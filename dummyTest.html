@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+const variants = {
+    "edges": [
+        {
+            "node": {
+                "id": "gid://shopify/ProductVariant/46128122265855",
+                "title": "Black / S / Silk",
+                "quantityAvailable": 15,
+                "price": {
+                    "amount": "800.0",
+                    "currencyCode": "INR"
+                },
+                "selectedOptions": [
+                    {
+                        "name": "Color",
+                        "value": "Black"
+                    },
+                    {
+                        "name": "Size",
+                        "value": "S"
+                    },
+                    {
+                        "name": "Fabric",
+                        "value": "Silk"
+                    }
+                ],
+                "image": {
+                    "src": "https://cdn.shopify.com/s/files/1/0713/4265/3695/files/black_2_acdd72e6-87ee-4aba-8556-df214be5db59.jpg?v=1726305268"
+                }
+            }
+        },
+        {
+            "node": {
+                "id": "gid://shopify/ProductVariant/46134517825791",
+                "title": "Black / S / Cotton",
+                "quantityAvailable": 0,
+                "price": {
+                    "amount": "800.0",
+                    "currencyCode": "INR"
+                },
+                "selectedOptions": [
+                    {
+                        "name": "Color",
+                        "value": "Black"
+                    },
+                    {
+                        "name": "Size",
+                        "value": "S"
+                    },
+                    {
+                        "name": "Fabric",
+                        "value": "Cotton"
+                    }
+                ],
+                "image": {
+                    "src": "https://cdn.shopify.com/s/files/1/0713/4265/3695/files/1.webp?v=1726064188"
+                }
+            }
+        },
+        {
+            "node": {
+                "id": "gid://shopify/ProductVariant/46128122364159",
+                "title": "Black / M / Silk",
+                "quantityAvailable": 30,
+                "price": {
+                    "amount": "500.0",
+                    "currencyCode": "INR"
+                },
+                "selectedOptions": [
+                    {
+                        "name": "Color",
+                        "value": "Black"
+                    },
+                    {
+                        "name": "Size",
+                        "value": "M"
+                    },
+                    {
+                        "name": "Fabric",
+                        "value": "Silk"
+                    }
+                ],
+                "image": {
+                    "src": "https://cdn.shopify.com/s/files/1/0713/4265/3695/files/1.webp?v=1726064188"
+                }
+            }
+        },
+        {
+            "node": {
+                "id": "gid://shopify/ProductVariant/46128122298623",
+                "title": "Black / L / Silk",
+                "quantityAvailable": 85,
+                "price": {
+                    "amount": "10000.0",
+                    "currencyCode": "INR"
+                },
+                "selectedOptions": [
+                    {
+                        "name": "Color",
+                        "value": "Black"
+                    },
+                    {
+                        "name": "Size",
+                        "value": "L"
+                    },
+                    {
+                        "name": "Fabric",
+                        "value": "Silk"
+                    }
+                ],
+                "image": {
+                    "src": "https://cdn.shopify.com/s/files/1/0713/4265/3695/files/Screenshot_2024-03-06_021616.png?v=1726114595"
+                }
+            }
+        },
+        {
+            "node": {
+                "id": "gid://shopify/ProductVariant/46134517891327",
+                "title": "Black / L / Cotton",
+                "quantityAvailable": 15,
+                "price": {
+                    "amount": "800.0",
+                    "currencyCode": "INR"
+                },
+                "selectedOptions": [
+                    {
+                        "name": "Color",
+                        "value": "Black"
+                    },
+                    {
+                        "name": "Size",
+                        "value": "L"
+                    },
+                    {
+                        "name": "Fabric",
+                        "value": "Cotton"
+                    }
+                ],
+                "image": {
+                    "src": "https://cdn.shopify.com/s/files/1/0713/4265/3695/files/1.webp?v=1726064188"
+                }
+            }
+        },
+        {
+            "node": {
+                "id": "gid://shopify/ProductVariant/46134491283711",
+                "title": "Gray / M / Silk",
+                "quantityAvailable": 0,
+                "price": {
+                    "amount": "800.0",
+                    "currencyCode": "INR"
+                },
+                "selectedOptions": [
+                    {
+                        "name": "Color",
+                        "value": "Gray"
+                    },
+                    {
+                        "name": "Size",
+                        "value": "M"
+                    },
+                    {
+                        "name": "Fabric",
+                        "value": "Silk"
+                    }
+                ],
+                "image": {
+                    "src": "https://cdn.shopify.com/s/files/1/0713/4265/3695/files/1.webp?v=1726064188"
+                }
+            }
+        },
+        {
+            "node": {
+                "id": "gid://shopify/ProductVariant/46134517924095",
+                "title": "Gray / M / Cotton",
+                "quantityAvailable": 15,
+                "price": {
+                    "amount": "800.0",
+                    "currencyCode": "INR"
+                },
+                "selectedOptions": [
+                    {
+                        "name": "Color",
+                        "value": "Gray"
+                    },
+                    {
+                        "name": "Size",
+                        "value": "M"
+                    },
+                    {
+                        "name": "Fabric",
+                        "value": "Cotton"
+                    }
+                ],
+                "image": {
+                    "src": "https://cdn.shopify.com/s/files/1/0713/4265/3695/files/1.webp?v=1726064188"
+                }
+            }
+        },
+        {
+            "node": {
+                "id": "gid://shopify/ProductVariant/46134491316479",
+                "title": "Gray / L / Silk",
+                "quantityAvailable": 0,
+                "price": {
+                    "amount": "800.0",
+                    "currencyCode": "INR"
+                },
+                "selectedOptions": [
+                    {
+                        "name": "Color",
+                        "value": "Gray"
+                    },
+                    {
+                        "name": "Size",
+                        "value": "L"
+                    },
+                    {
+                        "name": "Fabric",
+                        "value": "Silk"
+                    }
+                ],
+                "image": {
+                    "src": "https://cdn.shopify.com/s/files/1/0713/4265/3695/files/1.webp?v=1726064188"
+                }
+            }
+        },
+        {
+            "node": {
+                "id": "gid://shopify/ProductVariant/46134517956863",
+                "title": "Gray / L / Cotton",
+                "quantityAvailable": 15,
+                "price": {
+                    "amount": "800.0",
+                    "currencyCode": "INR"
+                },
+                "selectedOptions": [
+                    {
+                        "name": "Color",
+                        "value": "Gray"
+                    },
+                    {
+                        "name": "Size",
+                        "value": "L"
+                    },
+                    {
+                        "name": "Fabric",
+                        "value": "Cotton"
+                    }
+                ],
+                "image": {
+                    "src": "https://cdn.shopify.com/s/files/1/0713/4265/3695/files/1.webp?v=1726064188"
+                }
+            }
+        }
+    ]
+};
+let availableVariants = variants.edges;
+console.log("all variants: ", availableVariants);
+let variantsInStock = availableVariants.filter(el => parseInt(el.node.quantityAvailable) > 0);
+console.log("Variants that are in stock: ", variantsInStock);
+
+const findVariant = (optionsWithValues) => {
+    return variantsInStock.find(item => {
+        const selectedOptions = item.node.selectedOptions;
+        return selectedOptions.every(option => optionsWithValues[option.name] === option.value);
+    });
+};
+
+const optionChoices = {
+    Color: [
+        {name: "Black", enabled: true},
+        {name: "Gray", enabled: true}
+    ],
+    Size: [
+        {name: "S", enabled: true},
+        {name: "M", enabled: true},
+        {name: "L", enabled: true}
+    ],
+    Fabric: [
+        {name: "Silk", enabled: true},
+        {name: "Cotton", enabled: true}
+    ]
+};
+
+const selectedOptions = {Color: "Black", Size: "S", Fabric: "Silk"};
+
+const updateOptionStatuses = () => {
+    Object.keys(optionChoices).forEach(optionKey => {
+        const currentOption = optionKey;
+        const optionValues = optionChoices[currentOption].map(el => el.name);
+
+        optionValues.forEach(value => {
+            // Create a new selection with the current option value
+            const newSelection = {...selectedOptions, [currentOption]: value};
+            // Check if this combination exists as a variant
+            const variantExists = findVariant(newSelection);
+            // Update the enabled status based on whether the variant exists
+            optionChoices[currentOption] = optionChoices[currentOption].map(opt => 
+                opt.name === value ? { ...opt, enabled: !!variantExists } : opt
+            );
+        });
+    });
+
+    console.log("Updated option choices with enabled statuses:", optionChoices);
+};
+
+updateOptionStatuses();
+// remainingOptions.forEach(el=>{
+//     console.log(selectedOptions[el], )
+// })
+
+// });
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import SliderNavbar from "./SliderNavbar";
+import CartIcon from "../CartIcon";
+import { useDispatch } from "react-redux";
+import { setAppTheme } from "../../store";
+import { getCollections } from "../../apis/Collections"; // No longer needed if "Browse Collections" is removed
+
+const Navbar = () => {
+  const dispatch = useDispatch();
+  // const [collections, setCollections] = useState([]); // Not needed if "Browse Collections" is removed
+  const [isOpen, setIsOpen] = useState(false); // State for mobile slider menu (controlled by hamburger)
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const element = document.documentElement;
+
+  // State to manage hover for the "CLOTHING" menu
+  const [isClothingHovered, setIsClothingHovered] = useState(false);
+
+  const [allCollections, setAllCollections] = useState([]);
+    
+  const fetchCollections = async () => {
+      try {
+        const allCollections = await getCollections();
+        console.log(allCollections);
+        setAllCollections(allCollections.reverse());
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+  useEffect(() => {
+    fetchCollections();
+  }, []);
+
+  // Fetch collections from API - REMOVED if "Browse Collections" is gone
+  /*
+  useEffect(() => {
+    const fetchCollections = async () => {
+      try {
+        const all = await getCollections();
+        setCollections(all.reverse());
+      } catch (error) {
+        console.error("Failed to load collections:", error);
+      }
+    };
+    fetchCollections();
+  }, []);
+  */
+
+  // Theme handling
+  useEffect(() => {
+    if (theme === "dark") element.classList.add("dark");
+    else element.classList.remove("dark");
+    dispatch(setAppTheme(theme));
+  }, [theme, dispatch]);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+  };
+
+  // Scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      const hero = document.querySelector(".carousel-inner"); // Assuming this is your hero section
+      const offset = hero ? hero.offsetHeight - 100 : 50;
+      setIsScrolled(window.pageYOffset > offset);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Toggle mobile menu
+  const toggleMenu = () => setIsOpen((prev) => !prev);
+
+  const bgClass = isScrolled
+    ? theme === "light"
+      ? "bg-white text-black"
+      : "bg-black text-white"
+    : theme === "light"
+    ? "bg-transparent text-black"
+    : "bg-transparent text-white";
+
+  return (
+    <div className="relative">
+      <nav
+        className={
+          !isScrolled
+            ? `top-5 fixed left-0 w-full z-50 flex justify-between items-center md:px-10 pl-4 pr-2 py-4 transition-colors duration-300 ${bgClass}`
+            : `fixed top-0 left-0 w-full z-50 flex justify-between items-center md:px-10 pl-4 pr-2 py-4 transition-colors duration-300 ${bgClass}`
+        }
+      >
+        {/* Left Section: Hamburger and Logo */}
+        <div className="flex items-center space-x-4">
+          <button onClick={toggleMenu} className="text-4xl font-bold">
+            &#9776; {/* Hamburger always visible */}
+          </button>
+          <Link to="/" className="flex-shrink-0 w-[500px]">
+            <img
+              src={
+                isScrolled
+                  ? theme === "dark"
+                    ? "/logo2.svg"
+                    : "/logo.svg"
+                  : "/logo2.svg"
+              }
+              alt="logo"
+              className={
+                isScrolled
+                  ? "h-[70px] -mt-4"
+                  : "xl:h-[170px] lg:h-[140px] md:h-[100px] h-[80px] sm:absolute md:-top-3 lg:-top-8"
+              }
+            />
+          </Link>
+        </div>
+
+        {/* Right Section: Navigation (Clothing) and Icons */}
+        <div className="flex gap-6 items-center">
+
+          {/* CLOTHING Dropdown (Single Column) */}
+          <div
+            className="relative hidden lg:block" // Hidden on smaller screens, shown on large for desktop
+            onMouseEnter={() => setIsClothingHovered(true)}
+            onMouseLeave={() => setIsClothingHovered(false)}
+          >
+            <div
+              className={`hover:text-gray-400 cursor-pointer uppercase font-medium ${isScrolled ? 'text-black dark:text-white' : 'text-black dark:text-white'}`}
+              onClick={() => setIsClothingHovered((prev) => !prev)}
+              onMouseEnter={() => setIsClothingHovered(true)}
+            >
+              Clothing
+            </div>
+
+            {isClothingHovered && (
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-64 bg-white dark:bg-gray-800 shadow-lg p-4 rounded-b-lg z-50">
+                {/* Single Column for Clothing links */}
+                <h3 className="text-gray-800 dark:text-gray-200 font-bold mb-2">CLOTHING</h3>
+                <ul className="space-y-1">
+                  {allCollections.map((item, index) => {
+                   const displayTitle =
+                   item.title === "Chaon: The Summer Edit 2025" ? "New In" : item.title;
+
+                   return (
+                    <li key={index}>
+                      <Link
+                        to={
+                          allCollections.length === 0
+                            ? "#"
+                            : `/collection?id=${encodeURIComponent(item.id)}`
+                          }
+                        className="block px-2 py-1 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                      >
+                        {displayTitle}
+                      </Link>
+                    </li>
+                  );
+                })}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* Right-side Icons */}
+          <div className="flex items-center md:space-x-5 space-x-2">
+            <button onClick={toggleTheme} className="text-4xl rounded-full">
+              <img
+                src="/home/navbar/light_icon1.svg"
+                alt={`${theme} mode icon`}
+                className={theme === "light" && !isScrolled ? "white-icon" : ""}
+              />
+            </button>
+
+            <Link to="/profile">
+              <img
+                src="home/navbar/user.svg"
+                alt="user icon"
+                className={theme === "dark" || !isScrolled ? "white-icon" : ""}
+              />
+            </Link>
+
+            <CartIcon theme={theme} OnHomePageHeroSection={!isScrolled} />
+          </div>
+        </div>
+      </nav>
+
+      {/* SliderNavbar (Mobile Menu) - This remains untouched and should work as before */}
+      <SliderNavbar isOpen={isOpen} toggleMenu={toggleMenu} />
+    </div>
+  );
+};
+
+export default Navbar;

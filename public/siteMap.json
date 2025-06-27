@@ -1,0 +1,12 @@
+{
+    "routes": [
+      { "path": "/", "label": "Home" },
+      { "path": "/about", "label": "About Us" },
+      { "path": "/products", "label": "Products" },
+      { "path": "/collection", "label": "Collection Detail" },
+      { "path": "/profile", "label": "User Profile" },
+      { "path": "/orders", "label": "User Orders" },
+      { "path": "/behind", "label": "Behind the Screen" }
+    ]
+  }
+  

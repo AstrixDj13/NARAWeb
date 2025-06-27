@@ -1,0 +1,196 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono Bold Italic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono Book Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono Book.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono ExtraBold Italic.ttf") format("truetype");
+  font-weight: 800;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono ExtraLight Italic.ttf") format("truetype");
+  font-weight: 200;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono Hairline Italic.ttf") format("truetype");
+  font-weight: 100;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono Hairline.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono Light Italic.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono Medium Italic.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono News Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono News.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono Regular Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono Semibold Italic.ttf") format("truetype");
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Antikor Mono";
+  src: url("./fonts/antikor_mono/Taner Ardali  Antikor Mono SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: "outfit";
+  src: url("./fonts/Outfit/outfit_variable.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  /* cursor: url('../public/icons/cursor.svg'), auto;  client asked to comment it*/ 
+  
+}
+
+input[type="password"]::-ms-reveal {
+  display: none;
+}
+
+
+/* body {
+  font-family: "Antikor Text", sans-serif;
+} */
+/* body {
+  font-family: "Antikor Mono",  monospace;
+} */
+.testimonial-container::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge, and Firefox */
+.testimonial-container {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.white-icon {
+  filter: brightness(0) invert(1);
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+.bloc {
+  animation: appear linear;
+  animation-timeline: view();
+  animation-range: entry 0% cover 40%;
+}
