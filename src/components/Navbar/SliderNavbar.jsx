@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 const SliderNavbar = ({ isOpen, toggleMenu, allCollections }) => {
   const [activeLink, setActiveLink] = useState("home");
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024); // Tailwind's lg breakpoint
+  const [showDropdown, setShowDropdown] = useState(false);
 
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 1024);
@@ -83,35 +84,41 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections }) => {
                   </Link>
                 </li>*/}
                 {isMobile ? (
-                  <li>
-                    <div className="text-lg md:text-xl text-[#5D5D5D] italic">02</div>
-                    <div className="pl-4 md:pl-8">
-                      <h3 className="text-3xl md:text-5xl font-semibold text-black dark:!text-[#D8E3B1] not-italic tracking-widest">
-                        OUR CLOTHING
-                      </h3>
-                      <ul className="mt-2 space-y-2">
-                        {allCollections?.map((item, index) => {
-                          const displayTitle =
-                            item.title === "Chaon: The Summer Edit 2025"
-                              ? "New In"
-                              : item.title;
+                    <li>
+                      <div className="text-lg md:text-xl text-[#5D5D5D] italic">02</div>
+                      <div
+                        className="pl-4 md:pl-8 cursor-pointer"
+                        onClick={() => setShowDropdown(!showDropdown)}
+                      >
+                        <h3 className="text-3xl md:text-5xl font-semibold text-black dark:!text-[#D8E3B1] not-italic tracking-widest">
+                          OUR CLOTHING {showDropdown ? "▲" : "▼"}
+                        </h3>
+                      </div>
+                      {showDropdown && (
+                        <ul className="mt-2 space-y-2 pl-4 md:pl-8">
+                          {allCollections?.map((item, index) => {
+                            const displayTitle =
+                              item.title === "Chaon: The Summer Edit 2025"
+                                ? "New In"
+                                : item.title;
 
-                          return (
-                            <li key={index}>
-                              <Link
-                                to={`/collection?id=${encodeURIComponent(item.id)}`}
-                                onClick={toggleMenu}
-                                className="block text-[16px] text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-                              >
-                                {displayTitle}
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  </li>
-                ) : (
+                            return (
+                              <li key={index}>
+                                <Link
+                                  to={`/collection?id=${encodeURIComponent(item.id)}`}
+                                  onClick={toggleMenu}
+                                  className="block text-[16px] text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                                >
+                                  {displayTitle}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </li>
+                  ) : (
+
                   <li>
                     <Link
                       to={"/products"}
