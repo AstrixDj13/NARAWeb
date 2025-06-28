@@ -1,16 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { getCollections } from "../../apis/Collections";
 
-const SliderNavbar = ({ isOpen, toggleMenu, allCollections }) => {
+const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }) => {
   const [activeLink, setActiveLink] = useState("home");
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024); // Tailwind's lg breakpoint
   const [showDropdown, setShowDropdown] = useState(false);
+
+  const [collections, setCollections] = useState(initialCollections || []);
 
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 1024);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    if (!initialCollections || initialCollections.length === 0) {
+      // Fetch only if not already provided
+      getCollections()
+        .then((data) => setCollections(data))
+        .catch((err) => console.error("Failed to fetch collections:", err));
+    } else {
+      setCollections(initialCollections); // in case prop changes
+    }
+  }, [initialCollections]);
 
   const location = useLocation();
   React.useEffect(() => {
@@ -96,7 +110,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections }) => {
                       </div>
                       {showDropdown && (
                         <ul className="mt-2 space-y-2 pl-4 md:pl-8">
-                          {allCollections?.map((item, index) => {
+                          {collections?.map((item, index) => {
                             const displayTitle =
                               item.title === "Chaon: The Summer Edit 2025"
                                 ? "New In"
