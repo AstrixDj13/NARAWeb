@@ -35,13 +35,16 @@ const FooterSection = () => {
 
       {/* Optional: Scroll up button - repositioned it for common footer placement */}
       {/* You can choose to keep this or remove it entirely if the design doesn't need it */}
-      <div
-        className="text-[#6C757D] text-sm cursor-pointer mb-8" // Adjusted styling and margin
-        onClick={scrollToTop}
-      >
-        <p className="inline-block mr-2">Scroll up</p> {/* Added inline-block and margin */}
-        <i className="fas fa-chevron-up text-xl"></i> {/* Adjust icon size */}
+      <div className="flex justify-center mb-8">
+        <div
+          className="text-[#6C757D] text-sm cursor-pointer flex items-center"
+          onClick={scrollToTop}
+        >
+          <p className="inline-block mr-2">Scroll up</p>
+          <i className="fas fa-chevron-up text-xl"></i>
+        </div>
       </div>
+
 
       {/* Main footer content grid */}
       <div className="max-w-full mx-auto px-4 md:px-8 lg:px-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-y-8 gap-x-4">

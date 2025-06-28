@@ -186,7 +186,7 @@ const Navbar = () => {
       </nav>
 
       {/* SliderNavbar (Mobile Menu) - This remains untouched and should work as before */}
-      <SliderNavbar isOpen={isOpen} toggleMenu={toggleMenu} />
+      <SliderNavbar isOpen={isOpen} toggleMenu={toggleMenu} allCollections={allCollections}/>
     </div>
   );
 };

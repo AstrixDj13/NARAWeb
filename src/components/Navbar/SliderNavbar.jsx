@@ -1,8 +1,16 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-const SliderNavbar = ({ isOpen, toggleMenu }) => {
+const SliderNavbar = ({ isOpen, toggleMenu, allCollections }) => {
   const [activeLink, setActiveLink] = useState("home");
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024); // Tailwind's lg breakpoint
+
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 1024);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const location = useLocation();
   React.useEffect(() => {
     if (location.pathname === "/") {
@@ -56,7 +64,7 @@ const SliderNavbar = ({ isOpen, toggleMenu }) => {
                     </span>
                   </Link>
                 </li>
-                <li>
+                {/*<li>
                   <Link
                     to={"/products"}
                     onClick={() => handleClick("products")}
@@ -73,7 +81,57 @@ const SliderNavbar = ({ isOpen, toggleMenu }) => {
                       OUR SHOP
                     </span>
                   </Link>
-                </li>
+                </li>*/}
+                {isMobile ? (
+                  <li>
+                    <div className="text-lg md:text-xl text-[#5D5D5D] italic">02</div>
+                    <div className="pl-4 md:pl-8">
+                      <h3 className="text-3xl md:text-5xl font-semibold text-black dark:!text-[#D8E3B1] not-italic tracking-widest">
+                        OUR CLOTHING
+                      </h3>
+                      <ul className="mt-2 space-y-2">
+                        {allCollections?.map((item, index) => {
+                          const displayTitle =
+                            item.title === "Chaon: The Summer Edit 2025"
+                              ? "New In"
+                              : item.title;
+
+                          return (
+                            <li key={index}>
+                              <Link
+                                to={`/collection?id=${encodeURIComponent(item.id)}`}
+                                onClick={toggleMenu}
+                                className="block text-[16px] text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                              >
+                                {displayTitle}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  </li>
+                ) : (
+                  <li>
+                    <Link
+                      to={"/products"}
+                      onClick={() => handleClick("products")}
+                      className="text-lg md:text-xl  text-[#5D5D5D] italic"
+                    >
+                      02
+                      <span
+                        className={`${
+                          activeLink === "products"
+                            ? "text-green-800"
+                            : "text-black dark:!text-[#D8E3B1]"
+                        } text-3xl md:text-5xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
+                      >
+                        OUR SHOP
+                      </span>
+                    </Link>
+                  </li>
+                )}
+
                 <li>
                   <Link
                     to="/about"
