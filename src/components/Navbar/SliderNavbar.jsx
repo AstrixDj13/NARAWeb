@@ -19,7 +19,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
     if (!initialCollections || initialCollections.length === 0) {
       // Fetch only if not already provided
       getCollections()
-        .then((data) => setCollections(data))
+        .then((data) => setCollections(data.reverse()))
         .catch((err) => console.error("Failed to fetch collections:", err));
     } else {
       setCollections(initialCollections); // in case prop changes
