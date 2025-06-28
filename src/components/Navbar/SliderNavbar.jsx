@@ -106,7 +106,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections }) => {
                               <li key={index}>
                                 <Link
                                   to={`/collection?id=${encodeURIComponent(item.id)}`}
-                                  onClick={toggleMenu}
+                                  //onClick={toggleMenu}
                                   className="block text-[16px] text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                                 >
                                   {displayTitle}
