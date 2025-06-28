@@ -97,7 +97,7 @@ const Navbar = () => {
           <button onClick={toggleMenu} className="text-4xl font-bold">
             &#9776; {/* Hamburger always visible */}
           </button>
-          <Link to="/" className="flex-shrink-0 w-[500px]">
+          <Link to="/" className="flex-shrink-0 w-36 sm:w-48 md:w-64 lg:w-[500px]">
             <img
               src={
                 isScrolled
