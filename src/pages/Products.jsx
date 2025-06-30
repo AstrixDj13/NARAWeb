@@ -98,6 +98,7 @@ const Products = () => {
                     colors={colors}
                     price={product?.variants?.nodes[0]?.price?.amount}
                     name={product.title}
+                    stockLeft={product?.metafield?.value || undefined}
                     discount={""}
                     message={""}
                     productId={product.id}

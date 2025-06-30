@@ -50,6 +50,9 @@ export async function getCollectionById(collectionId) {
         node {
           id
           title
+          metafield(namespace: "custom", key: "stock_quantity") {
+            value
+          }
           variants(first: 1) {
             edges {
               node {
@@ -99,6 +102,7 @@ export async function getCollectionById(collectionId) {
       imageSrc: product.node.variants.edges[0].node.image?.url,
       price: product.node.variants.edges[0].node.price.amount,
       productId: product.node.id,
+      stockLeft: product.node.metafield?.value ?? undefined,
     }));
 
     return { collectionDetail, products };

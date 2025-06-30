@@ -14,7 +14,9 @@ const ProductItem = ({
   price,
   img,
   productId,
+  stockLeft,
 }) => {
+  console.log("Received stockLeft:", stockLeft);
   productId = encodeURIComponent(productId); //Bad code
   return (
     <Link to={`/product/${productId}?camefrompage=Products`}>
@@ -41,6 +43,7 @@ const ProductItem = ({
           <h1 className="font-semibold py-2">{name}</h1>
           <div className="flex justify-between items-center">
             <div className="font-mono text-base">INR {formatToINR(price)}</div>
+            
             {colors && (
               <div className="flex items-center gap-2">
                 {colors?.map((color, index) => (
@@ -49,6 +52,11 @@ const ProductItem = ({
               </div>
             )}
           </div>
+          {stockLeft !== undefined && stockLeft !== null && stockLeft !== "" && (
+              <div className="text-xs text-red-600 mt-1">
+                {stockLeft}
+              </div>
+            )}
         </div>
         <ViewButton link={`/product/${productId}?camefrompage=Products`} />
         {/* <div className="flex justify-between py-2">

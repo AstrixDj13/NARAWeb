@@ -105,11 +105,20 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                         onClick={() => setShowDropdown(!showDropdown)}
                       >
                         <h3 className="text-3xl md:text-5xl font-semibold text-black dark:!text-[#D8E3B1] not-italic tracking-widest">
-                          OUR CLOTHING {showDropdown ? "▲" : "▼"}
+                          CLOTHING {showDropdown ? "▲" : "▼"}
                         </h3>
                       </div>
                       {showDropdown && (
                         <ul className="mt-2 space-y-2 pl-4 md:pl-8">
+                          {/* Static "All" item */}
+                          <li>
+                            <Link
+                              to="/products"
+                              className="block text-[16px] text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                            >
+                              All
+                            </Link>
+                          </li>
                           {collections?.map((item, index) => {
                             const displayTitle =
                               item.title === "Chaon: The Summer Edit 2025"

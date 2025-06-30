@@ -7,6 +7,9 @@ const GET_ALL_PRODUCTS_QUERY = `
       node {
         id
         title
+        metafield(namespace: "custom", key: "stock_quantity") {
+            value
+          }
         variants(first: 1) {
           nodes {
             id

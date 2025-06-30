@@ -22,6 +22,7 @@ const CollectionProductItem = ({
   productId,
   collectionTitle,
   collectionId,
+  stockLeft,
 }) => {
   productId = encodeURIComponent(productId); //Bad code
   const navigate = useNavigate();
@@ -92,6 +93,11 @@ const CollectionProductItem = ({
           <h1 className="font-semibold py-2">{name}</h1>
           <div className="flex justify-between items-center">
             <div className="font-mono text-base">INR {formatToINR(price)}</div>
+            {stockLeft !== undefined && stockLeft !== null && stockLeft !== "" && (
+              <div className="text-xs text-red-600 mt-1">
+                {stockLeft}
+              </div>
+            )}
             {colors && (
               <div className="flex items-center gap-2">
                 {colors.map((color, index) => (
