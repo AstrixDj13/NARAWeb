@@ -17,8 +17,8 @@ const testimonials = [
   },
   {
     id: 2,
-    quote: "The designs are so unique and chic. NARA has quickly become my go-to brand for stylish and sustainable fashion. Love it!",
-    name: "Rahul Gupta",
+    quote: "The designs are so chic. Love it!",
+    name: "Yashika Verma",
     location: "Bengaluru, India",
     rating: 5,
   },
@@ -27,13 +27,6 @@ const testimonials = [
     quote: "Absolutely thrilled with my purchase! The fit is perfect, and the fabric feels amazing. Excellent customer service too.",
     name: "Priya Singh",
     location: "Delhi, India",
-    rating: 5,
-  },
-  {
-    id: 4,
-    quote: "NARA stands for elegance and comfort. Their collection truly elevates my wardrobe. Highly recommend trying their dresses!",
-    name: "Vikram Kumar",
-    location: "Hyderabad, India",
     rating: 5,
   },
 ];
