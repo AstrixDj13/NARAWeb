@@ -57,9 +57,10 @@ const CollectionCarousel = () => {
       fetchCollections();
     }, []); 
 
-    const excludedTitles = ["Chaon: The Summer Edit 2025", "Bestsellers"];
+    const includedTitles = ["Tops", "Bottoms", "Co-ord sets"];
+
     const filteredCollections = allCollections.filter(
-      (col) => !excludedTitles.includes(col.title));
+      (col) => includedTitles.includes(col.title));
     
   return (
     // Re-added px-4 for left/right padding of the entire carousel

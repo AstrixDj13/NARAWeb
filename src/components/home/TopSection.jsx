@@ -92,7 +92,9 @@ const TopSection = () => {
         ))}
         {/* Text and buttons */}
         <div className="absolute bottom-28 left-12 text-left text-white">
-          <h5 className="text-sm">Summer collection, 2025</h5>
+          {/*<h5 className="text-sm">Summer collection, 2025</h5>*/}
+          {currentCollection.title === "Chaon: The Summer Edit 2025" && (
+          <h5 className="text-sm">Summer collection, 2025</h5>)}
           <h2 className="text-5xl font-bold py-4">{currentCollection.title}</h2>
           <Link
             to={
