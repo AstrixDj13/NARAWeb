@@ -89,7 +89,7 @@ const Home = () => {
       {/* Announcement panel with floating text */}
       <div className="bg-black text-white font-bold">
         <div className="announcement-container py-1">
-          <div className="marquee">40% OFF on Founder"s Picks!</div>
+          <div className="marquee">40% OFF on Founder's Picks!</div>
         </div>
       </div>
 
