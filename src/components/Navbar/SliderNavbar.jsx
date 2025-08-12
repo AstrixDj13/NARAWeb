@@ -73,7 +73,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                         activeLink === "home"
                           ? "text-green-800"
                           : "text-black dark:!text-[#D8E3B1]"
-                      }  text-3xl md:text-3xl font-semibold not-italic pl-2 md:pl-7 md:tracking-widest `}
+                      }  text-xl md:text-3xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest `}
                     >
                       HOME
                     </span>
@@ -104,7 +104,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                         className="pl-4 md:pl-8 cursor-pointer"
                         onClick={() => setShowDropdown(!showDropdown)}
                       >
-                        <h3 className="text-3xl md:text-5xl font-semibold text-black dark:!text-[#D8E3B1] not-italic tracking-widest">
+                        <h3 className="text-xl md:text-3xl font-semibold text-black dark:!text-[#D8E3B1] not-italic tracking-widest">
                           CLOTHING {showDropdown ? "▲" : "▼"}
                         </h3>
                       </div>
@@ -154,7 +154,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                           activeLink === "products"
                             ? "text-green-800"
                             : "text-black dark:!text-[#D8E3B1]"
-                        } text-3xl md:text-3xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
+                        } text-xl md:text-3xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
                       >
                         OUR SHOP
                       </span>
@@ -170,7 +170,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                   >
                     {/*03*/}
                     <span
-                      className={`text-3xl md:text-3xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest ${
+                      className={`text-xl md:text-3xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest ${
                         activeLink === "about"
                           ? "text-green-800"
                           : "text-black dark:!text-[#D8E3B1]"
@@ -188,7 +188,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     to="/behind"
                     className="text-lg md:text-xl  text-[#5D5D5D] italic"
                   >
-                    <span className="text-3xl md:text-3xl font-semibold text-black dark:!text-[#D8E3B1] not-italic pl-4 md:pl-8 md:tracking-widest">
+                    <span className="text-xl md:text-3xl font-semibold text-black dark:!text-[#D8E3B1] not-italic pl-4 md:pl-8 md:tracking-widest">
                       BEHIND THE SCREEN
                     </span>
                   </Link>
