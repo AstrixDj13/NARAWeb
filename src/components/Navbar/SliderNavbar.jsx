@@ -67,13 +67,13 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     onClick={() => handleClick("home")}
                     className="text-lg md:text-xl text-[#5D5D5D] italic"
                   >
-                    01{" "}
+                    {/*01{" "}*/}
                     <span
                       className={`${
                         activeLink === "home"
                           ? "text-green-800"
                           : "text-black dark:!text-[#D8E3B1]"
-                      }  text-3xl md:text-5xl font-semibold not-italic pl-2 md:pl-7 md:tracking-widest `}
+                      }  text-3xl md:text-3xl font-semibold not-italic pl-2 md:pl-7 md:tracking-widest `}
                     >
                       HOME
                     </span>
@@ -99,7 +99,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                 </li>*/}
                 {isMobile ? (
                     <li>
-                      <div className="text-lg md:text-xl text-[#5D5D5D] italic">02</div>
+                      {/*<div className="text-lg md:text-xl text-[#5D5D5D] italic">02</div>*/}
                       <div
                         className="pl-4 md:pl-8 cursor-pointer"
                         onClick={() => setShowDropdown(!showDropdown)}
@@ -148,13 +148,13 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                       onClick={() => handleClick("products")}
                       className="text-lg md:text-xl  text-[#5D5D5D] italic"
                     >
-                      02
+                      {/*02*/}
                       <span
                         className={`${
                           activeLink === "products"
                             ? "text-green-800"
                             : "text-black dark:!text-[#D8E3B1]"
-                        } text-3xl md:text-5xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
+                        } text-3xl md:text-3xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
                       >
                         OUR SHOP
                       </span>
@@ -168,9 +168,9 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     onClick={() => handleClick("about")}
                     className="text-lg md:text-xl  text-[#5D5D5D] italic"
                   >
-                    03
+                    {/*03*/}
                     <span
-                      className={`text-3xl md:text-5xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest ${
+                      className={`text-3xl md:text-3xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest ${
                         activeLink === "about"
                           ? "text-green-800"
                           : "text-black dark:!text-[#D8E3B1]"
@@ -182,13 +182,13 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                 </li>
                 <li className="flex">
                   <div className="text-lg md:text-xl  text-[#5D5D5D] italic">
-                    04
+                    {/*04*/}
                   </div>
                   <Link
                     to="/behind"
                     className="text-lg md:text-xl  text-[#5D5D5D] italic"
                   >
-                    <span className="text-3xl md:text-5xl font-semibold text-black dark:!text-[#D8E3B1] not-italic pl-4 md:pl-8 md:tracking-widest">
+                    <span className="text-3xl md:text-3xl font-semibold text-black dark:!text-[#D8E3B1] not-italic pl-4 md:pl-8 md:tracking-widest">
                       BEHIND THE SCREEN
                     </span>
                   </Link>

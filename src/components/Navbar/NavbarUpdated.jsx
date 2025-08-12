@@ -75,13 +75,21 @@ const Navbar = () => {
   // Toggle mobile menu
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
-  const bgClass = isScrolled
+  {/*const bgClass = isScrolled
     ? theme === "light"
       ? "bg-white text-black"
       : "bg-black text-white"
     : theme === "light"
     ? "bg-transparent text-black"
-    : "bg-transparent text-white";
+    : "bg-transparent text-white";*/}
+
+  const bgClass = isScrolled
+    ? theme === "light"
+      ? "bg-white text-black"
+      : "bg-black text-white"
+    : theme === "light"
+    ? "bg-green-900 text-black"
+    : "bg-green-900 text-white";
 
   return (
     <div className="relative">
@@ -94,8 +102,21 @@ const Navbar = () => {
       >
         {/* Left Section: Hamburger and Logo */}
         <div className="flex items-center space-x-4">
-          <button onClick={toggleMenu} className="text-4xl font-bold">
-            &#9776; {/* Hamburger always visible */}
+          {/*<button onClick={toggleMenu} className="text-4xl font-bold text-white">
+            &#9776; */}{/* Hamburger always visible */}
+          {/*</button>*/}
+
+          <button
+            onClick={toggleMenu}
+            className={`text-4xl font-bold ${
+              isScrolled
+                ? theme === "light"
+                  ? "text-black"
+                  : "text-white"
+                : "text-white"
+            }`}
+          >
+          &#9776;
           </button>
           <Link to="/" className="flex-shrink-0 w-48 sm:w-56 md:w-64 lg:w-[500px]">
             <img
@@ -110,7 +131,8 @@ const Navbar = () => {
               className={
                 isScrolled
                   ? "h-[70px] -mt-4"
-                  : "xl:h-[170px] lg:h-[140px] md:h-[100px] h-[80px] sm:absolute md:-top-3 lg:-top-8"
+                  : "xl:h-[130px] lg:h-[140px] md:h-[100px] h-[80px] sm:absolute md:-top-3 lg:-top-8"
+                  
               }
             />
           </Link>
