@@ -96,8 +96,8 @@ const Navbar = () => {
       <nav
         className={
           !isScrolled
-            ? `top-5 fixed left-0 w-full z-50 flex justify-between items-center md:px-10 pl-4 pr-2 py-4 transition-colors duration-300 ${bgClass}`
-            : `fixed top-0 left-0 w-full z-50 flex justify-between items-center md:px-10 pl-4 pr-2 py-4 transition-colors duration-300 ${bgClass}`
+            ? `top-5 fixed left-0 w-full z-50 flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
+            : `fixed top-0 left-0 w-full z-50 flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
         }
       >
         {/* Left Section: Hamburger and Logo */}
