@@ -79,6 +79,107 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     </span>
                   </Link>
                 </li>
+
+                <li>
+                    <Link
+                      to={"/products"}
+                      onClick={() => handleClick("products")}
+                      className="text-lg md:text-xl  text-[#5D5D5D] italic"
+                    >
+                      {/*02*/}
+                      <span
+                        className={`${
+                          activeLink === "products"
+                            ? "text-green-800"
+                            : "text-black dark:!text-[#D8E3B1]"
+                        } text-xl md:text-3xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
+                      >
+                        ALL PRODUCTS
+                      </span>
+                    </Link>
+                  </li>
+
+                  <li>
+                      {/*<div className="text-lg md:text-xl text-[#5D5D5D] italic">02</div>*/}
+                      <div
+                        className="pl-4 md:pl-8 cursor-pointer"
+                        onClick={() => setShowDropdown(!showDropdown)}
+                      >
+                        <h3 className="text-xl md:text-3xl font-semibold text-black dark:!text-[#D8E3B1] not-italic tracking-widest">
+                          CATEGORIES {showDropdown ? "▲" : "▼"}
+                        </h3>
+                      </div>
+                      {showDropdown && (
+                        <ul className="mt-2 space-y-2 pl-4 md:pl-8">
+                          {/* Static "All" item */}
+                          {collections
+                          ?.filter(item =>
+                            ["Tops", "Bottoms", "Co-ord sets"].includes(item.title)
+                          )
+                          .map((item, index) => (
+                            <li key={index}>
+                              <Link
+                                to={`/collection?id=${encodeURIComponent(item.id)}`}
+                                className="block text-[16px] text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                              >
+                                {item.title}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+
+                  {collections
+                  ?.filter(item => item.title === "Bestsellers") // Only pick Bestsellers
+                  .map((item, index) => {
+                    return (
+                      <li key={index}>
+                        <Link
+                          to={`/collection?id=${encodeURIComponent(item.id)}`}
+                          onClick={() => handleClick("most-wanted")}
+                          className="text-lg md:text-xl text-[#5D5D5D] italic"
+                        >
+                          <span
+                            className={`${
+                              activeLink === "most-wanted"
+                                ? "text-green-800"
+                                : "text-black dark:!text-[#D8E3B1]"
+                            } text-xl md:text-3xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
+                          >
+                            MOST WANTED
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+
+                  {collections
+                  ?.filter(item => item.title === "Chaon: The Summer Edit 2025") // Only pick Bestsellers
+                  .map((item, index) => {
+                    return (
+                      <li key={index}>
+                        <Link
+                          to={`/collection?id=${encodeURIComponent(item.id)}`}
+                          onClick={() => handleClick("most-wanted")}
+                          className="text-lg md:text-xl text-[#5D5D5D] italic"
+                        >
+                          <span
+                            className={`${
+                              activeLink === "most-wanted"
+                                ? "text-green-800"
+                                : "text-black dark:!text-[#D8E3B1]"
+                            } text-xl md:text-3xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
+                          >
+                            NEW ARRIVALS
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+
+                  
+
                 {/*<li>
                   <Link
                     to={"/products"}
@@ -97,70 +198,6 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     </span>
                   </Link>
                 </li>*/}
-                {isMobile ? (
-                    <li>
-                      {/*<div className="text-lg md:text-xl text-[#5D5D5D] italic">02</div>*/}
-                      <div
-                        className="pl-4 md:pl-8 cursor-pointer"
-                        onClick={() => setShowDropdown(!showDropdown)}
-                      >
-                        <h3 className="text-xl md:text-3xl font-semibold text-black dark:!text-[#D8E3B1] not-italic tracking-widest">
-                          CLOTHING {showDropdown ? "▲" : "▼"}
-                        </h3>
-                      </div>
-                      {showDropdown && (
-                        <ul className="mt-2 space-y-2 pl-4 md:pl-8">
-                          {/* Static "All" item */}
-                          <li>
-                            <Link
-                              to="/products"
-                              className="block text-[16px] text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-                            >
-                              All
-                            </Link>
-                          </li>
-                          {collections?.map((item, index) => {
-                            const displayTitle =
-                              item.title === "Chaon: The Summer Edit 2025"
-                                ? "New In"
-                                : item.title;
-
-                            return (
-                              <li key={index}>
-                                <Link
-                                  to={`/collection?id=${encodeURIComponent(item.id)}`}
-                                  //onClick={toggleMenu}
-                                  className="block text-[16px] text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-                                >
-                                  {displayTitle}
-                                </Link>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      )}
-                    </li>
-                  ) : (
-
-                  <li>
-                    <Link
-                      to={"/products"}
-                      onClick={() => handleClick("products")}
-                      className="text-lg md:text-xl  text-[#5D5D5D] italic"
-                    >
-                      {/*02*/}
-                      <span
-                        className={`${
-                          activeLink === "products"
-                            ? "text-green-800"
-                            : "text-black dark:!text-[#D8E3B1]"
-                        } text-xl md:text-3xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
-                      >
-                        OUR SHOP
-                      </span>
-                    </Link>
-                  </li>
-                )}
 
                 <li>
                   <Link
@@ -180,6 +217,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     </span>
                   </Link>
                 </li>
+                
                 <li className="flex">
                   <div className="text-lg md:text-xl  text-[#5D5D5D] italic">
                     {/*04*/}
