@@ -88,8 +88,8 @@ const Navbar = () => {
       ? "bg-white text-black"
       : "bg-black text-white"
     : theme === "light"
-    ? "bg-green-900 text-black"
-    : "bg-green-900 text-white";
+    ? "bg-white text-black"
+    : "bg-black text-white";
 
   return (
     <div className="relative">
@@ -108,12 +108,14 @@ const Navbar = () => {
 
           <button
             onClick={toggleMenu}
-            className={`text-4xl font-bold ${
+            className={`text-3xl font-bold ${
               isScrolled
                 ? theme === "light"
                   ? "text-black"
                   : "text-white"
-                : "text-white"
+                : theme === "light"
+                  ? "text-black"
+                  : "text-white"
             }`}
           >
           &#9776;
@@ -125,7 +127,9 @@ const Navbar = () => {
                   ? theme === "dark"
                     ? "/logo2.svg"
                     : "/logo.svg"
-                  : "/logo2.svg"
+                  : theme === "dark"
+                    ? "/logo2.svg"
+                    : "/logo.svg"
               }
               alt="logo"
               className={
@@ -183,26 +187,47 @@ const Navbar = () => {
               </div>
             )}
           </div>
-
+    
           {/* Right-side Icons */}
           <div className="flex items-center md:space-x-5 space-x-2">
             <button onClick={toggleTheme} className="text-4xl rounded-full">
               <img
                 src="/home/navbar/light_icon1.svg"
                 alt={`${theme} mode icon`}
-                className={theme === "light" && !isScrolled ? "white-icon" : ""}
+                
+                className={
+                  theme === "light" && !isScrolled
+                    ? "black-icon"
+                    : theme === "dark" && !isScrolled
+                    ? "white-icon"
+                    : theme === "light" && isScrolled
+                    ? "black-icon"
+                    : theme === "dark" && isScrolled
+                    ? "white-icon":""
+                }
               />
             </button>
-
+          
             <Link to="/profile">
               <img
                 src="home/navbar/user.svg"
                 alt="user icon"
-                className={theme === "dark" || !isScrolled ? "white-icon" : ""}
+                
+                className={
+                  theme === "light" && !isScrolled
+                    ? "black-icon"
+                    : theme === "dark" && !isScrolled
+                    ? "white-icon"
+                    : theme === "light" && isScrolled
+                    ? "black-icon"
+                    : theme === "dark" && isScrolled
+                    ? "white-icon":""
+                }
               />
             </Link>
 
-            <CartIcon theme={theme} OnHomePageHeroSection={!isScrolled} />
+            {/*<CartIcon theme={theme} OnHomePageHeroSection={!isScrolled} />*/}
+            <CartIcon theme={theme} />
           </div>
         </div>
       </nav>
