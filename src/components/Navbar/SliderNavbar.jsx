@@ -59,13 +59,13 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                 ✕
               </button>
             </div>
-            <div className="mt-10 md:mt-14">
-              <ul className="space-y-8 md:space-y-14">
+            <div className="mt-10 md:mt-1">
+              <ul className="space-y-8 md:space-y-4">
                 <li>
                   <Link
                     to="/"
                     onClick={() => handleClick("home")}
-                    className="text-lg md:text-xl text-[#5D5D5D] italic"
+                    className="text-lg md:text-2xl text-[#5D5D5D] italic"
                   >
                     {/*01{" "}*/}
                     <span
@@ -73,7 +73,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                         activeLink === "home"
                           ? "text-green-800"
                           : "text-black dark:!text-[#D8E3B1]"
-                      }  text-xl md:text-3xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest `}
+                      }  text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest `}
                     >
                       HOME
                     </span>
@@ -92,7 +92,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                           activeLink === "products"
                             ? "text-green-800"
                             : "text-black dark:!text-[#D8E3B1]"
-                        } text-xl md:text-3xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
+                        } text-xl md:text-2xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
                       >
                         ALL PRODUCTS
                       </span>
@@ -105,7 +105,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                         className="pl-4 md:pl-8 cursor-pointer"
                         onClick={() => setShowDropdown(!showDropdown)}
                       >
-                        <h3 className="text-xl md:text-3xl font-semibold text-black dark:!text-[#D8E3B1] not-italic tracking-widest">
+                        <h3 className="text-xl md:text-2xl font-semibold text-black dark:!text-[#D8E3B1] not-italic tracking-widest">
                           CATEGORIES {showDropdown ? "▲" : "▼"}
                         </h3>
                       </div>
@@ -145,7 +145,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                               activeLink === "most-wanted"
                                 ? "text-green-800"
                                 : "text-black dark:!text-[#D8E3B1]"
-                            } text-xl md:text-3xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
+                            } text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
                           >
                             MOST WANTED
                           </span>
@@ -169,7 +169,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                               activeLink === "most-wanted"
                                 ? "text-green-800"
                                 : "text-black dark:!text-[#D8E3B1]"
-                            } text-xl md:text-3xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
+                            } text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
                           >
                             NEW ARRIVALS
                           </span>
@@ -177,27 +177,6 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                       </li>
                     );
                   })}
-
-                  
-
-                {/*<li>
-                  <Link
-                    to={"/products"}
-                    onClick={() => handleClick("products")}
-                    className="text-lg md:text-xl  text-[#5D5D5D] italic"
-                  >
-                    02
-                    <span
-                      className={`${
-                        activeLink === "products"
-                          ? "text-green-800"
-                          : "text-black dark:!text-[#D8E3B1]"
-                      } text-3xl md:text-5xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
-                    >
-                      OUR SHOP
-                    </span>
-                  </Link>
-                </li>*/}
 
                 <li>
                   <Link
@@ -207,7 +186,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                   >
                     {/*03*/}
                     <span
-                      className={`text-xl md:text-3xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest ${
+                      className={`text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest ${
                         activeLink === "about"
                           ? "text-green-800"
                           : "text-black dark:!text-[#D8E3B1]"
@@ -226,7 +205,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     to="/behind"
                     className="text-lg md:text-xl  text-[#5D5D5D] italic"
                   >
-                    <span className="text-xl md:text-3xl font-semibold text-black dark:!text-[#D8E3B1] not-italic pl-4 md:pl-8 md:tracking-widest">
+                    <span className="text-xl md:text-2xl font-semibold text-black dark:!text-[#D8E3B1] not-italic pl-4 md:pl-8 md:tracking-widest">
                       BEHIND THE SCREEN
                     </span>
                   </Link>
@@ -253,7 +232,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     alt="instagram"
                   />
                 </a>
-                <div className="flex items-center space-x-1  md:space-x-2  bg-white px-2 rounded-xl ">
+                {/*<div className="flex items-center space-x-1  md:space-x-2  bg-white px-2 rounded-xl ">
                   <a
                     href="mailto:info@narawear.com"
                     className="text-black text-xs md:text-[16px] font-sans font-medium"
@@ -265,7 +244,32 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     src="/home/navbar/file.svg"
                     alt="Product"
                   />
+                </div>*/}
+
+                <div
+                  className="
+                    flex flex-wrap items-center 
+                    gap-1 md:gap-2 
+                    bg-white px-2 py-1 rounded-xl 
+                    max-w-[220px] md:max-w-[260px] 
+                    overflow-hidden
+                  "
+                >
+                  <a
+                    href="mailto:info@narawear.com"
+                    className="text-black text-xs md:text-sm lg:text-base font-sans font-medium truncate"
+                    title="info@narawear.com"
+                  >
+                    info@narawear.com
+                  </a>
+                  <img
+                    title="Email icon"
+                    src="/home/navbar/file.svg"
+                    alt="Product"
+                    className="w-4 h-4 md:w-5 md:h-5"
+                  />
                 </div>
+
               </div>
             </div>
           </div>
