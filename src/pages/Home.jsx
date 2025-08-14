@@ -8,6 +8,7 @@ import Spotlight from "../components/home/Spotlight";
 import MidSection from "../components/home/MidSection";
 import FooterSection from "../components/home/FooterSectionUpdated";
 import TestimonialsSection from "../components/home/Testimonials";
+import BlogSection from "../components/home/BlogSection";
 import SubscribeSection from "../components/home/SubscribeSection";
 import NewestArrivals from "../components/home/NewArrivals";
 import { motion } from "framer-motion";
@@ -105,6 +106,7 @@ const Home = () => {
       <Spotlight />
       {/* <MidSection /> */}
       {/*<SubscribeSection /> */}
+      <BlogSection />
       <TestimonialsSection />
       <FooterSection />
     </div>

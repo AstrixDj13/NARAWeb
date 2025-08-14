@@ -18,6 +18,7 @@ export default function CollectionDetail() {
   });
   const [collectionProducts, setCollectionProducts] = useState([]);
   const query = useQuery();
+  const collectionId = query.get("id");
 
   const fetchCollectionProducts = async () => {
     try {
@@ -31,8 +32,8 @@ export default function CollectionDetail() {
   };
 
   useEffect(() => {
-    fetchCollectionProducts();
-  }, []);
+    fetchCollectionProducts(collectionId);
+  }, [collectionId]);
   return (
     <div className="lg:h-[100vh] lg:!overflow-hidden overflow-auto ">
       <header className="h-[4em]">

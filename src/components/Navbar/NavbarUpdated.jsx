@@ -145,48 +145,7 @@ const Navbar = () => {
         {/* Right Section: Navigation (Clothing) and Icons */}
         <div className="flex gap-6 items-center">
 
-          {/* CLOTHING Dropdown (Single Column) */}
-          <div
-            className="relative hidden lg:block" // Hidden on smaller screens, shown on large for desktop
-            onMouseEnter={() => setIsClothingHovered(true)}
-            onMouseLeave={() => setIsClothingHovered(false)}
-          >
-            <div
-              className={`hover:text-gray-400 cursor-pointer uppercase font-medium ${isScrolled ? 'text-black dark:text-white' : 'text-black dark:text-white'}`}
-              onClick={() => setIsClothingHovered((prev) => !prev)}
-              onMouseEnter={() => setIsClothingHovered(true)}
-            >
-              Clothing
-            </div>
-
-            {isClothingHovered && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-64 bg-white dark:bg-gray-800 shadow-lg p-4 rounded-b-lg z-50">
-                {/* Single Column for Clothing links */}
-                <h3 className="text-gray-800 dark:text-gray-200 font-bold mb-2">CLOTHING</h3>
-                <ul className="space-y-1">
-                  {allCollections.map((item, index) => {
-                   const displayTitle =
-                   item.title === "Chaon: The Summer Edit 2025" ? "New In" : item.title;
-
-                   return (
-                    <li key={index}>
-                      <Link
-                        to={
-                          allCollections.length === 0
-                            ? "#"
-                            : `/collection?id=${encodeURIComponent(item.id)}`
-                          }
-                        className="block px-2 py-1 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-                      >
-                        {displayTitle}
-                      </Link>
-                    </li>
-                  );
-                })}
-                </ul>
-              </div>
-            )}
-          </div>
+          
     
           {/* Right-side Icons */}
           <div className="flex items-center md:space-x-5 space-x-2">

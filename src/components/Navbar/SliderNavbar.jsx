@@ -27,7 +27,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
   }, [initialCollections]);
 
   const location = useLocation();
-  React.useEffect(() => {
+  {/*React.useEffect(() => {
     if (location.pathname === "/") {
       setActiveLink("home");
     } else if (location.pathname === "/about") {
@@ -35,9 +35,38 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
     } else if (location.pathname === "/products") {
       setActiveLink("products");
     }
-  }, [location.pathname]);
+  }, [location.pathname]);*/}
+  
+  React.useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const collectionId = params.get("id");
+
+    if (location.pathname === "/") {
+      setActiveLink("home");
+    } else if (location.pathname === "/about") {
+      setActiveLink("about");
+    } else if (location.pathname === "/products") {
+      setActiveLink("products");
+    } else if (location.pathname === "/collection" && collectionId) {
+      const bestsellersCollection = collections.find(item => item.title === "Bestsellers");
+      const newArrivalsCollection = collections.find(item => item.title === "Chaon: The Summer Edit 2025");
+
+      if (bestsellersCollection && collectionId === encodeURIComponent(bestsellersCollection.id)) {
+        setActiveLink("most-wanted");
+      } else if (newArrivalsCollection && collectionId === encodeURIComponent(newArrivalsCollection.id)) {
+        setActiveLink("new-arrivals");
+      } else {
+        // Handle other collections in the dropdown, if needed.
+        setActiveLink(""); 
+      }
+    } else {
+      setActiveLink(""); 
+    }
+  }, [location.pathname, location.search, collections]); // Add 'collections' to dependencies
+  
   const handleClick = (Link) => {
     setActiveLink(Link);
+    toggleMenu();
   };
   return (
     <div>
@@ -120,6 +149,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                             <li key={index}>
                               <Link
                                 to={`/collection?id=${encodeURIComponent(item.id)}`}
+                                onClick={() => handleClick(item.title)}
                                 className="block text-[16px] text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                               >
                                 {item.title}
@@ -161,12 +191,12 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                       <li key={index}>
                         <Link
                           to={`/collection?id=${encodeURIComponent(item.id)}`}
-                          onClick={() => handleClick("most-wanted")}
+                          onClick={() => handleClick("new-arrivals")}
                           className="text-lg md:text-xl text-[#5D5D5D] italic"
                         >
                           <span
                             className={`${
-                              activeLink === "most-wanted"
+                              activeLink === "new-arrivals"
                                 ? "text-green-800"
                                 : "text-black dark:!text-[#D8E3B1]"
                             } text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
