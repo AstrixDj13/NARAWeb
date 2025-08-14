@@ -114,19 +114,19 @@ const BlogCarousel = () => {
     return content.split('\n').map((paragraph, index) => {
       if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
         return (
-          <h4 key={index} className="font-semibold text-gray-900 dark:text-white mt-4 mb-2">
+          <h4 key={index} className="font-semibold text-gray-900 dark:text-gray-900 mt-4 mb-2">
             {paragraph.slice(2, -2)}
           </h4>
         );
       } else if (paragraph.startsWith('•')) {
         return (
-          <li key={index} className="ml-4 text-gray-700 dark:text-gray-300 mb-1">
+          <li key={index} className="ml-4 text-gray-700 dark:text-gray-700 mb-1">
             {paragraph.slice(2)}
           </li>
         );
       } else if (paragraph.trim()) {
         return (
-          <p key={index} className="text-gray-700 dark:text-gray-300 mb-3">
+          <p key={index} className="text-gray-700 dark:text-gray-700 mb-3">
             {paragraph}
           </p>
         );
@@ -167,20 +167,20 @@ const BlogCarousel = () => {
 
                     {/* Content */}
                     <div className="space-y-4">
-                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-900 leading-tight">
                         {blog.title}
                       </h3>
                       
-                      <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                      <p className="text-sm text-gray-600 dark:text-gray-600 italic">
                         {blog.metaDescription}
                       </p>
 
-                      <div className="text-gray-700 dark:text-gray-300">
+                      <div className="text-gray-700 dark:text-gray-700">
                         {expandedBlog === index ? (
                           <div className="space-y-2">
                             {formatContent(blog.content)}
-                            <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg mt-6">
-                              <p className="text-green-800 dark:text-green-300 font-medium">
+                            <div className="bg-green-50 dark:bg-green-50 p-4 rounded-lg mt-6">
+                              <p className="text-green-800 dark:text-green-800 font-medium">
                                 {blog.cta}
                               </p>
                             </div>
@@ -194,7 +194,7 @@ const BlogCarousel = () => {
                       <div className="flex flex-wrap gap-3 pt-4">
                         <button
                           onClick={() => toggleExpanded(index)}
-                          className="px-4 py-2 bg-green-800 dark:bg-[#D8E3B1] text-white dark:text-black rounded-lg hover:bg-green-700 dark:hover:bg-[#C5D49A] transition-colors font-medium"
+                          className="px-4 py-2 bg-green-800 dark:bg-green-800 text-white dark:text-white rounded-lg hover:bg-green-700 dark:hover:bg-[#C5D49A] transition-colors font-medium"
                         >
                           {expandedBlog === index ? 'Show Less' : 'Read Full Article'}
                         </button>
@@ -215,7 +215,7 @@ const BlogCarousel = () => {
           {/* Navigation Arrows */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white dark:bg-[#1F1F1F] p-3 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors z-10"
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white dark:bg-[#1F1F1F] p-1 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors z-10"
             onMouseEnter={() => setAutoPlay(false)}
             onMouseLeave={() => setAutoPlay(true)}
           >
@@ -226,7 +226,7 @@ const BlogCarousel = () => {
           
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white dark:bg-[#1F1F1F] p-3 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors z-10"
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white dark:bg-[#1F1F1F] p-1 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors z-10"
             onMouseEnter={() => setAutoPlay(false)}
             onMouseLeave={() => setAutoPlay(true)}
           >
