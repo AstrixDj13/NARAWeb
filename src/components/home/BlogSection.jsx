@@ -16,7 +16,8 @@ At NARA, we're here to change that. We've taken the rich textures of Ikat, Ajrak
     images: [
       "/blog1/blog1_1.jpeg",
       "/blog1/blog1_2.jpeg",
-      "/blog1/blog1_3.jpeg"
+      "/blog1/blog1_3.jpeg",
+      "/blog1/blog1_4.JPG"
     ],
     cta: "Heritage belongs in your everyday life. Shop the collection here.",
     link: "/blog/heritage-prints"
@@ -49,7 +50,8 @@ The new aesthetic is all about contrast, think temple earrings with sneakers, or
     images: [
       "/blog2/blog2_1.jpeg",
       "/blog2/blog2_2.jpeg",
-      "/blog2/blog2_3.jpeg"
+      "/blog2/blog2_3.jpeg",
+      "/blog2/blog2_4.JPG"
     ],
     cta: "Our take on these trends is coming very soon. Get ready to shop for pieces that look traditional, feel comfortable, and photograph like a dream.",
     link: "/blog/festive-trends-2025"
