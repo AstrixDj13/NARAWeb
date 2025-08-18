@@ -89,8 +89,8 @@ const Home = () => {
 
       {/* Announcement panel with floating text */}
       <div className="bg-black text-white font-bold">
-        <div className="announcement-container py-1">
-          <div className="marquee">40% OFF on Founder's Picks!</div>
+        <div className="announcement-container py-0.3">
+          <div className="marquee">Free Mystery Gifts on orders above Rs. 999!</div>
         </div>
       </div>
 
