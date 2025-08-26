@@ -161,6 +161,30 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     </li>
 
                   {collections
+                  ?.filter(item => item.title === "Rs. 300 OFF on orders above Rs. 1499!") // Only pick Bestsellers
+                  .map((item, index) => {
+                    return (
+                      <li key={index}>
+                        <Link
+                          to={`/collection?id=${encodeURIComponent(item.id)}`}
+                          onClick={() => handleClick("most-wanted")}
+                          className="text-lg md:text-xl text-[#5D5D5D] italic"
+                        >
+                          <span
+                            className={`${
+                              activeLink === "most-wanted"
+                                ? "text-green-800"
+                                : "text-black dark:!text-[#D8E3B1]"
+                            } text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
+                          >
+                            ON Going OFFERS
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+
+                  {collections
                   ?.filter(item => item.title === "Bestsellers") // Only pick Bestsellers
                   .map((item, index) => {
                     return (
@@ -242,7 +266,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                 </li>
               </ul>
             </div>
-            <div className="md:fixed bottom-0 left-0 w-full text-black pb-6 pt-10 md:p-10 md:pl-12">
+            <div className="md:relative bottom-0 left-0 w-full text-black pb-6 pt-10 md:p-10 md:pl-12">
               <div className="flex md:space-x-3 space-x-1">
                 {/* <a
                   href="https://facebook.com"

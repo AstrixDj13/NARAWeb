@@ -291,3 +291,55 @@ export const fetchFourProducts = async () => {
     throw error;
   }
 };
+
+// apis/Products.js
+
+export async function fetchRelatedProducts(productId) {
+  const query = `
+    query RelatedProducts($id: ID!) {
+      product(id: $id) {
+        collections(first: 1) {
+          nodes {
+            products(first: 4) {
+              nodes {
+                id
+                title
+                variants(first: 1) {
+                  nodes {
+                    id
+                    image {
+                      src
+                    }
+                    price {
+                      amount
+                      currencyCode
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await api.post("/", {
+      query,
+      variables: { id: productId },
+    });
+
+    const collections = response.data.data.product.collections.nodes;
+    if (collections.length === 0) return [];
+
+    const products = collections[0].products.nodes.filter(
+      (p) => p.id !== productId // exclude the current product
+    );
+
+    return products;
+  } catch (error) {
+    console.error("Error fetching related products:", error);
+    throw error;
+  }
+}
