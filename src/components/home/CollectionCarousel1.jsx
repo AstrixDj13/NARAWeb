@@ -6,39 +6,6 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/opacity.css";
 import { getCollections } from "../../apis/Collections";
 
-const collections = [
-  {
-    name: "Tops",
-    image: "https://cdn.shopify.com/s/files/1/0722/8951/7782/files/TheJuneCo-ordset-1stpic-min.webp?v=1728406041",
-    link: "/collection/tops",
-  },
-  {
-    name: "Staples",
-    image: "https://cdn.shopify.com/s/files/1/0722/8951/7782/files/TheJuneCo-ordset-1stpic-min.webp?v=1728406041",
-    link: "/collection/staples",
-  },
-  {
-    name: "Dresses",
-    image: "https://cdn.shopify.com/s/files/1/0722/8951/7782/files/TheJuneCo-ordset-1stpic-min.webp?v=1728406041",
-    link: "/collection/dresses",
-  },
-  { // Added more items for demonstration of scrolling
-    name: "Co-ords",
-    image: "https://cdn.shopify.com/s/files/1/0722/8951/7782/files/TheJuneCo-ordset-1stpic-min.webp?v=1728406041",
-    link: "/collection/coords",
-  },
-  {
-    name: "Bottoms",
-    image: "https://cdn.shopify.com/s/files/1/0722/8951/7782/files/TheJuneCo-ordset-1stpic-min.webp?v=1728406041",
-    link: "/collection/bottoms",
-  },
-  {
-    name: "Accessories",
-    image: "https://cdn.shopify.com/s/files/1/0722/8951/7782/files/TheJuneCo-ordset-1stpic-min.webp?v=1728406041",
-    link: "/collection/accessories",
-  },
-];
-
 const CollectionCarousel = () => {
 
     const [allCollections, setAllCollections] = useState([]);
@@ -100,7 +67,7 @@ const CollectionCarousel = () => {
             />
           </div>
           <div className="mt-2 text-center">
-            <span className="text-black dark:text-white font-bold text-base tracking-wider uppercase">
+            <span className="text-black dark:!text-white font-bold text-base tracking-wider uppercase">
               {col.title}
             </span>
           </div>

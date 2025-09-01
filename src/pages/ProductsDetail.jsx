@@ -36,11 +36,15 @@ export default function ProductsDetailPage() {
   const params = useParams();
   const imageRefs = useRef([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [collectionId, setCollectionId] = useState(null);
+  const [concernedCollectionId, setConcernedCollectionId] = useState(null);
 
   const fetchProductInfo = async (productId) => {
     try {
       const fetchedProduct = await getProductById(productId);
       setProduct(fetchedProduct);
+      setConcernedCollectionId(fetchedProduct.concernedCollectionId); // Set the concerned collection ID
+      setCollectionId(fetchedProduct.collectionId); // Assuming collectionId is part of the product data
       updateSizes(fetchedProduct);
       updateDefaultColorAndSize(fetchedProduct);
       updateColors(fetchedProduct);
@@ -243,7 +247,7 @@ export default function ProductsDetailPage() {
       )}
 
       {/* Related Products */}
-      <RelatedProducts />
+      <RelatedProducts collectionId={concernedCollectionId} productId={product.id} />
     </>
   );
 }

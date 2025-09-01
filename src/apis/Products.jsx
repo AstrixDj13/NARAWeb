@@ -63,6 +63,14 @@ query getProductById($id: ID!) {
         currencyCode
       }
     }
+    collections(first: 10) {  # Fetch all the collection ID
+        edges {
+          node {
+            id
+            title
+        }
+      }
+    }
   }
 }
 
@@ -132,6 +140,20 @@ query getProductById($id: ID!) {
     // Extract and attach the colors array:
     const colorsArray = productData.options.find(el=>el.name=="Color")?.optionValues.map(el=> ({name:el.name, value: el.swatch.color, image: el.swatch.image?.previewImage?.url}));
     productData.colorsArray = colorsArray;
+    // Extract the collection ID
+    //const collectionId = productData.collections.edges[0]?.node.id;
+    //productData.collectionId = collectionId;
+
+    // Extract all collections
+    const collections = productData.collections.edges.map((edge) => edge.node);
+
+    // Identify the concerned collection (e.g., Tops, Bottoms, Co-ords)
+    const concernedCollection = collections.find((collection) =>
+      ["Tops", "Bottoms", "Co-ord sets"].includes(collection.title)
+    );
+
+    // Set the concerned collection ID
+    productData.concernedCollectionId = concernedCollection?.id;
 
     console.log("logging the complete product data, ", productData);
     return productData;
@@ -292,28 +314,24 @@ export const fetchFourProducts = async () => {
   }
 };
 
-// apis/Products.js
-
-export async function fetchRelatedProducts(productId) {
-  const query = `
-    query RelatedProducts($id: ID!) {
-      product(id: $id) {
-        collections(first: 1) {
-          nodes {
-            products(first: 4) {
-              nodes {
-                id
-                title
-                variants(first: 1) {
-                  nodes {
-                    id
-                    image {
-                      src
-                    }
-                    price {
-                      amount
-                      currencyCode
-                    }
+export const fetchFourProductsfromCol = async (collectionId, productId) => {
+  const GET_FOUR_PRODUCTS_QUERY = `
+    query getProductsByCollection($collectionId: ID!) {
+      collection(id: $collectionId) {
+        products(first: 10) { # Fetch more products to ensure we can exclude the selected one
+          edges {
+            node {
+              id
+              title
+              variants(first: 1) {
+                nodes {
+                  id
+                  image {
+                    src
+                  }
+                  price {
+                    amount
+                    currencyCode
                   }
                 }
               }
@@ -324,22 +342,26 @@ export async function fetchRelatedProducts(productId) {
     }
   `;
 
+  const variables = { collectionId};
+
   try {
     const response = await api.post("/", {
-      query,
-      variables: { id: productId },
+      query: GET_FOUR_PRODUCTS_QUERY,
+      variables,
     });
 
-    const collections = response.data.data.product.collections.nodes;
-    if (collections.length === 0) return [];
+    console.log("GraphQL Response:", response.data); // Log the full API response
 
-    const products = collections[0].products.nodes.filter(
-      (p) => p.id !== productId // exclude the current product
-    );
+    // Filter out the selected product and limit to 4 products
+    const products = response.data.data.collection.products.edges
+      .map((edge) => edge.node)
+      .filter((product) => product.id !== productId) // Exclude the selected product
+      .slice(0, 4); // Limit to 4 products
+    console.log("Filtered Products:", products); // Log the filtered products
 
     return products;
   } catch (error) {
-    console.error("Error fetching related products:", error);
+    console.error("Error fetching products:", error);
     throw error;
   }
-}
+};

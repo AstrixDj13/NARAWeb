@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import ProductItem from "../products/product-item";
 import PageLoader from "../utils/PageLoader";
-import { fetchFourProducts } from "../../apis/Products";
+import { fetchFourProductsfromCol } from "../../apis/Products";
 
-const RelatedProducts = () => {
+const RelatedProducts = ({ collectionId, productId }) => {
   const colors = ["black", "brown", "beige", "gray"];
   const [activeProductColor, setActiveProductColor] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -11,10 +11,13 @@ const RelatedProducts = () => {
   const [copiedProducts, setCopiedProducts] = useState([]);
 
   useEffect(() => {
+    console.log("collectionId:", collectionId, "productId:", productId); // Log the props
+    if (!collectionId || !productId) return; // Ensure collectionId is provided
+
     const loadProducts = async () => {
       try {
         setIsLoading(true);
-        const productsData = await fetchFourProducts();
+        const productsData = await fetchFourProductsfromCol(collectionId, productId);
         setProducts(productsData);
         setCopiedProducts(productsData); // Initialize copied products
       } catch (error) {
@@ -25,7 +28,7 @@ const RelatedProducts = () => {
     };
 
     loadProducts();
-  }, []);
+  }, [collectionId, productId]);
 
 
 
