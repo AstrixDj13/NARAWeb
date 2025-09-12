@@ -149,7 +149,7 @@ query getProductById($id: ID!) {
 
     // Identify the concerned collection (e.g., Tops, Bottoms, Co-ords)
     const concernedCollection = collections.find((collection) =>
-      ["Tops", "Bottoms", "Co-ord sets"].includes(collection.title)
+      ["Tops", "Bottoms", "Co-ord sets", "Saaz: The Festive Collection"].includes(collection.title)
     );
 
     // Set the concerned collection ID
