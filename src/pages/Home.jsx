@@ -90,7 +90,7 @@ const Home = () => {
       {/* Announcement panel with floating text */}
       <div className="bg-black text-white font-bold">
         <div className="announcement-container py-0.3">
-          <div className="marquee">Rs. 300 OFF on orders above Rs. 1499!</div>
+          <div className="marquee">Saaz:The Festive Collection is LIVE NOW!</div>
         </div>
       </div>
 
