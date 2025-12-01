@@ -78,7 +78,7 @@ function App() {
     <div className="cursor-custom dark:!bg-black font-antikor">
       <Toaster position="top-center" richColors />
       <Outlet />
-      {/*<Chatbot />*/} {/* ✅ Chatbot rendered globally */}
+      <Chatbot /> {/* ✅ Chatbot with Shopify MCP integration */}
     </div>
   );
 }
