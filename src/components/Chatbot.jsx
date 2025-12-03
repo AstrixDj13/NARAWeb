@@ -154,28 +154,6 @@ const Chatbot = () => {
         setCartId(result.result.cart_id);
       }
 
-      // Fix checkout URL domain if it doesn't match the configured shopifyDomain
-      if ((toolName === 'update_cart' || toolName === 'get_cart') && result.result?.content) {
-        result.result.content = result.result.content.map(item => {
-          if (item.type === 'text') {
-            try {
-              const data = JSON.parse(item.text);
-              if (data.cart && data.cart.checkout_url) {
-                const url = new URL(data.cart.checkout_url);
-                if (url.hostname !== shopifyDomain) {
-                  url.hostname = shopifyDomain;
-                  data.cart.checkout_url = url.toString();
-                  return { ...item, text: JSON.stringify(data) };
-                }
-              }
-            } catch (e) {
-              // Ignore parsing errors
-            }
-          }
-          return item;
-        });
-      }
-
       return result.result;
     } catch (error) {
       console.error('❌ MCP tool execution error:', error);

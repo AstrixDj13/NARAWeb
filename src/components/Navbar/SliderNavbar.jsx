@@ -36,7 +36,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
       setActiveLink("products");
     }
   }, [location.pathname]);*/}
-  
+
   React.useEffect(() => {
     const params = new URLSearchParams(location.search);
     const collectionId = params.get("id");
@@ -57,13 +57,13 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
         setActiveLink("new-arrivals");
       } else {
         // Handle other collections in the dropdown, if needed.
-        setActiveLink(""); 
+        setActiveLink("");
       }
     } else {
-      setActiveLink(""); 
+      setActiveLink("");
     }
   }, [location.pathname, location.search, collections]); // Add 'collections' to dependencies
-  
+
   const handleClick = (Link) => {
     setActiveLink(Link);
     toggleMenu();
@@ -71,9 +71,8 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
   return (
     <div>
       <div
-        className={`fixed top-0 overflow-scroll left-0 h-full w-full transition-transform duration-300 z-50 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 overflow-scroll left-0 h-full w-full transition-transform duration-300 z-50 ${isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <div className="flex h-full flex-col lg:flex-row">
           <div className="w-full lg:w-1/2 bg-[#f5f5e1] dark:!bg-black pt-8 px-8 md:p-12">
@@ -98,11 +97,10 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                   >
                     {/*01{" "}*/}
                     <span
-                      className={`${
-                        activeLink === "home"
-                          ? "text-green-800"
-                          : "text-black dark:!text-[#D8E3B1]"
-                      }  text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest `}
+                      className={`${activeLink === "home"
+                        ? "text-green-800"
+                        : "text-black dark:!text-[#D8E3B1]"
+                        }  text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest `}
                     >
                       HOME
                     </span>
@@ -110,57 +108,56 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                 </li>
 
                 <li>
-                    <Link
-                      to={"/products"}
-                      onClick={() => handleClick("products")}
-                      className="text-lg md:text-xl  text-[#5D5D5D] italic"
-                    >
-                      {/*02*/}
-                      <span
-                        className={`${
-                          activeLink === "products"
-                            ? "text-green-800"
-                            : "text-black dark:!text-[#D8E3B1]"
+                  <Link
+                    to={"/products"}
+                    onClick={() => handleClick("products")}
+                    className="text-lg md:text-xl  text-[#5D5D5D] italic"
+                  >
+                    {/*02*/}
+                    <span
+                      className={`${activeLink === "products"
+                        ? "text-green-800"
+                        : "text-black dark:!text-[#D8E3B1]"
                         } text-xl md:text-2xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
-                      >
-                        ALL PRODUCTS
-                      </span>
-                    </Link>
-                  </li>
+                    >
+                      ALL PRODUCTS
+                    </span>
+                  </Link>
+                </li>
 
-                  <li>
-                      {/*<div className="text-lg md:text-xl text-[#5D5D5D] italic">02</div>*/}
-                      <div
-                        className="pl-4 md:pl-8 cursor-pointer"
-                        onClick={() => setShowDropdown(!showDropdown)}
-                      >
-                        <h3 className="text-xl md:text-2xl font-semibold text-black dark:!text-[#D8E3B1] not-italic tracking-widest">
-                          CATEGORIES {showDropdown ? "▲" : "▼"}
-                        </h3>
-                      </div>
-                      {showDropdown && (
-                        <ul className="mt-2 space-y-2 pl-4 md:pl-8">
-                          {/* Static "All" item */}
-                          {collections
-                          ?.filter(item =>
-                            ["Tops", "Bottoms", "Co-ord sets"].includes(item.title)
-                          )
-                          .map((item, index) => (
-                            <li key={index}>
-                              <Link
-                                to={`/collection?id=${encodeURIComponent(item.id)}`}
-                                onClick={() => handleClick(item.title)}
-                                className="block text-[16px] text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-                              >
-                                {item.title}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </li>
+                <li>
+                  {/*<div className="text-lg md:text-xl text-[#5D5D5D] italic">02</div>*/}
+                  <div
+                    className="pl-4 md:pl-8 cursor-pointer"
+                    onClick={() => setShowDropdown(!showDropdown)}
+                  >
+                    <h3 className="text-xl md:text-2xl font-semibold text-black dark:!text-[#D8E3B1] not-italic tracking-widest">
+                      CATEGORIES {showDropdown ? "▲" : "▼"}
+                    </h3>
+                  </div>
+                  {showDropdown && (
+                    <ul className="mt-2 space-y-2 pl-4 md:pl-8">
+                      {/* Static "All" item */}
+                      {collections
+                        ?.filter(item =>
+                          ["Tops", "Bottoms", "Co-ord sets"].includes(item.title)
+                        )
+                        .map((item, index) => (
+                          <li key={index}>
+                            <Link
+                              to={`/collection?id=${encodeURIComponent(item.id)}`}
+                              onClick={() => handleClick(item.title)}
+                              className="block text-[16px] text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                            >
+                              {item.title}
+                            </Link>
+                          </li>
+                        ))}
+                    </ul>
+                  )}
+                </li>
 
-                  {collections
+                {collections
                   ?.filter(item => item.title === "Rs. 300 OFF on orders above Rs. 1499!") // Only pick Bestsellers
                   .map((item, index) => {
                     return (
@@ -171,11 +168,10 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                           className="text-lg md:text-xl text-[#5D5D5D] italic"
                         >
                           <span
-                            className={`${
-                              activeLink === "most-wanted"
-                                ? "text-green-800"
-                                : "text-black dark:!text-[#D8E3B1]"
-                            } text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
+                            className={`${activeLink === "most-wanted"
+                              ? "text-green-800"
+                              : "text-black dark:!text-[#D8E3B1]"
+                              } text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
                           >
                             ON Going OFFERS
                           </span>
@@ -184,7 +180,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     );
                   })}
 
-                  {collections
+                {collections
                   ?.filter(item => item.title === "Bestsellers") // Only pick Bestsellers
                   .map((item, index) => {
                     return (
@@ -195,11 +191,10 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                           className="text-lg md:text-xl text-[#5D5D5D] italic"
                         >
                           <span
-                            className={`${
-                              activeLink === "most-wanted"
-                                ? "text-green-800"
-                                : "text-black dark:!text-[#D8E3B1]"
-                            } text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
+                            className={`${activeLink === "most-wanted"
+                              ? "text-green-800"
+                              : "text-black dark:!text-[#D8E3B1]"
+                              } text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
                           >
                             MOST WANTED
                           </span>
@@ -208,7 +203,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     );
                   })}
 
-                  {collections
+                {collections
                   ?.filter(item => item.title === "Chaon: The Summer Edit 2025") // Only pick Bestsellers
                   .map((item, index) => {
                     return (
@@ -219,11 +214,10 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                           className="text-lg md:text-xl text-[#5D5D5D] italic"
                         >
                           <span
-                            className={`${
-                              activeLink === "new-arrivals"
-                                ? "text-green-800"
-                                : "text-black dark:!text-[#D8E3B1]"
-                            } text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
+                            className={`${activeLink === "new-arrivals"
+                              ? "text-green-800"
+                              : "text-black dark:!text-[#D8E3B1]"
+                              } text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest`}
                           >
                             NEW ARRIVALS
                           </span>
@@ -240,17 +234,16 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                   >
                     {/*03*/}
                     <span
-                      className={`text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest ${
-                        activeLink === "about"
-                          ? "text-green-800"
-                          : "text-black dark:!text-[#D8E3B1]"
-                      }`}
+                      className={`text-xl md:text-2xl font-semibold not-italic pl-4 md:pl-8 md:tracking-widest ${activeLink === "about"
+                        ? "text-green-800"
+                        : "text-black dark:!text-[#D8E3B1]"
+                        }`}
                     >
                       ABOUT US
                     </span>
                   </Link>
                 </li>
-                
+
                 <li className="flex">
                   <div className="text-lg md:text-xl  text-[#5D5D5D] italic">
                     {/*04*/}
@@ -284,6 +277,18 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     title="image"
                     src="/home/navbar/insta.svg"
                     alt="instagram"
+                  />
+                </a>
+                <a
+                  href="https://wa.me/919930835594"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    title="WhatsApp"
+                    src="/home/navbar/WhatsApp.svg.webp"
+                    alt="whatsapp"
+                    className="w-6 h-6"
                   />
                 </a>
                 {/*<div className="flex items-center space-x-1  md:space-x-2  bg-white px-2 rounded-xl ">
