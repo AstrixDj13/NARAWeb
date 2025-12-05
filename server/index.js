@@ -11,6 +11,52 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Newsletter endpoint
+app.post('/api/newsletter', async (req, res) => {
+  try {
+    const { email, phone } = req.body;
+
+    if (!email && !phone) {
+      return res.status(400).json({ error: 'Email or phone number is required' });
+    }
+
+    const dataFile = path.join(__dirname, 'newsletter_data.json');
+    let currentData = [];
+
+    if (fs.existsSync(dataFile)) {
+      const fileContent = fs.readFileSync(dataFile, 'utf8');
+      try {
+        currentData = JSON.parse(fileContent);
+      } catch (e) {
+        console.error('Error parsing newsletter data:', e);
+        currentData = [];
+      }
+    }
+
+    const newEntry = {
+      email,
+      phone,
+      timestamp: new Date().toISOString()
+    };
+
+    currentData.push(newEntry);
+
+    fs.writeFileSync(dataFile, JSON.stringify(currentData, null, 2));
+
+    res.json({ success: true, message: 'Successfully subscribed!' });
+  } catch (error) {
+    console.error('Error saving newsletter data:', error);
+    res.status(500).json({ error: 'Failed to save subscription' });
+  }
+});
+
 // Shopify MCP API endpoints
 // Note: These endpoints will proxy requests to Shopify MCP tools
 // In production, you would configure MCP server connection here

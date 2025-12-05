@@ -2,25 +2,58 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { getCollections } from "../../apis/Collections";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // For social media icons
+import { toast } from "sonner";
 
 const FooterSection = () => {
 
   const [allCollections, setAllCollections] = useState([]);
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:3001/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data.message || "Successfully subscribed!");
+        setEmail("");
+      } else {
+        toast.error(data.error || "Failed to subscribe");
+      }
+    } catch (error) {
+      console.error("Newsletter error:", error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchCollections = async () => {
-      try {
-        const allCollections = await getCollections();
-        console.log(allCollections);
-        setAllCollections(allCollections.reverse());
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    try {
+      const allCollections = await getCollections();
+      console.log(allCollections);
+      setAllCollections(allCollections.reverse());
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     fetchCollections();
-  }, []); 
-  
+  }, []);
+
   // The scrollToTop function is still useful, keep it.
   const scrollToTop = () => {
     window.scrollTo({
@@ -54,13 +87,13 @@ const FooterSection = () => {
           <h3 className="font-bold mb-4 uppercase">Shop</h3>
           <ul className="space-y-2">
             <li>
-              <Link 
+              <Link
                 to={
                   allCollections.length === 0
                     ? "#"
                     : `/collection?id=${encodeURIComponent(allCollections[0].id)}`
-                  }
-                 className="hover:underline"
+                }
+                className="hover:underline"
               >
                 New In
               </Link>
@@ -117,16 +150,23 @@ const FooterSection = () => {
         <div>
           <h3 className="font-bold mb-4 uppercase">Stay in the loop</h3>
           <p className="mb-4 text-xs">Sign up to get exclusive access to launches, secret discounts and more</p>
-          <div className="flex flex-col gap-2"> {/* Changed to flex-col for stacking on small screens */}
+          <form onSubmit={handleSubscribe} className="flex flex-col gap-2"> {/* Changed to flex-col for stacking on small screens */}
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="YOUR EMAIL ADDRESS"
               className="p-3 bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+              required
             />
-            <button className="bg-[#1E7B74] text-white font-bold py-3 px-6 hover:bg-[#155A55] transition-colors duration-200 uppercase">
-              Sign Up
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-[#1E7B74] text-white font-bold py-3 px-6 hover:bg-[#155A55] transition-colors duration-200 uppercase disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Signing Up..." : "Sign Up"}
             </button>
-          </div>
+          </form>
         </div>
 
       </div> {/* End main footer content grid */}

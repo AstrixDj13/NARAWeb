@@ -11,6 +11,7 @@ import TestimonialsSection from "../components/home/Testimonials";
 import BlogCarousel from "../components/home/BlogSection";
 import SubscribeSection from "../components/home/SubscribeSection";
 import NewestArrivals from "../components/home/NewArrivals";
+import NewsletterPopup from "../components/home/NewsletterPopup";
 import { motion } from "framer-motion";
 
 // Inline CSS for marquee animation
@@ -81,6 +82,8 @@ const DiscountPopup = () => {
   );
 };
 
+
+
 const Home = () => {
   return (
     <div className="dark:bg-black">
@@ -96,6 +99,7 @@ const Home = () => {
 
       {/* Discount popup */}
       {/* <DiscountPopup /> */}
+      <NewsletterPopup />
 
       <Navbar />
       <TopSection />
