@@ -1,42 +1,65 @@
-import React from "react";
-import VideoLazy from "../loaders/VideoLazy";
-import { LazyLoadImage } from "react-lazy-load-image-component";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import ProductCard from "../common/ProductCard";
+import { fetchProducts } from "../../apis/getAllProducts";
+
 const Spotlight = () => {
-  const products = [
-    {
-      imgSrc:
-        "https://cdn.shopify.com/s/files/1/0722/8951/7782/files/LaidbackLuxeCo-ordSet-1stpic-min.webp?v=1728406565",
-      description: "Laidback Luxe Co-ord Set",
-      price: "INR 2,800.00",
-      label: "Best seller",
-      link: "/product/gid%3A%2F%2Fshopify%2FProduct%2F8756899709142?camefrompage=collection&title=Co-ord%20Sets&id=gid%3A%2F%2Fshopify%2FCollection%2F446032871638",
-    },
-    {
-      imgSrc:
-        "https://cdn.shopify.com/s/files/1/0722/8951/7782/files/OutoftheOfficeCo-ordset-4thpic-min.webp?v=1728406394",
-      description: "The Out of the Office Co-ord set",
-      price: "INR 2500.00",
-      label: "Best seller",
-      link: "/product/gid%3A%2F%2Fshopify%2FProduct%2F8756898365654?camefrompage=collection&title=Co-ord%20Sets&id=gid%3A%2F%2Fshopify%2FCollection%2F446032871638",
-    },
-    {
-      imgSrc:
-        "https://cdn.shopify.com/s/files/1/0722/8951/7782/files/TheRedontheRunCo-ordset-1stpic-min.webp?v=1728406266",
-      description: "The Red on the Run Co-ord set",
-      price: "INR 2499.00",
-      label: "Best Seller",
-      link: "/product/gid%3A%2F%2Fshopify%2FProduct%2F8756897644758?camefrompage=collection&title=Co-ord%20Sets&id=gid%3A%2F%2Fshopify%2FCollection%2F446032871638",
-    },
-    {
-      imgSrc:
-        "https://cdn.shopify.com/s/files/1/0722/8951/7782/files/TheJuneCo-ordset-1stpic-min.webp?v=1728406041",
-      description: "The June Co-ord set",
-      price: "INR 2500.00",
-      label: "Best Seller",
-      link: "/product/gid%3A%2F%2Fshopify%2FProduct%2F8756895383766?camefrompage=collection&title=Co-ord%20Sets&id=gid%3A%2F%2Fshopify%2FCollection%2F446032871638",
-    },
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // IDs of the products to show in Spotlight
+  const spotlightIds = [
+    "gid://shopify/Product/8756899709142", // Laidback Luxe Co-ord Set
+    "gid://shopify/Product/8756898365654", // The Out of the Office Co-ord set
+    "gid://shopify/Product/8756897644758", // The Red on the Run Co-ord set
+    "gid://shopify/Product/8756895383766", // The June Co-ord set
   ];
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setIsLoading(true);
+        const allProducts = await fetchProducts();
+
+        // Filter products that match the spotlight IDs
+        const spotlightProducts = allProducts.filter(product =>
+          spotlightIds.includes(product.id)
+        );
+
+        // If we found the products, use them. 
+        // Note: The order might depend on the API response, so we might want to sort them to match the original order if important.
+        // For now, we'll just use the filtered list.
+
+        // Map to ensure they have the 'label' property which was hardcoded before
+        const mappedProducts = spotlightProducts.map(product => {
+          // Add custom labels based on ID if needed, or just use a generic one
+          // The original hardcoded data had "Best seller" for all.
+          return {
+            ...product,
+            label: "Best seller"
+          };
+        });
+
+        setProducts(mappedProducts);
+      } catch (error) {
+        console.error("Failed to load spotlight products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-20 bg-white dark:!bg-black">
+        <p className="text-gray-500 dark:text-gray-400">
+          Loading spotlight...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white pt-20 dark:!bg-black">
@@ -56,58 +79,15 @@ const Spotlight = () => {
         </div>
         <div className="mt-6 md:mt-12 overflow-x-scroll testimonial-container">
           <div className="flex lg:grid lg:grid-cols-4 md:grid-cols-3 gap-3 md:gap-2 pl-4">
-            {products.map((product, index) => (
-              <div
-                key={index}
-                className="flex-shrink-0 w-[300px] sm:w-1/3 lg:w-full"
-              >
-                <Link to={product.link}>
-                  <div className="w-full md:w-full bg-gray-200 !max-h-3/4 min-h-96 aspect-h-1 overflow-hidden relative h-3/4 ">
-                    {product.imgSrc.endsWith(".webm") ? (
-                      <div className="bloc w-full h-full object-center object-cover">
-                        <VideoLazy
-                          src={product.imgSrc}
-                          alt={product.description}
-                        />
-                      </div>
-                    ) : (
-                      // <img title="image"
-                      //   src={product.imgSrc}
-                      //   alt={product.description}
-                      //   className="bloc w-full h-full object-center object-cover"
-                      // />
-                      <div className="bg-gray-100 bloc w-full h-full object-center object-cover">
-                        <LazyLoadImage
-                          src={product.imgSrc}
-                          width={"100%"}
-                          height={"100%"}
-                          // PlaceholderSrc={PlaceholderImage}
-                          alt={product.description}
-                        />
-                      </div>
-                    )}
-                    {product.label && (
-                      <div className="absolute bottom-0 left-0 w-full text-left bg-opacity-70 pb-3 sm:pl-2 pl-4 flex items-center">
-                        {/* <span className="text-xs font-bold font-mono text-black  bg-white py-1 sm:px-1 px-2 sm:mr-1 mr-2">
-                        {product.bought}
-                      </span> */}
-                        <span className="text-xs font-bold font-mono text-black  bg-white py-1 sm:px-1 px-2">
-                          {product.label}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mt-4 text-center">
-                    <h3 className="text-lg text-black dark:!text-white font-medium font-mono">
-                      {product.description}
-                    </h3>
-                    <p className="mt-1 text-[12px] font-mono md:text-sm font-light text-black dark:!text-white">
-                      {product.price}
-                    </p>
-                  </div>
-                </Link>
+            {products.length > 0 ? (
+              products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            ) : (
+              <div className="col-span-4 text-center py-10">
+                <p className="text-gray-500">No spotlight products found.</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>

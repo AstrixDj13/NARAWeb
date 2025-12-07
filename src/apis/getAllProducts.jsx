@@ -1,4 +1,4 @@
-import api from "../utils/interceptors"; 
+import api from "../utils/interceptors";
 
 const GET_ALL_PRODUCTS_QUERY = `
  {
@@ -7,6 +7,11 @@ const GET_ALL_PRODUCTS_QUERY = `
       node {
         id
         title
+        images(first: 5) {
+          nodes {
+            url
+          }
+        }
         metafield(namespace: "custom", key: "stock_quantity") {
             value
           }

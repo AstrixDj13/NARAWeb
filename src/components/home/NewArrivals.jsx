@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import VideoLazy from "../loaders/VideoLazy";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { fetchProducts } from "../../apis/getAllProducts";
+import ProductCard from "../common/ProductCard";
 
 const NewestArrivals = () => {
   const [products, setProducts] = useState([]);
@@ -66,45 +67,7 @@ const NewestArrivals = () => {
         <div className="mt-6 md:mt-12 overflow-x-auto">
           <div className="flex lg:grid lg:grid-cols-4 md:grid-cols-3 gap-3 md:gap-2 pl-4">
             {latestFour.map((product) => (
-              <div
-                key={product.id}
-                className="flex-shrink-0 w-[300px] sm:w-1/3 lg:w-full"
-              >
-                <Link to={`/product/${encodeURIComponent(product.id)}`}>
-                  <div className="w-full bg-gray-200 min-h-[350px] relative overflow-hidden rounded-lg">
-                    {product.mediaType === "video" ? (
-                      <VideoLazy
-                        src={product.mediaUrl}
-                        alt={product.title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <LazyLoadImage
-                        src={product.variants.nodes[0].image.src}
-                        alt={product.title}
-                        className="w-full h-full object-cover"
-                        width="100%"
-                        height="100%"
-                      />
-                    )}
-                    {product.badge && (
-                      <div className="absolute bottom-2 left-2 bg-white bg-opacity-80 py-1 px-2 rounded">
-                        <span className="text-xs font-bold font-mono text-black">
-                          {product.badge}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mt-4 text-center">
-                    <h3 className="text-lg font-medium font-mono text-black dark:!text-white">
-                      {product.title}
-                    </h3>
-                    <p className="mt-1 text-sm font-light font-mono text-gray-800 dark:text-gray-200">
-                      INR {product.variants.nodes[0].price.amount}0
-                    </p>
-                  </div>
-                </Link>
-              </div>
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         </div>
