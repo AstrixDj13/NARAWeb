@@ -83,7 +83,7 @@ const Products = () => {
           {isLoading ? (
             <PageLoader />
           ) : (
-            <div className="flex flex-wrap gap-4 justify-center py-4">
+            <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 md:gap-4 justify-center py-4">
               {currentProducts.length === 0 ? (
                 <h1 className="text-3xl text-center p-12">
                   Could not get any product for you!
