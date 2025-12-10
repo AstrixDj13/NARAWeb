@@ -17,25 +17,13 @@ const FooterSection = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3001/api/newsletter", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success(data.message || "Successfully subscribed!");
-        setEmail("");
-      } else {
-        toast.error(data.error || "Failed to subscribe");
-      }
+      const response = await backendApi.post("/api/newsletter", { email });
+      toast.success(response.data.message || "Successfully subscribed!");
+      setEmail("");
     } catch (error) {
       console.error("Newsletter error:", error);
-      toast.error("Something went wrong. Please try again.");
+      const errorMessage = error.response?.data?.error || "Something went wrong. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
