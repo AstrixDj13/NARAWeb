@@ -5,6 +5,7 @@ import CartIcon from "../CartIcon";
 import { useDispatch } from "react-redux";
 import { setAppTheme } from "../../store";
 import { getCollections } from "../../apis/Collections"; // No longer needed if "Browse Collections" is removed
+import CampaignCountdown from "./CampaignCountdown";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -139,6 +140,16 @@ const Navbar = () => {
               }
             />
           </Link>
+        </div>
+
+        {/* Center Section: Campaign Countdown */}
+        <div className="absolute left-1/2 transform -translate-x-1/2">
+          <CampaignCountdown
+            campaignName="X-Mas Sale"
+            targetDate="2025-12-12T00:00:00"
+            isScrolled={isScrolled}
+            theme={theme}
+          />
         </div>
 
         {/* Right Section: Navigation (Clothing) and Icons */}
