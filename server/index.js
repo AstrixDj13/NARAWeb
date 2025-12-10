@@ -19,6 +19,10 @@ import { BlobServiceClient } from '@azure/storage-blob';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Serve static files from the React app
+const distPath = path.join(__dirname, '../dist');
+app.use(express.static(distPath));
+
 // Azure Storage Configuration
 const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING;
 const AZURE_CONTAINER_NAME = process.env.AZURE_CONTAINER_NAME || 'nara-web-data';
@@ -540,6 +544,11 @@ app.post('/api/anthropic/messages', async (req, res) => {
     console.error('❌ Anthropic Proxy Error:', error);
     res.status(500).json({ error: `Proxy error: ${error.message}` });
   }
+});
+
+// Catch-all handler for any request that doesn't match the above
+app.get('*', (req, res) => {
+  res.sendFile(path.join(distPath, 'index.html'));
 });
 
 app.listen(PORT, () => {
