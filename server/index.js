@@ -14,9 +14,117 @@ app.use(express.json());
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { BlobServiceClient } from '@azure/storage-blob';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Azure Storage Configuration
+const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING;
+const AZURE_CONTAINER_NAME = process.env.AZURE_CONTAINER_NAME || 'nara-web-data';
+
+let blobServiceClient;
+let containerClient;
+
+// In-Memory Data Stores
+let newsletterData = [];
+let reviewsData = [];
+
+// Initialize Azure
+if (AZURE_STORAGE_CONNECTION_STRING) {
+  try {
+    blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
+    containerClient = blobServiceClient.getContainerClient(AZURE_CONTAINER_NAME);
+    console.log(`Azure Blob Storage initialized. Container: ${AZURE_CONTAINER_NAME}`);
+
+    // Create container if it doesn't exist
+    containerClient.createIfNotExists().catch(err => console.error("Error creating container:", err.message));
+  } catch (error) {
+    console.error('Error initializing Azure Blob Storage:', error.message);
+  }
+} else {
+  console.warn('AZURE_STORAGE_CONNECTION_STRING not found. Azure sync disabled.');
+}
+
+// Helper: Stream to Buffer
+async function streamToBuffer(readableStream) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    readableStream.on("data", (data) => {
+      chunks.push(data instanceof Buffer ? data : Buffer.from(data));
+    });
+    readableStream.on("end", () => {
+      resolve(Buffer.concat(chunks));
+    });
+    readableStream.on("error", reject);
+  });
+}
+
+// Helper: Download from Azure
+async function downloadFromAzure(blobName) {
+  if (!containerClient) return null;
+  try {
+    const blobClient = containerClient.getBlockBlobClient(blobName);
+    if (await blobClient.exists()) {
+      const downloadBlockBlobResponse = await blobClient.download(0);
+      const downloaded = await streamToBuffer(downloadBlockBlobResponse.readableStreamBody);
+      return JSON.parse(downloaded.toString());
+    }
+  } catch (error) {
+    console.error(`Error downloading ${blobName} from Azure:`, error.message);
+  }
+  return null;
+}
+
+// Helper: Upload to Azure
+async function uploadToAzure(blobName, data) {
+  if (!containerClient) return;
+  try {
+    const blobClient = containerClient.getBlockBlobClient(blobName);
+    const content = JSON.stringify(data, null, 2);
+    await blobClient.upload(content, content.length);
+    console.log(`Synced ${blobName} to Azure.`);
+  } catch (error) {
+    console.error(`Error uploading ${blobName} to Azure:`, error.message);
+  }
+}
+
+// Initialize Data on Start
+async function initializeData() {
+  // Load Newsletter
+  const azureNewsletter = await downloadFromAzure('newsletter_data.json');
+  if (azureNewsletter) {
+    newsletterData = azureNewsletter;
+    console.log(`Loaded ${newsletterData.length} newsletter entries from Azure.`);
+  } else {
+    // Fallback to local file if exists (migration/dev)
+    const localFile = path.join(__dirname, 'newsletter_data.json');
+    if (fs.existsSync(localFile)) {
+      try {
+        newsletterData = JSON.parse(fs.readFileSync(localFile, 'utf8'));
+        console.log(`Loaded ${newsletterData.length} newsletter entries from local file.`);
+      } catch (e) { console.error("Error reading local newsletter file", e); }
+    }
+  }
+
+  // Load Reviews
+  const azureReviews = await downloadFromAzure('reviews_data.json');
+  if (azureReviews) {
+    reviewsData = azureReviews;
+    console.log(`Loaded ${reviewsData.length} reviews from Azure.`);
+  } else {
+    // Fallback to local file
+    const localFile = path.join(__dirname, 'reviews_data.json');
+    if (fs.existsSync(localFile)) {
+      try {
+        reviewsData = JSON.parse(fs.readFileSync(localFile, 'utf8'));
+        console.log(`Loaded ${reviewsData.length} reviews from local file.`);
+      } catch (e) { console.error("Error reading local reviews file", e); }
+    }
+  }
+}
+
+initializeData();
 
 // Newsletter endpoint
 app.post('/api/newsletter', async (req, res) => {
@@ -27,33 +135,83 @@ app.post('/api/newsletter', async (req, res) => {
       return res.status(400).json({ error: 'Email or phone number is required' });
     }
 
-    const dataFile = path.join(__dirname, 'newsletter_data.json');
-    let currentData = [];
-
-    if (fs.existsSync(dataFile)) {
-      const fileContent = fs.readFileSync(dataFile, 'utf8');
-      try {
-        currentData = JSON.parse(fileContent);
-      } catch (e) {
-        console.error('Error parsing newsletter data:', e);
-        currentData = [];
-      }
-    }
-
     const newEntry = {
       email,
       phone,
       timestamp: new Date().toISOString()
     };
 
-    currentData.push(newEntry);
+    // Update Memory
+    newsletterData.push(newEntry);
 
-    fs.writeFileSync(dataFile, JSON.stringify(currentData, null, 2));
+    // Sync to Azure (Background)
+    uploadToAzure('newsletter_data.json', newsletterData);
+
+    // Sync to Local (Backup/Dev)
+    try {
+      const dataFile = path.join(__dirname, 'newsletter_data.json');
+      fs.writeFileSync(dataFile, JSON.stringify(newsletterData, null, 2));
+    } catch (e) { console.error("Error writing local newsletter file", e); }
 
     res.json({ success: true, message: 'Successfully subscribed!' });
   } catch (error) {
     console.error('Error saving newsletter data:', error);
     res.status(500).json({ error: 'Failed to save subscription' });
+  }
+});
+
+// Reviews Endpoints
+
+// GET Reviews for a product
+app.get('/api/reviews/:productId', (req, res) => {
+  try {
+    const { productId } = req.params;
+    // Filter reviews for this product
+    const productReviews = reviewsData.filter(r => r.productId === productId);
+    // Sort by date desc
+    productReviews.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    res.json({ reviews: productReviews });
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    res.status(500).json({ error: 'Failed to fetch reviews' });
+  }
+});
+
+// POST Review
+app.post('/api/reviews', (req, res) => {
+  try {
+    const { productId, userName, rating, comment } = req.body;
+
+    if (!productId || !rating) {
+      return res.status(400).json({ error: 'Product ID and Rating are required' });
+    }
+
+    const newReview = {
+      id: Date.now().toString(), // Simple ID
+      productId,
+      userName: userName || 'Anonymous',
+      rating: Number(rating),
+      comment,
+      timestamp: new Date().toISOString()
+    };
+
+    // Update Memory
+    reviewsData.push(newReview);
+
+    // Sync to Azure (Background)
+    uploadToAzure('reviews_data.json', reviewsData);
+
+    // Sync to Local (Backup/Dev)
+    try {
+      const dataFile = path.join(__dirname, 'reviews_data.json');
+      fs.writeFileSync(dataFile, JSON.stringify(reviewsData, null, 2));
+    } catch (e) { console.error("Error writing local reviews file", e); }
+
+    res.json({ success: true, review: newReview });
+  } catch (error) {
+    console.error('Error saving review:', error);
+    res.status(500).json({ error: 'Failed to save review' });
   }
 });
 

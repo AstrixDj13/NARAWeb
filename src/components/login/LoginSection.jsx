@@ -88,7 +88,7 @@ function LoginSection() {
       />
       {/* Same as */}
 
-      <div className="lg:w-[50%] h-full object-cover">
+      {/*<div className="lg:w-[50%] h-full object-cover">
         <div className="hidden w-full h-full p-10 md:p-8 lg:flex justify-center items-center bg-white dark:!bg-black relative">
           <div className="text-center ">
             <h1
@@ -122,7 +122,7 @@ function LoginSection() {
           alt="Product"
           className="h-full w-full object-cover lg:hidden"
         />
-      </div>
+      </div>*/}
       <div className="lg:w-[50%] h-full px-8 py-16 flex justify-center items-center">
         <div className="max-w-[480px] flex-col flex gap-[30px]">
           <div className="w-full h-full flex flex-col gap-[10px]">

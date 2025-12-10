@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { MuiTelInput } from "mui-tel-input";
+import backendApi from "../../utils/backendApi";
 
 const NewsletterPopup = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -33,17 +34,10 @@ const NewsletterPopup = () => {
 
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3001/api/newsletter", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, phone }),
-            });
+            const response = await backendApi.post("/api/newsletter", { email, phone });
+            const data = response.data;
 
-            const data = await response.json();
-
-            if (response.ok) {
+            if (response.status === 200) {
                 toast.success(data.message || "Successfully subscribed!");
                 handleClose();
             } else {
@@ -51,7 +45,7 @@ const NewsletterPopup = () => {
             }
         } catch (error) {
             console.error("Newsletter error:", error);
-            toast.error("Something went wrong. Please try again.");
+            toast.error(error.response?.data?.error || "Something went wrong. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -68,23 +62,23 @@ const NewsletterPopup = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4"
+                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4"
                 >
                     <motion.div
                         initial={{ y: 50, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         exit={{ y: 50, opacity: 0 }}
                         transition={{ type: "spring", damping: 25, stiffness: 500 }}
-                        className="relative w-full max-w-md bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl overflow-hidden"
+                        className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden mt-20"
                     >
                         {/* Close Button */}
                         <button
                             onClick={handleClose}
-                            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 z-10"
+                            className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 z-10"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6"
+                                className="h-5 w-5"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -98,22 +92,22 @@ const NewsletterPopup = () => {
                             </svg>
                         </button>
 
-                        <div className="p-8">
-                            <div className="text-center mb-6">
-                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 font-antikor">
+                        <div className="p-6">
+                            <div className="text-center mb-5">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-2 font-antikor">
                                     Join the Club
                                 </h2>
-                                <p className="text-gray-600 dark:text-gray-300">
+                                <p className="text-sm text-gray-600">
                                     Subscribe to get special offers, free giveaways, and
                                     once-in-a-lifetime deals.
                                 </p>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="space-y-4">
+                            <form onSubmit={handleSubmit} className="space-y-3">
                                 <div>
                                     <label
                                         htmlFor="email"
-                                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                                        className="block text-xs font-medium text-gray-700 mb-1"
                                     >
                                         Email Address
                                     </label>
@@ -123,14 +117,14 @@ const NewsletterPopup = () => {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="you@example.com"
-                                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
+                                        className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent bg-white text-gray-900 transition-colors"
                                     />
                                 </div>
 
                                 <div>
                                     <label
                                         htmlFor="phone"
-                                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                                        className="block text-xs font-medium text-gray-700 mb-1"
                                     >
                                         Phone Number
                                     </label>
@@ -138,7 +132,8 @@ const NewsletterPopup = () => {
                                         value={phone}
                                         onChange={handlePhoneChange}
                                         defaultCountry="IN"
-                                        className="w-full bg-white dark:bg-zinc-800 rounded-lg"
+                                        className="w-full bg-white rounded-lg"
+                                        size="small"
                                         sx={{
                                             "& .MuiOutlinedInput-root": {
                                                 "& fieldset": {
@@ -152,9 +147,8 @@ const NewsletterPopup = () => {
                                                 },
                                             },
                                             "& .MuiInputBase-input": {
-                                                color: "inherit",
+                                                color: "#111827", // gray-900
                                             },
-                                            // Dark mode adjustments if needed, though MUI handles some automatically
                                         }}
                                     />
                                 </div>
@@ -162,13 +156,13 @@ const NewsletterPopup = () => {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full bg-black dark:bg-white text-white dark:text-black font-bold py-3 px-4 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                                    className="w-full bg-black text-white font-bold py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2 text-sm"
                                 >
                                     {loading ? "Subscribing..." : "Subscribe"}
                                 </button>
                             </form>
 
-                            <p className="mt-4 text-xs text-center text-gray-500 dark:text-gray-400">
+                            <p className="mt-3 text-[10px] text-center text-gray-500">
                                 By subscribing you agree to our Terms & Conditions and Privacy
                                 Policy.
                             </p>

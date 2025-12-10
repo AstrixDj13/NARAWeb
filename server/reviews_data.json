@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1765264218022",
+    "productId": "gid://shopify/Product/9087622906070",
+    "userName": "Anonymous",
+    "rating": 4,
+    "comment": "nice blue tint",
+    "timestamp": "2025-12-09T07:10:18.022Z"
+  },
+  {
+    "id": "1765271461481",
+    "productId": "gid://shopify/Product/9087622906070",
+    "userName": "Dj",
+    "rating": 5,
+    "comment": "Material is good",
+    "timestamp": "2025-12-09T09:11:01.481Z"
+  },
+  {
+    "id": "1765279217538",
+    "productId": "gid://shopify/Product/9087622906070",
+    "userName": "Uzair",
+    "rating": 5,
+    "comment": "Nice fit",
+    "timestamp": "2025-12-09T11:20:17.538Z"
+  }
+]

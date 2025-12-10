@@ -71,7 +71,7 @@ function App() {
       dispatch(setActiveCartId(cartId));
       fetchAllItemsInCart(cartId);
     }
-     
+
   }, []);
 
   return (

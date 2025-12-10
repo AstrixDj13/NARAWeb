@@ -16,6 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import PageLoader from "../components/utils/PageLoader";
 import useQuery from "../hooks/useQuery";
 import RelatedProducts from "../components/productsDetail/RelatedProducts";
+import ReviewSection from "../components/productsDetail/ReviewSection";
 
 export default function ProductsDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -241,6 +242,8 @@ export default function ProductsDetailPage() {
                         </p>
                       </div> */}
               {/* Fabric Name section ends here */}
+
+              <ReviewSection productId={product.id} />
             </div>
           </div>
         </div>

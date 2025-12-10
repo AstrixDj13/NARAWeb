@@ -18,16 +18,16 @@ const Navbar = () => {
   const [isClothingHovered, setIsClothingHovered] = useState(false);
 
   const [allCollections, setAllCollections] = useState([]);
-    
+
   const fetchCollections = async () => {
-      try {
-        const allCollections = await getCollections();
-        console.log(allCollections);
-        setAllCollections(allCollections.reverse());
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    try {
+      const allCollections = await getCollections();
+      console.log(allCollections);
+      setAllCollections(allCollections.reverse());
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     fetchCollections();
@@ -88,8 +88,8 @@ const Navbar = () => {
       ? "bg-white text-black"
       : "bg-black text-white"
     : theme === "light"
-    ? "bg-white text-black"
-    : "bg-black text-white";
+      ? "bg-white text-black"
+      : "bg-black text-white";
 
   return (
     <div className="relative">
@@ -108,17 +108,16 @@ const Navbar = () => {
 
           <button
             onClick={toggleMenu}
-            className={`text-3xl font-bold ${
-              isScrolled
-                ? theme === "light"
-                  ? "text-black"
-                  : "text-white"
-                : theme === "light"
-                  ? "text-black"
-                  : "text-white"
-            }`}
+            className={`text-3xl font-bold ${isScrolled
+              ? theme === "light"
+                ? "text-black"
+                : "text-white"
+              : theme === "light"
+                ? "text-black"
+                : "text-white"
+              }`}
           >
-          &#9776;
+            &#9776;
           </button>
           <Link to="/" className="flex-shrink-0 w-48 sm:w-56 md:w-64 lg:w-[500px]">
             <img
@@ -136,7 +135,7 @@ const Navbar = () => {
                 isScrolled
                   ? "h-[70px] -mt-4"
                   : "xl:h-[130px] lg:h-[140px] md:h-[100px] h-[80px] sm:absolute md:-top-3 lg:-top-8"
-                  
+
               }
             />
           </Link>
@@ -145,42 +144,42 @@ const Navbar = () => {
         {/* Right Section: Navigation (Clothing) and Icons */}
         <div className="flex gap-6 items-center">
 
-          
-    
+
+
           {/* Right-side Icons */}
           <div className="flex items-center md:space-x-5 space-x-2">
             <button onClick={toggleTheme} className="text-4xl rounded-full">
               <img
                 src="/home/navbar/light_icon1.svg"
                 alt={`${theme} mode icon`}
-                
+
                 className={
                   theme === "light" && !isScrolled
                     ? "black-icon"
                     : theme === "dark" && !isScrolled
-                    ? "white-icon"
-                    : theme === "light" && isScrolled
-                    ? "black-icon"
-                    : theme === "dark" && isScrolled
-                    ? "white-icon":""
+                      ? "white-icon"
+                      : theme === "light" && isScrolled
+                        ? "black-icon"
+                        : theme === "dark" && isScrolled
+                          ? "white-icon" : ""
                 }
               />
             </button>
-          
+
             <Link to="/profile">
               <img
                 src="home/navbar/user.svg"
                 alt="user icon"
-                
+
                 className={
                   theme === "light" && !isScrolled
                     ? "black-icon"
                     : theme === "dark" && !isScrolled
-                    ? "white-icon"
-                    : theme === "light" && isScrolled
-                    ? "black-icon"
-                    : theme === "dark" && isScrolled
-                    ? "white-icon":""
+                      ? "white-icon"
+                      : theme === "light" && isScrolled
+                        ? "black-icon"
+                        : theme === "dark" && isScrolled
+                          ? "white-icon" : ""
                 }
               />
             </Link>
@@ -192,7 +191,7 @@ const Navbar = () => {
       </nav>
 
       {/* SliderNavbar (Mobile Menu) - This remains untouched and should work as before */}
-      <SliderNavbar isOpen={isOpen} toggleMenu={toggleMenu} allCollections={allCollections}/>
+      <SliderNavbar isOpen={isOpen} toggleMenu={toggleMenu} allCollections={allCollections} />
     </div>
   );
 };

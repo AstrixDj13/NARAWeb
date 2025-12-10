@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { getCollections } from "../../apis/Collections";
+import backendApi from "../../utils/backendApi";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // For social media icons
 import { toast } from "sonner";
 
