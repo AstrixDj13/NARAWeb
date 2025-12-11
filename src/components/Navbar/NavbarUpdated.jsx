@@ -6,12 +6,18 @@ import { useDispatch } from "react-redux";
 import { setAppTheme } from "../../store";
 import { getCollections } from "../../apis/Collections"; // No longer needed if "Browse Collections" is removed
 import CampaignCountdown from "./CampaignCountdown";
+import AuthModal from "../Auth/AuthModal";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   // const [collections, setCollections] = useState([]); // Not needed if "Browse Collections" is removed
   const [isOpen, setIsOpen] = useState(false); // State for mobile slider menu (controlled by hamburger)
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const navigate = useNavigate();
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const element = document.documentElement;
 
@@ -177,7 +183,15 @@ const Navbar = () => {
               />
             </button>
 
-            <Link to="/profile">
+            <button
+              onClick={() => {
+                if (isAuthenticated) {
+                  navigate("/profile");
+                } else {
+                  setIsAuthModalOpen(true);
+                }
+              }}
+            >
               <img
                 src="home/navbar/user.svg"
                 alt="user icon"
@@ -193,7 +207,7 @@ const Navbar = () => {
                           ? "white-icon" : ""
                 }
               />
-            </Link>
+            </button>
 
             {/*<CartIcon theme={theme} OnHomePageHeroSection={!isScrolled} />*/}
             <CartIcon theme={theme} />
@@ -203,6 +217,7 @@ const Navbar = () => {
 
       {/* SliderNavbar (Mobile Menu) - This remains untouched and should work as before */}
       <SliderNavbar isOpen={isOpen} toggleMenu={toggleMenu} allCollections={allCollections} />
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>
   );
 };
