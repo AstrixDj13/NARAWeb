@@ -93,13 +93,15 @@ const NewsletterPopup = () => {
                         </button>
 
                         <div className="p-6">
-                            <div className="text-center mb-5">
+                            <div className="text-center mb-3">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-2 font-antikor">
-                                    Join the Club
+                                    Be Part of the NARA Circle
                                 </h2>
                                 <p className="text-sm text-gray-600">
-                                    Subscribe to get special offers, free giveaways, and
-                                    once-in-a-lifetime deals.
+                                    Style inspiration, early access, surprises, and little treats, straight to you.
+                                </p>
+                                <p className="text-[12px] text-black mt-2">
+                                    We respect your privacy. No spam,only value.
                                 </p>
                             </div>
 

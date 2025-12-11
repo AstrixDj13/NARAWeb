@@ -11,6 +11,7 @@ import {
     setAuthStatus,
     deleteCart,
 } from "../../store";
+import logo from "../../assets/NaraLogo.png";
 
 const AuthModal = ({ isOpen, onClose }) => {
     const [isLoginView, setIsLoginView] = useState(true);
@@ -139,14 +140,28 @@ const AuthModal = ({ isOpen, onClose }) => {
                         </button>
 
                         <div className="text-center mb-6">
-                            <h2 className="text-2xl font-bold mb-2">
-                                {isLoginView ? "Welcome Back" : "Create Account"}
-                            </h2>
-                            <p className="text-sm text-gray-600 dark:text-gray-600">
-                                {isLoginView
-                                    ? "Please enter your details to sign in."
-                                    : "Enter your details to get started."}
-                            </p>
+                            <p className="font-extrabold text-xl mb-1 text-black dark:text-black">Welcome to</p>
+                            <div className="flex justify-center mb-3">
+                                <img
+                                    src={logo}
+                                    alt="NARA logo"
+                                    className="w-[150px] lg:w-[200px]"
+                                />
+                            </div>
+                            {isLoginView ? (
+                                <div className="mt-2">
+                                    <p className="text-sm italic text-gray-700 dark:text-gray-700 mb-1">
+                                        Every day is a chance to reinvent your style.
+                                    </p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-500">
+                                        Log in to access your orders, wishlist, and exclusive perks.
+                                    </p>
+                                </div>
+                            ) : (
+                                <p className="text-sm text-gray-600 dark:text-gray-600 mt-2">
+                                    Enter your details to get started.
+                                </p>
+                            )}
                         </div>
 
                         {isLoginView ? (
@@ -185,7 +200,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                                     <button
                                         type="button"
                                         onClick={handleForgotPassword}
-                                        className="text-sm text-[#1F4A40] dark:text-green-400 hover:underline"
+                                        className="text-sm text-[#1F4A40] dark:text-[#1F4A40] hover:underline"
                                     >
                                         Forgot Password?
                                     </button>
@@ -280,7 +295,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                                 {isLoginView ? "Don't have an account? " : "Already have an account? "}
                                 <button
                                     onClick={() => setIsLoginView(!isLoginView)}
-                                    className="text-[#1F4A40] dark:text-green-400 font-bold hover:underline"
+                                    className="text-[#1F4A40] dark:text-[#1F4A40] font-bold hover:underline"
                                 >
                                     {isLoginView ? "Sign Up" : "Log In"}
                                 </button>
