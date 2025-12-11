@@ -8,6 +8,7 @@ import { Skeleton } from "@mui/material";
 
 import { setCheckoutUrl, setProductsinCart } from "../../store";
 import CartItem from "./CartItem";
+import YouMayAlsoLike from "./YouMayAlsoLike";
 
 export default function Cart({ toggleCartOpen, cartOpen }) {
   const totalQuantityInCart = useSelector((state) => state.cart.totalQuantity);
@@ -110,8 +111,8 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
                 &times;
               </button>
             </div>
-            <div className="flex flex-col h-full pb-4">
-              <div className="flex flex-col gap-4 h-5/6 p-4">
+            <div className="flex flex-col h-full">
+              <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
                 {cartLoading ? (
                   <Skeleton
                     variant="rectangular"
@@ -124,7 +125,7 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
                     <h2 className="font-black">
                       Added Products ({totalQuantityInCart})
                     </h2>
-                    <div className="flex flex-col gap-2 overflow-auto">
+                    <div className="flex flex-col gap-2">
                       {productsInCart?.map((el) => (
                         <CartItem
                           key={el?.node?.id}
@@ -145,8 +146,9 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
                     </div>
                   </>
                 )}
+                <YouMayAlsoLike />
               </div>
-              <div className="flex justify-around font-outfit">
+              <div className="flex justify-around font-outfit p-4 border-t bg-white dark:bg-black">
                 <button
                   onClick={continueShoppingHandler}
                   className="text-[#1F4A40] dark:text-[#ffff] border-1 border-[#1F4A40] px-2 py-1 flex items-center gap-2"

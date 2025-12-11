@@ -32,7 +32,7 @@ export async function getCollections() {
     if (!collectionsData) {
       throw new Error("No collections data found");
     }
-    const collections = collectionsData.edges.map(el=>({title: el.node.title, id: el.node.id, imageSrc: el.node.image?.url}));
+    const collections = collectionsData.edges.map(el => ({ title: el.node.title, id: el.node.id, imageSrc: el.node.image?.url }));
     return collections;
   } catch (error) {
     console.error("Could not fetch collections:", error.message);
@@ -102,6 +102,7 @@ export async function getCollectionById(collectionId) {
       imageSrc: product.node.variants.edges[0].node.image?.url,
       price: product.node.variants.edges[0].node.price.amount,
       productId: product.node.id,
+      variantId: product.node.variants.edges[0].node.id,
       stockLeft: product.node.metafield?.value ?? undefined,
     }));
 
