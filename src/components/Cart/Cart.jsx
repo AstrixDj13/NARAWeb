@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { getItemsInCartAPI } from "../../apis/Cart";
+import { fixCheckoutUrl } from "../../utils/interceptors";
 import { Skeleton } from "@mui/material";
 
 import { setCheckoutUrl, setProductsinCart } from "../../store";
@@ -23,12 +24,13 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
   const cartRef = useRef(null);
 
   const checkOutHandler = async () => {
-    if (!checkoutUrl) {
-      // Proceed to delete cart
+    const fixedUrl = fixCheckoutUrl(checkoutUrl);
+    if (!fixedUrl) {
+      toast.error("Unable to proceed to checkout. Please try again.");
       return;
     }
     if (totalQuantityInCart === 0) return toast.error("Your cart is empty!");
-    window.open(checkoutUrl);
+    window.location.href = fixedUrl;
   };
 
   // const fetchAllItems = async (cartId) => {
@@ -66,6 +68,18 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
   const closeCartHandler = () => {
     toggleCartOpen();
   };
+
+  // Calculate subtotal
+  const calculateSubtotal = () => {
+    if (!productsInCart || productsInCart.length === 0) return 0;
+    return productsInCart.reduce((total, item) => {
+      const price = parseFloat(item?.node?.merchandise?.price?.amount || 0);
+      const quantity = item?.node?.quantity || 0;
+      return total + (price * quantity);
+    }, 0);
+  };
+
+  const subtotal = calculateSubtotal();
 
   return (
     <AnimatePresence>
@@ -111,7 +125,7 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
                 &times;
               </button>
             </div>
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col" style={{ height: 'calc(100% - 60px)' }}>
               <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
                 {cartLoading ? (
                   <Skeleton
@@ -147,21 +161,47 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
                   </>
                 )}
                 <YouMayAlsoLike />
-              </div>
-              <div className="flex justify-around font-outfit p-4 border-t bg-white dark:bg-black">
-                <button
-                  onClick={continueShoppingHandler}
-                  className="text-[#1F4A40] dark:text-[#ffff] border-1 border-[#1F4A40] px-2 py-1 flex items-center gap-2"
-                >
-                  <HiArrowNarrowLeft /> Continue Shopping
-                </button>
-                <button
-                  onClick={checkOutHandler}
-                  className="disabled:opacity-50 bg-[#1F4A40] px-2 py-1 text-[#ffff]"
-                  disabled={totalQuantityInCart > 0 ? false : true}
-                >
-                  Continue to Checkout
-                </button>
+
+                {/* Offers Section */}
+                <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                  <h3 className="font-bold text-sm mb-2">Available Offers</h3>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded font-semibold">XMAS sale</span>
+                      <p className="text-gray-700 dark:text-gray-300">FLAT 25% Off on Selected Items</p>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded font-semibold">Stock clearance sale</span>
+                      <p className="text-gray-700 dark:text-gray-300">B1G1 on the Entire MEL Edit</p>
+                    </div>
+                  </div>
+                </div>
+
+
+                {/* Subtotal and Checkout Section Combined */}
+                <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="font-bold text-lg">Subtotal:</span>
+                    <span className="font-bold text-lg text-[#1F4A40] dark:text-green-400">₹{subtotal.toFixed(2)}</span>
+                  </div>
+
+                  {/* Checkout Buttons */}
+                  <div className="flex justify-between gap-2">
+                    <button
+                      onClick={continueShoppingHandler}
+                      className="text-[#1F4A40] dark:text-[#ffff] border-1 border-[#1F4A40] px-3 py-2 flex items-center gap-2 flex-1"
+                    >
+                      <HiArrowNarrowLeft /> Continue Shopping
+                    </button>
+                    <button
+                      onClick={checkOutHandler}
+                      className="disabled:opacity-50 bg-[#1F4A40] px-3 py-2 text-[#ffff] flex-1"
+                      disabled={totalQuantityInCart > 0 ? false : true}
+                    >
+                      Checkout
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>

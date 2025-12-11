@@ -152,7 +152,7 @@ const Navbar = () => {
         <div className="absolute left-1/2 transform -translate-x-1/2">
           <CampaignCountdown
             campaignName="X-Mas Sale"
-            targetDate="2025-12-12T00:00:00"
+            targetDate="2025-12-13T00:00:00"
             isScrolled={isScrolled}
             theme={theme}
           />

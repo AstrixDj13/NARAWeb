@@ -72,13 +72,13 @@ const YouMayAlsoLike = () => {
                 {products.map((product) => (
                     <div
                         key={product.productId}
-                        className="flex-none w-40 flex flex-col gap-2"
+                        className="flex-none w-32 flex flex-col gap-1"
                     >
                         <Link
                             to={`/product/${encodeURIComponent(product.productId)}?camefrompage=Cart`}
                             className="flex flex-col gap-2"
                         >
-                            <div className="relative w-full h-48 bg-gray-100 rounded-md overflow-hidden">
+                            <div className="relative w-full h-32 bg-gray-100 rounded-md overflow-hidden">
                                 <LazyLoadImage
                                     effect="opacity"
                                     src={product.imageSrc}

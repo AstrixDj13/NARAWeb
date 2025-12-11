@@ -6,6 +6,7 @@ import createCart, {
   createAuthenticatedCart,
   getItemsInCartAPI,
 } from "../../apis/Cart";
+import { fixCheckoutUrl } from "../../utils/interceptors";
 import { toast } from "sonner";
 import {
   setActiveCartId,
@@ -127,8 +128,14 @@ export default function ActionButtons() {
     try {
       setBuyNowBtnClicked(true);
       const cart = await createCart(variantId);
-      const checkoutUrl = cart.checkoutUrl;
-      window.open(checkoutUrl);
+      console.log("URL FROM CART:", cart.checkoutUrl);
+      const checkoutUrl = fixCheckoutUrl(cart.checkoutUrl);
+      console.log("Checkout URL:", checkoutUrl);
+      if (!checkoutUrl || !checkoutUrl.startsWith('http')) {
+        toast.error("Unable to get checkout URL. Please try again.");
+        return;
+      }
+      window.location.href = checkoutUrl;
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -144,9 +151,14 @@ export default function ActionButtons() {
         variantId,
         customerAccessToken
       );
-
-      const checkoutUrl = cart.checkoutUrl;
-      window.open(checkoutUrl);
+      console.log("URL FROM CART:", cart.checkoutUrl);
+      const checkoutUrl = fixCheckoutUrl(cart.checkoutUrl);
+      console.log("Checkout URL (authenticated):", checkoutUrl);
+      if (!checkoutUrl || !checkoutUrl.startsWith('http')) {
+        toast.error("Unable to get checkout URL. Please try again.");
+        return;
+      }
+      window.location.href = checkoutUrl;
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -185,9 +197,8 @@ export default function ActionButtons() {
       <button
         onClick={addToCartHandler}
         disabled={productOutOfStock || addingToThecart}
-        className={` disabled:bg-gray-400 mr-2  px-4 py-2  ${
-          addingToThecart ? "bg-gray-800" : " bg-[#1F4A40]"
-        }   text-white border-2 shadow-lg xl:!shadow-none flex items-center justify-center gap-2`}
+        className={` disabled:bg-gray-400 mr-2  px-4 py-2  ${addingToThecart ? "bg-gray-800" : " bg-[#1F4A40]"
+          }   text-white border-2 shadow-lg xl:!shadow-none flex items-center justify-center gap-2`}
       >
         {addingToThecart ? (
           "Adding Item..."
