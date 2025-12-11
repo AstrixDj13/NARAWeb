@@ -12,6 +12,7 @@ import BlogCarousel from "../components/home/BlogSection";
 import SubscribeSection from "../components/home/SubscribeSection";
 import NewestArrivals from "../components/home/NewArrivals";
 import NewsletterPopup from "../components/home/NewsletterPopup";
+import CampaignCountdown from "../components/countdown/CampaignCountdown";
 import { motion } from "framer-motion";
 
 // Inline CSS for marquee animation
@@ -85,16 +86,34 @@ const DiscountPopup = () => {
 
 
 const Home = () => {
+  const [theme] = useState(localStorage.getItem("theme") || "light");
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.pageYOffset > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <div className="dark:bg-black">
       {/* Global marquee styles */}
       <style>{marqueeStyle}</style>
 
-      {/* Announcement panel with floating text */}
-      <div className="bg-black text-white font-bold">
+      {/* Announcement panel with floating text - Fixed at top */}
+      <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold">
         <div className="announcement-container py-0.3">
           <div className="marquee">Saaz:The Festive Collection is LIVE NOW!</div>
         </div>
+      </div>
+
+      {/* Campaign Countdown Section - Fixed below marquee */}
+      <div
+        className="fixed top-6 left-0 w-full z-[60] flex justify-center items-center py-2 transition-colors duration-300 bg-[#0e2a1a] text-yellow-400"
+      >
+        <CampaignCountdown />
       </div>
 
       {/* Discount popup */}
