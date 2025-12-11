@@ -74,27 +74,32 @@ const YouMayAlsoLike = () => {
                         key={product.productId}
                         className="flex-none w-40 flex flex-col gap-2"
                     >
-                        <div className="relative w-full h-48 bg-gray-100 rounded-md overflow-hidden">
-                            <LazyLoadImage
-                                effect="opacity"
-                                src={product.imageSrc}
-                                alt={product.title}
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                        <div className="flex flex-col gap-1">
-                            <p className="text-sm font-medium truncate">{product.title}</p>
-                            <p className="text-sm text-gray-600">
-                                {product.price} INR
-                            </p>
-                            <button
-                                onClick={() => handleAddToCart(product)}
-                                disabled={addingToCart[product.productId]}
-                                className="mt-1 w-full bg-[#1F4A40] text-white text-xs py-2 rounded disabled:opacity-50"
-                            >
-                                {addingToCart[product.productId] ? "Adding..." : "Add to Cart"}
-                            </button>
-                        </div>
+                        <Link
+                            to={`/product/${encodeURIComponent(product.productId)}?camefrompage=Cart`}
+                            className="flex flex-col gap-2"
+                        >
+                            <div className="relative w-full h-48 bg-gray-100 rounded-md overflow-hidden">
+                                <LazyLoadImage
+                                    effect="opacity"
+                                    src={product.imageSrc}
+                                    alt={product.title}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <p className="text-sm font-medium truncate">{product.title}</p>
+                                <p className="text-sm text-gray-600">
+                                    {product.price} INR
+                                </p>
+                            </div>
+                        </Link>
+                        <button
+                            onClick={() => handleAddToCart(product)}
+                            disabled={addingToCart[product.productId]}
+                            className="mt-1 w-full bg-[#1F4A40] text-white text-xs py-2 rounded disabled:opacity-50"
+                        >
+                            {addingToCart[product.productId] ? "Adding..." : "Add to Cart"}
+                        </button>
                     </div>
                 ))}
             </div>
