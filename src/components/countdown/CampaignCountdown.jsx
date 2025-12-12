@@ -3,8 +3,12 @@ import React, { useState, useEffect } from 'react';
 // Define your campaigns here - add as many as you need
 const campaigns = [
     {
-        name: "X-Mas Sale",
-        targetDate: "2025-12-13T00:00:00",
+        name: "X-Mas Sale (Flat 25% off)",
+        targetDate: "2025-12-13T12:00:00",
+    },
+    {
+        name: "Stock Clearance:B1G1 Free",
+        targetDate: "2025-12-15T00:00:00",
     },
 ];
 
