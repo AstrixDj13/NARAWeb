@@ -70,7 +70,7 @@ export default function CollectionDetail() {
           ></div>
         </div>
         {/* Products */}
-        <div className="lg:w-3/4 lg:h-[calc(100vh-4em)] lg:pb-36 w-full sm:w-3/4 md:w-1/2 grid lg:grid-cols-2 grid-cols-1 gap-x-12 gap-y-12 lg:!overflow-auto px-6 justify-items-center">
+        <div className="lg:w-3/4 lg:h-[calc(100vh-4em)] lg:pb-36 w-full sm:w-3/4 md:w-1/2 grid lg:grid-cols-2 grid-cols-2 gap-x-4 gap-y-6 lg:gap-x-12 lg:gap-y-12 lg:!overflow-auto px-2 sm:px-6 justify-items-center">
           {collectionProducts.map((product, index) => {
             return (
               <div
