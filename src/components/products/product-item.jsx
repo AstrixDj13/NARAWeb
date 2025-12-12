@@ -21,7 +21,7 @@ const ProductItem = ({
   return (
     <Link to={`/product/${productId}?camefrompage=Products`}>
       <div className="flex flex-col justify-between h-full font-antikor tracking-tighter xl:w-[350px] md:w-[320px] w-full cursor-pointer hover:brightness-75">
-        <div className="w-full md:h-[400px] h-[200px] lg:h-[477px] relative">
+        <div className="w-full md:h-[400px] h-[300px] lg:h-[477px] relative">
           <ImageWithSkeleton img={img} name={name} />
 
           <div className="absolute w-full bottom-0">

@@ -71,7 +71,7 @@ const CollectionProductItem = ({
         className="flex flex-col h-full font-sans tracking-tighter xl:w-[23vw] lg:w-[30vw] md:w-[40vw] w-full cursor-pointer hover:brightness-75"
         onClick={productClickHandler}
       >
-        <div className="w-full 2xl:h[700px] md:h-[445px] h-[200px] relative">
+        <div className="w-full 2xl:h[700px] md:h-[445px] h-[300px] relative">
           <ImageWithSkeleton img={img} name={name} />
 
           <div className="absolute w-full bottom-0">

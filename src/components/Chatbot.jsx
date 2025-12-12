@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Loader2, Settings, X, ShoppingCart, AlertCircle } from 'lucide-react';
 
 const Chatbot = () => {
