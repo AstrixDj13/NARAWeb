@@ -21,7 +21,7 @@ const ProductItem = ({
   return (
     <Link to={`/product/${productId}?camefrompage=Products`}>
       <div className="flex flex-col justify-between h-full font-antikor tracking-tighter xl:w-[350px] md:w-[320px] w-full cursor-pointer hover:brightness-75">
-        <div className="w-full md:h-[400px] h-[477px] lg:h-[477px] relative">
+        <div className="w-full md:h-[400px] h-[200px] lg:h-[477px] relative">
           <ImageWithSkeleton img={img} name={name} />
 
           <div className="absolute w-full bottom-0">
@@ -39,27 +39,29 @@ const ProductItem = ({
             </div>
           </div>
         </div>
-        <div className="py-2">
-          <h1 className="font-semibold py-2">{name}</h1>
-          <div className="flex justify-between items-center">
+        <div className="py-2 text-center md:text-left flex flex-col flex-grow">
+          <h1 className="font-semibold py-2 line-clamp-2 md:line-clamp-none min-h-[3rem] md:min-h-0">{name}</h1>
+          <div className="flex flex-col items-center justify-center">
             <div className="font-mono text-base">INR {formatToINR(price)}</div>
-
-            {colors && (
-              <div className="flex items-center gap-2">
-                {colors?.map((color, index) => (
-                  <ProductColor key={index} color={color} active={false} />
-                ))}
+            {stockLeft !== undefined && stockLeft !== null && stockLeft !== "" && (
+              <div className="text-xs text-red-600 mt-1">
+                {stockLeft}
               </div>
             )}
           </div>
-          {stockLeft !== undefined && stockLeft !== null && stockLeft !== "" && (
-            <div className="text-xs text-red-600 mt-1">
-              {stockLeft}
+          {colors && (
+            <div className="flex items-center justify-center gap-2 mt-2">
+              {colors?.map((color, index) => (
+                <ProductColor key={index} color={color} active={false} />
+              ))}
             </div>
           )}
         </div>
-        <ViewButton link={`/product/${productId}?camefrompage=Products`} />
-        {/* <div className="flex justify-between py-2">
+        <div className="mt-auto">
+          <ViewButton link={`/product/${productId}?camefrompage=Products`} />
+        </div>
+      </div>
+      {/* <div className="flex justify-between py-2">
           plus minus button
             <div className="flex text-xl items-center cursor-pointer gap-2">
               <div className="border w-8 h-8 grid place-items-center cursor-pointer" onClick={() => handleAddtocard("add")}><GoPlus /></div>
@@ -76,8 +78,7 @@ const ProductItem = ({
                 Wishlist
             </div>
         </div> */}
-      </div>
-    </Link>
+    </Link >
   );
 };
 

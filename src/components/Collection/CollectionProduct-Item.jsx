@@ -71,7 +71,7 @@ const CollectionProductItem = ({
         className="font-sans tracking-tighter xl:w-[23vw] lg:w-[30vw] md:w-[40vw] w-full cursor-pointer hover:brightness-75"
         onClick={productClickHandler}
       >
-        <div className="w-full 2xl:h[700px]  md:h-[445px] h-[440px]  relative">
+        <div className="w-full 2xl:h[700px] md:h-[445px] h-[200px] relative">
           <ImageWithSkeleton img={img} name={name} />
 
           <div className="absolute w-full bottom-0">
@@ -89,25 +89,25 @@ const CollectionProductItem = ({
             </div>
           </div>
         </div>
-        <div className="py-2">
-          <h1 className="font-semibold py-2">{name}</h1>
-          <div className="flex justify-between items-center">
+        <div className="py-2 text-center md:text-left flex flex-col flex-grow">
+          <h1 className="font-semibold py-2 line-clamp-2 md:line-clamp-none min-h-[3rem] md:min-h-0">{name}</h1>
+          <div className="flex flex-col items-center justify-center">
             <div className="font-mono text-base">INR {formatToINR(price)}</div>
             {stockLeft !== undefined && stockLeft !== null && stockLeft !== "" && (
               <div className="text-xs text-red-600 mt-1">
                 {stockLeft}
               </div>
             )}
-            {colors && (
-              <div className="flex items-center gap-2">
-                {colors.map((color, index) => (
-                  <ProductColor key={index} color={color} active={false} />
-                ))}
-              </div>
-            )}
           </div>
+          {colors && (
+            <div className="flex items-center justify-center gap-2 mt-2">
+              {colors.map((color, index) => (
+                <ProductColor key={index} color={color} active={false} />
+              ))}
+            </div>
+          )}
         </div>
-        <div className="flex justify-between py-2">
+        <div className="flex justify-between py-2 mt-auto">
           {/* plus minus button */}
           {/* <div className="flex text-xl items-center cursor-pointer gap-2">
               <div className="border w-8 h-8 grid place-items-center cursor-pointer" onClick={() => handleAddtocard("add")}><GoPlus /></div>
@@ -139,9 +139,8 @@ export default CollectionProductItem;
 function ProductColor({ color, active }) {
   return (
     <div
-      className={`w-6 aspect-square rounded-full grid place-items-center cursor-pointer ${
-        active ? "border-2 border-gray-400" : "border-none"
-      }`}
+      className={`w-6 aspect-square rounded-full grid place-items-center cursor-pointer ${active ? "border-2 border-gray-400" : "border-none"
+        }`}
     >
       <div
         className="w-4 aspect-square rounded-full"
