@@ -68,7 +68,7 @@ const CollectionProductItem = ({
       )}`}
     >
       <div
-        className="font-sans tracking-tighter xl:w-[23vw] lg:w-[30vw] md:w-[40vw] w-full cursor-pointer hover:brightness-75"
+        className="flex flex-col h-full font-sans tracking-tighter xl:w-[23vw] lg:w-[30vw] md:w-[40vw] w-full cursor-pointer hover:brightness-75"
         onClick={productClickHandler}
       >
         <div className="w-full 2xl:h[700px] md:h-[445px] h-[200px] relative">
@@ -90,7 +90,7 @@ const CollectionProductItem = ({
           </div>
         </div>
         <div className="py-2 text-center md:text-left flex flex-col flex-grow">
-          <h1 className="font-semibold py-2 line-clamp-2 md:line-clamp-none min-h-[3rem] md:min-h-0">{name}</h1>
+          <h1 className="font-semibold py-2 line-clamp-2 md:line-clamp-none min-h-[3.5rem] md:min-h-0">{name}</h1>
           <div className="flex flex-col items-center justify-center">
             <div className="font-mono text-base">INR {formatToINR(price)}</div>
             {stockLeft !== undefined && stockLeft !== null && stockLeft !== "" && (

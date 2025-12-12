@@ -40,7 +40,7 @@ const ProductItem = ({
           </div>
         </div>
         <div className="py-2 text-center md:text-left flex flex-col flex-grow">
-          <h1 className="font-semibold py-2 line-clamp-2 md:line-clamp-none min-h-[3rem] md:min-h-0">{name}</h1>
+          <h1 className="font-semibold py-2 line-clamp-2 md:line-clamp-none min-h-[3.5rem] md:min-h-0">{name}</h1>
           <div className="flex flex-col items-center justify-center">
             <div className="font-mono text-base">INR {formatToINR(price)}</div>
             {stockLeft !== undefined && stockLeft !== null && stockLeft !== "" && (
