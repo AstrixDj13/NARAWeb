@@ -105,7 +105,7 @@ const Home = () => {
       {/* Announcement panel with floating text - Fixed at top */}
       <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold">
         <div className="announcement-container py-0.3">
-          <div className="marquee">Saaz:The Festive Collection is LIVE NOW!</div>
+          <div className="marquee">Christmas Sale: FLAT 25% OFF*!</div>
         </div>
       </div>
 

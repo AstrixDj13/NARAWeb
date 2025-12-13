@@ -167,11 +167,11 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
                   <h3 className="font-bold text-sm mb-2">Available Offers</h3>
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2 text-xs">
-                      <span className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded font-semibold">XMAS sale</span>
+                      <span className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded font-semibold">XMAS25</span>
                       <p className="text-gray-700 dark:text-gray-300">FLAT 25% Off on Selected Items</p>
                     </div>
                     <div className="flex items-center gap-2 text-xs">
-                      <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded font-semibold">Stock clearance sale</span>
+                      <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded font-semibold">BOGO</span>
                       <p className="text-gray-700 dark:text-gray-300">B1G1 on the Entire MEL Edit</p>
                     </div>
                   </div>
