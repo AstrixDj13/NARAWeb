@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 // Define your campaigns here - add as many as you need
 const campaigns = [
     {
-        name: "X-Mas Sale (Flat 25% off) is LIVE NOW! Time's running out!",
+        name: "X-Mas Sale (Flat 25% off)! LIVE NOW!",
         targetDate: "2025-12-25T00:00:00",
     },
     {
