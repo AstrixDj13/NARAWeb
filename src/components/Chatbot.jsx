@@ -422,10 +422,10 @@ Current cart_id: ${cartId || 'none (will create new cart on first add)'}`,
                 toolName === 'get_cart' ? 'Retrieving cart' :
                   toolName === 'update_cart' ? 'Updating cart' : 'Using tool';
 
-            setMessages(prev => [...prev, {
+            {/*setMessages(prev => [...prev, {
               role: 'system',
               content: `🔧 ${toolDesc}: ${toolName}\n📝 Input: ${JSON.stringify(toolUse.input, null, 2)}`
-            }]);
+            }]);*/}
 
             const result = await executeMCPTool(toolUse.name, toolUse.input);
 
