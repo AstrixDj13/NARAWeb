@@ -97,9 +97,12 @@ const TopSection = () => {
           {/*<h5 className="text-sm">Summer collection, 2025</h5>*/}
           {currentCollection.title === "Chaon: The Summer Edit 2025" && (
             <h5 className="text-sm">Summer collection, 2025</h5>)}
-          {currentCollection.title !== "XMAS Sale" && (
-            <h2 className="text-5xl font-bold py-4">{currentCollection.title}</h2>
+          {!["X'MAS Sale", "Buy1-Get1 Sale"].includes(currentCollection.title) && (
+            <h2 className="text-5xl font-bold py-4">
+              {currentCollection.title}
+            </h2>
           )}
+
           <Link
             to={
               allCollections.length === 0

@@ -554,31 +554,44 @@ Current cart_id: ${cartId || 'none (will create new cart on first add)'}`,
     );
   }
 
+  // Calculate responsive dimensions for the chat window
+  const getChatWindowStyle = () => {
+    const isMobile = window.innerWidth < 640;
+    const chatWidth = isMobile ? window.innerWidth - 16 : 380;
+    const chatHeight = isMobile ? window.innerHeight - 100 : 500;
+
+    // Ensure the chat window stays within viewport bounds
+    const maxLeft = window.innerWidth - chatWidth - 8;
+    const maxTop = window.innerHeight - chatHeight - 50;
+
+    return {
+      position: 'fixed',
+      left: Math.min(Math.max(8, position.x), maxLeft),
+      top: Math.min(Math.max(50, position.y), maxTop),
+      width: chatWidth,
+      height: chatHeight,
+    };
+  };
+
   return (
     <div
       ref={dragRef}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
-      style={{
-        position: 'fixed',
-        left: position.x,
-        top: position.y,
-        // Adjust position if it goes off screen when opening
-        transform: `translate(${Math.min(0, window.innerWidth - position.x - 380)}px, ${Math.min(0, window.innerHeight - position.y - 500)}px)`
-      }}
-      className="z-50 w-[85vw] md:w-[380px] h-[70vh] md:h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 animate-in fade-in duration-300"
+      style={getChatWindowStyle()}
+      className="z-[9999] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 animate-in fade-in duration-300"
     >
       {/* Header - Draggable Area */}
       <div
-        className="bg-white shadow-sm border-b border-slate-200 p-4 flex justify-between items-center shrink-0 cursor-grab active:cursor-grabbing"
+        className="bg-green-900 shadow-sm border-b border-slate-200 p-4 flex justify-between items-center shrink-0 cursor-grab active:cursor-grabbing"
       >
         <div className="flex items-center gap-3 pointer-events-none">
           <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-lg">
             <img src="/cat.gif" alt="Bot" className="w-6 h-6 object-contain" />
           </div>
           <div>
-            <h1 className="font-bold text-slate-800 text-sm">NARA AI Shopper</h1>
-            <p className="text-[10px] text-slate-500 flex items-center gap-1">
+            <h1 className="font-bold text-[#facc15] text-sm">NARA AI Shopper</h1>
+            <p className="text-[10px] text-[#facc14] flex items-center gap-1">
               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
               Online
             </p>
@@ -593,7 +606,7 @@ Current cart_id: ${cartId || 'none (will create new cart on first add)'}`,
           )}
           <button
             onClick={() => setIsOpen(false)}
-            className="p-1.5 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors text-slate-500"
+            className="p-1.5 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors text-[#facc15]"
             title="Close Chat"
           >
             <X className="w-4 h-4" />
@@ -690,7 +703,7 @@ Current cart_id: ${cartId || 'none (will create new cart on first add)'}`,
           <button
             onClick={handleSendMessage}
             disabled={loading || !input.trim()}
-            className="p-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors shadow-sm"
+            className="p-2 bg-green-900 text-[#facc15] rounded-xl hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors shadow-sm"
           >
             <Send className="w-4 h-4" />
           </button>
