@@ -7,8 +7,8 @@ const campaigns = [
         targetDate: "2025-12-25T00:00:00",
     },
     {
-        name: "Stock Clearance:B1G1 Free",
-        targetDate: "2025-12-15T00:00:00",
+        name: "Stock Clearance:B1G1! LIVE NOW!",
+        targetDate: "2026-01-01T00:00:00",
     },
 ];
 
