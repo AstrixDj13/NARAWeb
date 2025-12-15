@@ -83,11 +83,16 @@ const DiscountPopup = () => {
   );
 };
 
-
+{/* Announcement panel with floating text - Fixed at top */ }
+const marqueeMessages = [
+  "Christmas Sale: FLAT 25% OFF*!",
+  "B1G1 on the Entire MEL Edit!",
+];
 
 const Home = () => {
   const [theme] = useState(localStorage.getItem("theme") || "light");
   const [isScrolled, setIsScrolled] = useState(false);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,17 +102,39 @@ const Home = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((i) => (i + 1) % marqueeMessages.length);
+    }, 16000); // total time per message
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="dark:bg-black">
       {/* Global marquee styles */}
       <style>{marqueeStyle}</style>
 
-      {/* Announcement panel with floating text - Fixed at top */}
-      <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold">
+      <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold py-1 overflow-hidden">
+        <motion.div
+          key={index}
+          initial={{ x: "-100%" }}
+          animate={{ x: "100%" }}
+          transition={{
+            duration: 16,
+            ease: "linear",
+          }}
+          className="whitespace-nowrap text-center"
+        >
+          {marqueeMessages[index]}
+        </motion.div>
+      </div>
+
+
+      {/* <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold">
         <div className="announcement-container py-0.3">
           <div className="marquee">Christmas Sale: FLAT 25% OFF*!</div>
         </div>
-      </div>
+      </div> */}
 
       {/* Campaign Countdown Section - Fixed below marquee */}
       <div
