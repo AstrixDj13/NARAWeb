@@ -32,7 +32,7 @@ export async function getCheckoutURL() {
   }
 }
 
-export async function updateBuyersIndentity(cartId, email, deliveryAddress) {
+export async function updateBuyersIndentity(cartId, email, deliveryAddress, phone) {
   const query = `mutation updateCartBuyerIdentity($buyerIdentity: CartBuyerIdentityInput!, $cartId: ID!) {
   cartBuyerIdentityUpdate(buyerIdentity: $buyerIdentity, cartId: $cartId) {
     cart {
@@ -69,6 +69,7 @@ export async function updateBuyersIndentity(cartId, email, deliveryAddress) {
         },
       ],
       email,
+      phone,
     },
     cartId,
   };
@@ -400,9 +401,9 @@ export async function getItemsInCartAPI(cartId) {
       );
     }
 
-    
+
     return cart;
-    
+
   } catch (error) {
     console.error("Could not get items in cart: ", error.message);
     throw error;
@@ -485,8 +486,8 @@ export async function addItemToCart(cartId, variantId) {
     if (!cart) {
       throw new Error("Could not add the item to the cart!");
     }
-    const errorMessages = cart.data.cartLinesAdd.userErrors.map(el=>el.message).join(".");
-    if(errorMessages!==""){
+    const errorMessages = cart.data.cartLinesAdd.userErrors.map(el => el.message).join(".");
+    if (errorMessages !== "") {
       throw new Error(errorMessages);
     }
 

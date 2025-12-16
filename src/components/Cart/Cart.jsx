@@ -3,7 +3,8 @@ import { HiArrowNarrowLeft } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { getItemsInCartAPI } from "../../apis/Cart";
+import { getItemsInCartAPI, updateBuyersIndentity } from "../../apis/Cart";
+import getAccountDetailsAPI from "../../apis/getAccoutDetailsAPI";
 import { fixCheckoutUrl } from "../../utils/interceptors";
 import { Skeleton } from "@mui/material";
 
@@ -16,6 +17,8 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
   const checkoutUrl = useSelector((state) => state.cart.checkoutUrl);
   const cartId = useSelector((state) => state.cart.id);
   const productsInCart = useSelector((state) => state.cart.productsInCart);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const accessToken = useSelector((state) => state.user.accessToken);
   const dispatch = useDispatch();
 
   const [cartLoading, setCartLoading] = useState(false);
@@ -30,6 +33,33 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
       return;
     }
     if (totalQuantityInCart === 0) return toast.error("Your cart is empty!");
+
+    // Enhance buyer identity if authenticated
+    if (isAuthenticated && accessToken) {
+      try {
+        const customerDetails = await getAccountDetailsAPI();
+        if (customerDetails && customerDetails.defaultAddress) {
+          const address = customerDetails.defaultAddress;
+          const deliveryAddress = {
+            address1: address.address1,
+            address2: address.address2,
+            city: address.city,
+            country: "IN", // Assuming IN based on other code
+            firstName: address.firstName,
+            lastName: address.lastName,
+            province: address.province,
+            zip: address.zip
+          };
+
+          await updateBuyersIndentity(cartId, customerDetails.email, deliveryAddress, customerDetails.phone);
+          console.log("Buyer identity updated successfully");
+        }
+      } catch (err) {
+        console.error("Failed to update buyer identity:", err);
+        // Continue to checkout even if this fails
+      }
+    }
+
     window.location.href = fixedUrl;
   };
 

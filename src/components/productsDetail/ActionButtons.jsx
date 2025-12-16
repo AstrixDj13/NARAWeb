@@ -5,7 +5,9 @@ import createCart, {
   addItemToCart,
   createAuthenticatedCart,
   getItemsInCartAPI,
+  updateBuyersIndentity,
 } from "../../apis/Cart";
+import getAccountDetailsAPI from "../../apis/getAccoutDetailsAPI";
 import { fixCheckoutUrl } from "../../utils/interceptors";
 import { toast } from "sonner";
 import {
@@ -154,6 +156,31 @@ export default function ActionButtons() {
       console.log("URL FROM CART:", cart.checkoutUrl);
       const checkoutUrl = fixCheckoutUrl(cart.checkoutUrl);
       console.log("Checkout URL (authenticated):", checkoutUrl);
+
+      // Enhance buyer identity
+      try {
+        const customerDetails = await getAccountDetailsAPI();
+        if (customerDetails && customerDetails.defaultAddress) {
+          const address = customerDetails.defaultAddress;
+          const deliveryAddress = {
+            address1: address.address1,
+            address2: address.address2,
+            city: address.city,
+            country: "IN", // Assuming IN based on other code, or we could fetch country if available in API
+            firstName: address.firstName,
+            lastName: address.lastName,
+            province: address.province,
+            zip: address.zip
+          };
+
+          await updateBuyersIndentity(cart.id, customerDetails.email, deliveryAddress, customerDetails.phone);
+          console.log("Buyer identity updated successfully");
+        }
+      } catch (err) {
+        console.error("Failed to update buyer identity:", err);
+        // Continue to checkout even if this fails
+      }
+
       if (!checkoutUrl || !checkoutUrl.startsWith('http')) {
         toast.error("Unable to get checkout URL. Please try again.");
         return;
