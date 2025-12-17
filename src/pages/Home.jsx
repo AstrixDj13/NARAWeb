@@ -12,6 +12,7 @@ import BlogCarousel from "../components/home/BlogSection";
 import SubscribeSection from "../components/home/SubscribeSection";
 import NewestArrivals from "../components/home/NewArrivals";
 import NewsletterPopup from "../components/home/NewsletterPopup";
+import UGCSection from "../components/home/UGCSection";
 import CampaignCountdown from "../components/countdown/CampaignCountdown";
 import { motion } from "framer-motion";
 
@@ -152,6 +153,7 @@ const Home = () => {
       <NewestArrivals />
       {/*<BehindTheScreen />*/}
       <CollectionCarousel />
+      <UGCSection />
       {/* <MidSection /> */}
       <Spotlight />
       {/* <MidSection /> */}
