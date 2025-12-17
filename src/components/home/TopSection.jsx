@@ -12,12 +12,16 @@ const TopSection = () => {
   const [currentCollection, setCurrentCollection] = useState({});
 
   const carouselRef = useRef(null);
+  const excludedTitles = [
+    "C Grade Products",
+    "UGC_Collection",
+  ];
 
   const fetchCollections = async () => {
     try {
       let allCollections = await getCollections();
       allCollections = allCollections.filter(
-        (collection) => collection.title !== "C Grade Products"
+        (collection) => !excludedTitles.includes(collection.title)
       );
       console.log(allCollections);
       setAllCollections(allCollections.reverse());

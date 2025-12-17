@@ -1,3 +1,5 @@
+import SizeChart from "./SizeChart";
+
 export default function SizeSelector({ sizes, defaultSize, selectSize }) {
 
   return (
@@ -28,15 +30,8 @@ export default function SizeSelector({ sizes, defaultSize, selectSize }) {
           ))} */}
       </div>
 
-      {/* Size Chart Image */}
-      <div className="mt-4">
-        <img
-          title="Size Chart"
-          src="/size_chart.jpg"
-          alt="Size Chart"
-          className="w-full max-w-2xl"
-        />
-      </div>
+      {/* Size Chart Component */}
+      <SizeChart />
     </div>
   );
 }
