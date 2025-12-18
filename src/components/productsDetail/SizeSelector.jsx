@@ -1,6 +1,6 @@
 import SizeChart from "./SizeChart";
 
-export default function SizeSelector({ sizes, defaultSize, selectSize }) {
+export default function SizeSelector({ sizes, defaultSize, selectSize, productId }) {
 
   return (
     <div className="flex flex-col gap-4 tracking-tighter">
@@ -31,7 +31,7 @@ export default function SizeSelector({ sizes, defaultSize, selectSize }) {
       </div>
 
       {/* Size Chart Component */}
-      <SizeChart />
+      <SizeChart productId={productId} />
     </div>
   );
 }

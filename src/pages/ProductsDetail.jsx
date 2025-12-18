@@ -215,6 +215,7 @@ export default function ProductsDetailPage() {
                 colorsArray={product.colorsArray}
                 options={product.options}
                 variants={product.variants}
+                productId={product.id}
               />
 
               <ActionButtons />

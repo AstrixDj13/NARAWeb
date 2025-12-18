@@ -6,7 +6,7 @@ import SizeSelector from "./SizeSelector";
 import { useDispatch } from "react-redux";
 import { setCurrentVariant, setOutOfStock } from "../../store";
 
-export default function VariantsController({ options, variants, colorsArray, scrollToImageBySrc }) {
+export default function VariantsController({ options, variants, colorsArray, scrollToImageBySrc, productId }) {
   const [optionsList, setOptionsList] = useState([]);
   const [variantsInStock, setVariantsInStock] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState({});
@@ -15,7 +15,7 @@ export default function VariantsController({ options, variants, colorsArray, scr
   const dispatch = useDispatch();
 
   useEffect(() => {
-    
+
     let choicesList = {};
     let optionsList = [];
     options?.forEach(option => {
@@ -23,7 +23,7 @@ export default function VariantsController({ options, variants, colorsArray, scr
       optionsList.push(option.name);
     });
 
-    
+
 
     setOptionsChoiceList(choicesList);
     setOptionsList(optionsList);
@@ -53,7 +53,7 @@ export default function VariantsController({ options, variants, colorsArray, scr
       scrollToImageBySrc(firstVariant.node?.image?.src);
 
       setSelectedOptions(defaultSelectedOptions);
-      
+
 
       const varinstocks = variants?.edges?.filter(
         (variant) => parseInt(variant.node.quantityAvailable) > 0
@@ -90,19 +90,19 @@ export default function VariantsController({ options, variants, colorsArray, scr
     if (!hasNullProperty) {
       const matchedNode = variantsInStock?.find((item) => {
         const selectedOptions = item.node.selectedOptions;
-        
+
         return selectedOptions?.every(
           (option) => updatedSelectedOptions[option.name] === option.value
         );
       });
 
-      
+
 
       if (!matchedNode) {
         toast.info("This combination is not available");
         updatedSelectedOptions = { ...selectedOptions };
       } else {
-        
+
         scrollToImageBySrc(matchedNode.node?.image?.src);
         dispatch(setCurrentVariant(matchedNode));
       }
@@ -153,6 +153,7 @@ export default function VariantsController({ options, variants, colorsArray, scr
             selectSize={handleOptionChange}
             defaultSize={selectedOptions[option]}
             sizes={optionsChoiceList[option] || []}
+            productId={productId}
           />
         ) : (
           <VariantFilter
