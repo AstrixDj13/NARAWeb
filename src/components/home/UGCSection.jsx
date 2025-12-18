@@ -12,6 +12,7 @@ import {
     setProductsinCart,
     setTotalQuantityInCart,
 } from "../../store";
+import { toast } from "sonner";
 import CartToast from "../utils/CartToast";
 import { toast as customToast } from "react-toastify";
 import { FaShoppingCart, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
@@ -20,6 +21,8 @@ const UGCSection = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [addingToCart, setAddingToCart] = useState(null);
+
+    const [mutedStates, setMutedStates] = useState({});
 
     const videoRefs = useRef([]);
     const manuallyPaused = useRef(new Set());
@@ -63,6 +66,14 @@ const UGCSection = () => {
                 .filter(Boolean);
 
             setProducts(matched);
+
+            // Initialize mute states
+            const initialMuted = {};
+            matched.forEach((_, i) => {
+                initialMuted[i] = true;
+            });
+            setMutedStates(initialMuted);
+
             setLoading(false);
         };
 
@@ -146,12 +157,94 @@ const UGCSection = () => {
         const video = videoRefs.current[index];
         if (!video) return;
 
-        video.muted = !video.muted;
+        const newMutedState = !video.muted;
+        video.muted = newMutedState;
 
-        if (!video.muted) {
+        setMutedStates(prev => ({
+            ...prev,
+            [index]: newMutedState
+        }));
+
+        if (!newMutedState) {
             manuallyUnmuted.current.add(index);
         } else {
             manuallyUnmuted.current.delete(index);
+        }
+    };
+
+    // Cart Logic
+    const createCartWithOneitem = async (variantId) => {
+        try {
+            const cart = await createCart(variantId);
+            const cartId = cart.id;
+            const checkoutUrl = cart.checkoutUrl;
+            customToast(<CartToast />);
+            dispatch(setActiveCartId(cartId));
+            dispatch(setCheckoutUrl(checkoutUrl));
+            dispatch(setProductsinCart(cart.lines.edges));
+            dispatch(setTotalQuantityInCart(cart.totalQuantity));
+            localStorage.setItem("cartId", cartId);
+        } catch (error) {
+            console.error(error);
+            toast.error(error.message);
+        }
+    };
+
+    const createLoggedInCart = async (variantId, customerAccessToken) => {
+        try {
+            const cart = await createAuthenticatedCart(variantId, customerAccessToken);
+            const cartId = cart.id;
+            const checkoutUrl = cart.checkoutUrl;
+            customToast(<CartToast />);
+            dispatch(setActiveCartId(cartId));
+            dispatch(setCheckoutUrl(checkoutUrl));
+            dispatch(setProductsinCart(cart.lines.edges));
+            dispatch(setTotalQuantityInCart(cart.totalQuantity));
+            localStorage.setItem("cartId", cartId);
+        } catch (error) {
+            console.error(error);
+            toast.error(error.message);
+        }
+    };
+
+    const addAnotherItemToTheCart = async (cartId, variantId) => {
+        try {
+            const response = await addItemToCart(cartId, variantId);
+            const itemsQuantity = response?.totalQuantity;
+            dispatch(setTotalQuantityInCart(itemsQuantity));
+            dispatch(setCheckoutUrl(response?.checkoutUrl));
+            const products = response?.lines?.edges;
+            dispatch(setProductsinCart(products));
+            customToast(<CartToast />);
+        } catch (error) {
+            console.error(error);
+            if (error.message.includes("GraphQL error(s)")) {
+                toast.error("Something went wrong");
+            } else {
+                toast.info(error.message);
+            }
+        }
+    };
+
+    const handleAddToCart = async (e, product) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (addingToCart) return;
+        setAddingToCart(product.productId);
+
+        try {
+            const variantId = product.variantId;
+
+            if (cartId) {
+                await addAnotherItemToTheCart(cartId, variantId);
+            } else if (isAuthenticated) {
+                await createLoggedInCart(variantId, accessToken);
+            } else {
+                await createCartWithOneitem(variantId);
+            }
+        } finally {
+            setAddingToCart(null);
         }
     };
 
@@ -185,7 +278,7 @@ const UGCSection = () => {
                                 onClick={(e) => toggleMute(e, index)}
                                 className="absolute top-3 right-3 z-10 bg-black/60 text-white p-2 rounded-full"
                             >
-                                {videoRefs.current[index]?.muted ? (
+                                {mutedStates[index] ? (
                                     <FaVolumeMute size={14} />
                                 ) : (
                                     <FaVolumeUp size={14} />
@@ -218,9 +311,17 @@ const UGCSection = () => {
                                 </Link>
 
                                 <button
-                                    className="mt-2 w-full bg-[#1F4A40] py-2 rounded text-xs flex items-center justify-center gap-1"
+                                    onClick={(e) => handleAddToCart(e, product)}
+                                    disabled={addingToCart === product.productId}
+                                    className="mt-2 w-full bg-[#1F4A40] hover:bg-[#16332b] text-white py-2 rounded text-xs flex items-center justify-center gap-1 transition-colors"
                                 >
-                                    <FaShoppingCart size={10} /> Add to cart
+                                    {addingToCart === product.productId ? (
+                                        "Adding..."
+                                    ) : (
+                                        <>
+                                            <FaShoppingCart size={10} /> Add to cart
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         </div>
