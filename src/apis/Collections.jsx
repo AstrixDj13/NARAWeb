@@ -53,9 +53,10 @@ export async function getCollectionById(collectionId) {
           metafield(namespace: "custom", key: "stock_quantity") {
             value
           }
-          variants(first: 1) {
+          variants(first: 20) {
             edges {
               node {
+                title
                 image {
                   url
                 }
@@ -103,6 +104,11 @@ export async function getCollectionById(collectionId) {
       price: product.node.variants.edges[0].node.price.amount,
       productId: product.node.id,
       variantId: product.node.variants.edges[0].node.id,
+      variants: product.node.variants.edges.map(v => ({
+        id: v.node.id,
+        title: v.node.title,
+        price: v.node.price.amount
+      })),
       stockLeft: product.node.metafield?.value ?? undefined,
     }));
 

@@ -100,19 +100,17 @@ const Navbar = () => {
 
   return (
     <div className="relative">
-
-
       <nav
         className={
           !isScrolled
-            ? `top-[6.9rem] fixed left-0 w-full z-50 flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
-            : `fixed top-[6.4rem] left-0 w-full z-50 flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
+            ? `top-[6.9rem] fixed left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
+            : `fixed top-[6.4rem] left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
         }
       >
         {/* Left Section: Hamburger and Logo */}
         <div className="flex items-center space-x-4">
           {/*<button onClick={toggleMenu} className="text-4xl font-bold text-white">
-            &#9776; */}{/* Hamburger always visible */}
+            &#9776; */} {/* Hamburger always visible */}
           {/*</button>*/}
 
           <button

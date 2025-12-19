@@ -21,6 +21,7 @@ const UGCSection = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [addingToCart, setAddingToCart] = useState(null);
+    const [openSizeSelector, setOpenSizeSelector] = useState(null); // Track which product has size selector open
 
     const [mutedStates, setMutedStates] = useState({});
 
@@ -226,16 +227,14 @@ const UGCSection = () => {
         }
     };
 
-    const handleAddToCart = async (e, product) => {
+    const handleAddToCart = async (e, variantId, productId) => {
         e.preventDefault();
         e.stopPropagation();
 
         if (addingToCart) return;
-        setAddingToCart(product.productId);
+        setAddingToCart(productId);
 
         try {
-            const variantId = product.variantId;
-
             if (cartId) {
                 await addAnotherItemToTheCart(cartId, variantId);
             } else if (isAuthenticated) {
@@ -245,7 +244,14 @@ const UGCSection = () => {
             }
         } finally {
             setAddingToCart(null);
+            setOpenSizeSelector(null); // Close selector after adding
         }
+    };
+
+    const toggleSizeSelector = (e, productId) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setOpenSizeSelector(openSizeSelector === productId ? null : productId);
     };
 
     if (loading || !products.length) return null;
@@ -303,26 +309,49 @@ const UGCSection = () => {
 
                             {/* PRODUCT INFO */}
                             <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/80 text-white">
-                                <Link to={`/product/${encodeURIComponent(product.productId)}`}>
-                                    <h3 className="text-sm font-bold truncate">
-                                        {product.title}
-                                    </h3>
-                                    <p className="text-xs mb-2">INR {product.price}</p>
-                                </Link>
+                                <h3 className="text-sm font-bold truncate">
+                                    {product.title}
+                                </h3>
+                                <p className="text-xs mb-2">INR {product.price}</p>
 
-                                <button
-                                    onClick={(e) => handleAddToCart(e, product)}
-                                    disabled={addingToCart === product.productId}
-                                    className="mt-2 w-full bg-[#1F4A40] hover:bg-[#16332b] text-white py-2 rounded text-xs flex items-center justify-center gap-1 transition-colors"
-                                >
-                                    {addingToCart === product.productId ? (
-                                        "Adding..."
-                                    ) : (
-                                        <>
-                                            <FaShoppingCart size={10} /> Add to cart
-                                        </>
-                                    )}
-                                </button>
+                                <div className="flex gap-2 mt-2 relative">
+                                    <Link
+                                        to={`/product/${encodeURIComponent(product.productId)}`}
+                                        className="flex-1 bg-white/20 hover:bg-white/30 text-white py-2 rounded text-xs flex items-center justify-center transition-colors border border-white/30"
+                                    >
+                                        View
+                                    </Link>
+                                    <div className="flex-1 relative">
+                                        <button
+                                            onClick={(e) => toggleSizeSelector(e, product.productId)}
+                                            disabled={addingToCart === product.productId}
+                                            className="w-full bg-[#1F4A40] hover:bg-[#16332b] text-white py-2 rounded text-xs flex items-center justify-center gap-1 transition-colors"
+                                        >
+                                            {addingToCart === product.productId ? (
+                                                "Adding..."
+                                            ) : (
+                                                <>
+                                                    <FaShoppingCart size={10} /> Add
+                                                </>
+                                            )}
+                                        </button>
+
+                                        {/* SIZE SELECTOR DROPDOWN */}
+                                        {openSizeSelector === product.productId && (
+                                            <div className="absolute bottom-full left-0 w-full mb-1 bg-white rounded shadow-lg overflow-hidden z-20 flex flex-col-reverse">
+                                                {product.variants?.map((variant) => (
+                                                    <button
+                                                        key={variant.id}
+                                                        onClick={(e) => handleAddToCart(e, variant.id, product.productId)}
+                                                        className="w-full text-black text-xs py-2 hover:bg-gray-100 text-center border-b border-gray-100 last:border-0"
+                                                    >
+                                                        {variant.title}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ))}
