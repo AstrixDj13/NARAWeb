@@ -15,6 +15,7 @@ const TopSection = () => {
   const excludedTitles = [
     "C Grade Products",
     "UGC_Collection",
+    "Men's Top",
   ];
 
   const fetchCollections = async () => {
