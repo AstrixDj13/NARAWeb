@@ -122,8 +122,44 @@ const FooterSection = () => {
         <div>
           <h3 className="font-bold mb-4 uppercase">Contact Us</h3>
           <ul className="space-y-2 mb-6">
-            <li className="flex items-center"><i className="fas fa-map-marker-alt mr-2"></i> We are located in Mumbai, India</li>
-            <li className="flex items-center"><i className="fas fa-envelope mr-2"></i> info@narawear.com</li>
+            {/*<li className="flex items-center"><i className="fas fa-map-marker-alt mr-2"></i> S-07-3, PI No 88-91, Haware Centurion Mall, Navi Mumbai-400706, India</li>*/}
+            {/*<li className="flex items-center"><i className="fas fa-envelope mr-2"></i> info@narawear.com</li>*/}
+            <li className="flex items-center">
+              <i className="fas fa-map-marker-alt mr-2"></i>
+              <a
+                href={
+                  (() => {
+                    // Coordinates for Haware Centurion Mall
+                    const lat = "19.0247";
+                    const lng = "73.0221";
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                    return isIOS
+                      ? `https://maps.apple.com/?q=${lat},${lng}`  // ← Apple Maps for iOS
+                      : `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`; // ← Google Maps for others
+                  })()
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+                aria-label="Open location in Maps"
+                title="Open in Maps"
+              >
+                S-07-3, PI No 88-91, Haware Centurion Mall, Navi Mumbai-400706, India
+              </a>
+            </li>
+
+
+            <li className="flex items-center">
+              <i className="fas fa-envelope mr-2"></i>
+              <a
+                href="mailto:info@narawear.com?subject=Support%20Request&body=Hello%20NARA%20Team,"
+                aria-label="Email Nara Wear"
+                className="text-inherit hover:underline focus:outline-none"
+              >
+                info@narawear.com
+              </a>
+            </li>
+
           </ul>
 
           <h3 className="font-bold mb-4 uppercase">Social</h3>
@@ -132,6 +168,18 @@ const FooterSection = () => {
             <a href="https://www.instagram.com/narawearr/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400"><i className="fab fa-instagram"></i></a>
             {/*<a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400"><i className="fab fa-pinterest"></i></a> */}
             <a href="https://www.linkedin.com/company/narawear" target="_blank" rel="noopener noreferrer" className="hover:text-gray-400"><i className="fab fa-linkedin"></i></a>
+            <a
+              href="https://wa.me/919930835594"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                title="WhatsApp"
+                src="/home/navbar/WhatsApp.svg.webp"
+                alt="whatsapp"
+                className="w-6 h-6"
+              />
+            </a>
           </div>
         </div>
 
