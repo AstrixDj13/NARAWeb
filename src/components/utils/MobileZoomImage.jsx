@@ -23,7 +23,7 @@ export default function MobileZoomImage({ img }) {
                         src={img}
                         alt="product"
                         draggable={false}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                     />
                 </TransformComponent>
             </TransformWrapper>

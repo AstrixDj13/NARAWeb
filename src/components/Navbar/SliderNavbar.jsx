@@ -71,7 +71,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
   return (
     <div>
       <div
-        className={`fixed top-0 overflow-scroll left-0 h-full w-full transition-transform duration-300 z-50 ${isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 overflow-scroll left-0 h-full w-full transition-transform duration-300 z-[101] ${isOpen ? "translate-x-0" : "-translate-x-full"
           }`}
       >
         <div className="flex h-full flex-col lg:flex-row">

@@ -90,7 +90,7 @@ export default function SizeChart({ productId }) {
 
     const Table = ({ title, data, columns }) => (
         <div className="mb-8">
-            {title && <h3 className="text-center text-2xl mb-4 font-outfit">{title}</h3>}
+            {title && <h3 className="text-center text-2xl mb-4 font-bold">{title}</h3>}
             <div className="overflow-hidden border-2 border-black rounded-sm">
                 <table className="w-full text-center border-collapse bg-[#FFF8E7]">
                     <thead>
@@ -129,7 +129,7 @@ export default function SizeChart({ productId }) {
     const isCoords = showTops && showBottoms;
 
     return (
-        <div className="mt-8 font-serif w-full max-w-xl mx-auto">
+        <div className="mt-8 font-antikor w-full max-w-xl mx-auto">
             {showTops && <Table title={isCoords ? "Tops" : ""} data={topsData} columns={defaultColumns} />}
             {showBottoms && <Table title={isCoords ? "Bottoms" : ""} data={bottomsData} columns={defaultColumns} />}
             {showMenTops && <Table title="" data={menTopsData} columns={menColumns} />}
