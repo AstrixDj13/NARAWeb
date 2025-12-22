@@ -2,6 +2,7 @@ import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { useRef } from "react";
 import classes from "./imageGallery.module.css";
 import ImageWithSkeleton from "../utils/ImageWithSkeleton";
+import ZoomableImage from "../utils/ZoomableImage";
 
 export default function ImageGallery({
   images,
@@ -68,7 +69,7 @@ export default function ImageGallery({
             className="w-full h-full"
             ref={(el) => (imageRefs.current[index] = el)}
           >
-            <ImageWithSkeleton img={el?.node?.src} name={index + 1} />
+            <ZoomableImage img={el?.node?.src} name={index + 1} />
           </div>
         ))}
       </div>

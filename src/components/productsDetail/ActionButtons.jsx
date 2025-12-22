@@ -15,6 +15,7 @@ import {
   setCheckoutUrl,
   setProductsinCart,
   setTotalQuantityInCart,
+  setIsCartOpen,
 } from "../../store";
 import { useState } from "react";
 import Spinner from "../utils/Spinner";
@@ -46,6 +47,7 @@ export default function ActionButtons() {
       dispatch(setCheckoutUrl(checkoutUrl));
       dispatch(setProductsinCart(cart.lines.edges));
       dispatch(setTotalQuantityInCart(cart.totalQuantity));
+      dispatch(setIsCartOpen(true));
       localStorage.setItem("cartId", cartId);
     } catch (error) {
       console.error(error);
@@ -69,6 +71,7 @@ export default function ActionButtons() {
       dispatch(setCheckoutUrl(checkoutUrl));
       dispatch(setProductsinCart(cart.lines.edges));
       dispatch(setTotalQuantityInCart(cart.totalQuantity));
+      dispatch(setIsCartOpen(true));
       localStorage.setItem("cartId", cartId);
     } catch (error) {
       console.error(error);
@@ -89,6 +92,7 @@ export default function ActionButtons() {
       const products = response?.lines?.edges;
       dispatch(setProductsinCart(products));
       console.log(products);
+      dispatch(setIsCartOpen(true));
       customToast(<CartToast />);
     } catch (error) {
       console.error(error);

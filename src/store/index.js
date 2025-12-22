@@ -63,7 +63,8 @@ const cartSlice = createSlice({
     id: null,
     checkoutUrl: null,
     totalQuantity: 0,
-    productsInCart: null
+    productsInCart: null,
+    isCartOpen: false,
   },
   reducers: {
     deleteCart(state) {
@@ -83,6 +84,9 @@ const cartSlice = createSlice({
     },
     setCheckoutUrl(state, action) {
       state.checkoutUrl = action.payload;
+    },
+    setIsCartOpen(state, action) {
+      state.isCartOpen = action.payload;
     }
   }
 
@@ -133,7 +137,7 @@ const store = configureStore({
 
 export const { setUser, setFullName, setEmail, setPhone, setAddresses, setAuthStatus, setDefaultAddressId, setDefaultAddress, setAreAddressesLoading, logoutUser } = userSlice.actions;
 export const { setCurrentVariant, setOutOfStock } = activeProductSlice.actions;
-export const { setActiveCartId, setCheckoutUrl, setTotalQuantityInCart, setProductsinCart, deleteCart } = cartSlice.actions;
+export const { setActiveCartId, setCheckoutUrl, setTotalQuantityInCart, setProductsinCart, deleteCart, setIsCartOpen } = cartSlice.actions;
 export const { setAppTheme } = appSlice.actions;
 
 export default store;
