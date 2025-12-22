@@ -207,6 +207,7 @@ export default function ProductsDetailPage() {
                 title={product.title}
                 descriptionHtml={product.descriptionHtml}
                 cameFrom={cameFrom}
+                productId={product.id}
               />
 
               {/* Color Section */}

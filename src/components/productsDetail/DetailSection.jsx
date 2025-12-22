@@ -4,7 +4,9 @@ import { Skeleton } from "@mui/material";
 import classes from "./DetailSection.module.css";
 import { useEffect, useState } from "react";
 import useQuery from "../../hooks/useQuery";
-export default function DetailSection({ title, descriptionHtml, cameFrom }) {
+import { useOfferTag } from "../../hooks/useOfferTag";
+
+export default function DetailSection({ title, descriptionHtml, cameFrom, productId }) {
   const theme = useSelector((state) => state.app.theme);
   const currentVariant = useSelector(
     (state) => state.activeProduct.currentVariant
@@ -12,6 +14,7 @@ export default function DetailSection({ title, descriptionHtml, cameFrom }) {
   const productOutOfStock = useSelector(
     (state) => state.activeProduct.outOfStock
   );
+  const offerTag = useOfferTag(productId);
 
   return (
     <>
@@ -51,6 +54,11 @@ export default function DetailSection({ title, descriptionHtml, cameFrom }) {
         <span className="text-xs tracking-tighter capitalize">
           (Incl. of all taxes)
         </span>
+        {offerTag && (
+          <div className="bg-red-600 text-white text-xs font-bold px-2 py-1 w-fit mt-1">
+            {offerTag}
+          </div>
+        )}
       </div>
 
       {/* Description HTML section */}

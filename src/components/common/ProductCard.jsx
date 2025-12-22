@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import VideoLazy from '../loaders/VideoLazy';
+import { useOfferTag } from '../../hooks/useOfferTag';
 
 const ProductCard = ({ product, className }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
     const intervalRef = useRef(null);
+    const offerTag = useOfferTag(product.id);
 
     // Extract images from product data
     // Handle both API structure (images.nodes) and hardcoded structure (imgSrc/images)
@@ -85,6 +87,12 @@ const ProductCard = ({ product, className }) => {
                                 height="100%"
                                 effect="opacity"
                             />
+                        </div>
+                    )}
+
+                    {offerTag && (
+                        <div className="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 z-10">
+                            {offerTag}
                         </div>
                     )}
 

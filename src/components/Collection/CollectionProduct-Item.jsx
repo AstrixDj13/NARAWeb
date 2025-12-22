@@ -10,6 +10,7 @@ import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
 import ImageWithSkeleton from "../utils/ImageWithSkeleton";
 import ViewButton from "../ViewButton";
+import { useOfferTag } from "../../hooks/useOfferTag";
 
 const CollectionProductItem = ({
   colors,
@@ -24,6 +25,7 @@ const CollectionProductItem = ({
   collectionId,
   stockLeft,
 }) => {
+  const offerTag = useOfferTag(productId);
   productId = encodeURIComponent(productId); //Bad code
   const navigate = useNavigate();
   const [bookmark, setBookmark] = useState(false);
@@ -73,6 +75,11 @@ const CollectionProductItem = ({
       >
         <div className="w-full 2xl:h[700px] md:h-[445px] h-[300px] relative">
           <ImageWithSkeleton img={img} name={name} />
+          {offerTag && (
+            <div className="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 z-10">
+              {offerTag}
+            </div>
+          )}
 
           <div className="absolute w-full bottom-0">
             <div className="flex gap-2.5 p-3">

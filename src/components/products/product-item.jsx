@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import React from "react";
 import Skeleton from "@mui/material/Skeleton";
 import ViewButton from "../ViewButton";
+import { useOfferTag } from "../../hooks/useOfferTag";
 
 const ProductItem = ({
   colors,
@@ -16,6 +17,7 @@ const ProductItem = ({
   productId,
   stockLeft,
 }) => {
+  const offerTag = useOfferTag(productId);
   console.log("Received stockLeft:", stockLeft);
   productId = encodeURIComponent(productId); //Bad code
   return (
@@ -23,6 +25,11 @@ const ProductItem = ({
       <div className="flex flex-col justify-between h-full font-antikor tracking-tighter xl:w-[350px] md:w-[320px] w-full cursor-pointer hover:brightness-75">
         <div className="w-full md:h-[400px] h-[300px] lg:h-[477px] relative">
           <ImageWithSkeleton img={img} name={name} />
+          {offerTag && (
+            <div className="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 z-10">
+              {offerTag}
+            </div>
+          )}
 
           <div className="absolute w-full bottom-0">
             <div className="flex gap-2.5 p-3">
