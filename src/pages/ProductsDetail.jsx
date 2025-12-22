@@ -17,6 +17,7 @@ import PageLoader from "../components/utils/PageLoader";
 import useQuery from "../hooks/useQuery";
 import RelatedProducts from "../components/productsDetail/RelatedProducts";
 import ReviewSection from "../components/productsDetail/ReviewSection";
+import TrustBadges from "../components/productsDetail/TrustBadges";
 
 export default function ProductsDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -245,6 +246,7 @@ export default function ProductsDetailPage() {
               {/* Fabric Name section ends here */}
 
               <ReviewSection productId={product.id} />
+              <TrustBadges />
             </div>
           </div>
         </div>
