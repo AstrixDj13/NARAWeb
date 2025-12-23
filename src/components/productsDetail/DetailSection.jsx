@@ -5,6 +5,7 @@ import classes from "./DetailSection.module.css";
 import { useEffect, useState } from "react";
 import useQuery from "../../hooks/useQuery";
 import { useOfferTag } from "../../hooks/useOfferTag";
+import { campaigns, calculateTimeLeft } from "../../utils/campaignUtils";
 
 export default function DetailSection({ title, descriptionHtml, cameFrom, productId }) {
   const theme = useSelector((state) => state.app.theme);
@@ -15,6 +16,27 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
     (state) => state.activeProduct.outOfStock
   );
   const offerTag = useOfferTag(productId);
+  const [timeLeft, setTimeLeft] = useState({});
+
+  useEffect(() => {
+    if (!offerTag) return;
+
+    const campaign = campaigns.find((c) => c.offerTag === offerTag);
+    if (!campaign) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft(campaign.targetDate));
+    }, 1000);
+
+    setTimeLeft(calculateTimeLeft(campaign.targetDate));
+
+    return () => clearInterval(timer);
+  }, [offerTag]);
+
+  const formatTimeLeft = () => {
+    if (!timeLeft.days && !timeLeft.hours && !timeLeft.minutes && !timeLeft.seconds) return "";
+    return `${timeLeft.days}d : ${timeLeft.hours}h : ${timeLeft.minutes}m : ${timeLeft.seconds}s`;
+  };
 
   return (
     <>
@@ -55,8 +77,13 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
           (Incl. of all taxes)
         </span>
         {offerTag && (
-          <div className="bg-red-600 text-white text-xs font-bold px-2 py-1 w-fit mt-1">
-            {offerTag}
+          <div className="flex items-center gap-2 mt-1">
+            <div className="bg-red-600 text-white text-xs font-bold px-2 py-1 w-fit">
+              {offerTag}
+            </div>
+            <span className="text-red-600 text-xs font-bold">
+              Hurry Up! Offer valid only for {formatTimeLeft()}
+            </span>
           </div>
         )}
       </div>

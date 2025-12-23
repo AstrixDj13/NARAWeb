@@ -41,7 +41,7 @@ export const useOfferTag = (productId) => {
             if (xmasProductIds.has(productId)) {
                 setOfferTag("25% Off");
             } else if (b1g1ProductIds.has(productId)) {
-                setOfferTag("Buy 1 Get 1");
+                setOfferTag("Buy1Get1");
             } else {
                 setOfferTag(null);
             }
