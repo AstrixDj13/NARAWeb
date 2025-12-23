@@ -21,7 +21,12 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
   useEffect(() => {
     if (!offerTag) return;
 
-    const campaign = campaigns.find((c) => c.offerTag === offerTag);
+    // Normalize strings for comparison (remove spaces and lowercase)
+    const normalize = (str) => str.replace(/\s+/g, "").toLowerCase();
+    const campaign = campaigns.find(
+      (c) => normalize(c.offerTag) === normalize(offerTag)
+    );
+
     if (!campaign) return;
 
     const timer = setInterval(() => {
@@ -34,7 +39,13 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
   }, [offerTag]);
 
   const formatTimeLeft = () => {
-    if (!timeLeft.days && !timeLeft.hours && !timeLeft.minutes && !timeLeft.seconds) return "";
+    if (
+      !timeLeft.days &&
+      !timeLeft.hours &&
+      !timeLeft.minutes &&
+      !timeLeft.seconds
+    )
+      return "";
     return `${timeLeft.days}d : ${timeLeft.hours}h : ${timeLeft.minutes}m : ${timeLeft.seconds}s`;
   };
 
@@ -77,8 +88,8 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
           (Incl. of all taxes)
         </span>
         {offerTag && (
-          <div className="flex items-center gap-2 mt-1">
-            <div className="bg-red-600 text-white text-xs font-bold px-2 py-1 w-fit">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
+            <div className="bg-red-600 text-white text-xs font-bold px-2 py-1 w-fit whitespace-nowrap">
               {offerTag}
             </div>
             <span className="text-red-600 text-xs font-bold">
