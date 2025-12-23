@@ -44,10 +44,14 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
       !timeLeft.hours &&
       !timeLeft.minutes &&
       !timeLeft.seconds
-    )
+    ) {
       return "";
-    return `${timeLeft.days}d : ${timeLeft.hours}h : ${timeLeft.minutes}m : ${timeLeft.seconds}s`;
+    }
+
+    const dayLabel = timeLeft.days === 1 ? "Day" : "Days";
+    return `${timeLeft.days} ${dayLabel}`;
   };
+
 
   return (
     <>
