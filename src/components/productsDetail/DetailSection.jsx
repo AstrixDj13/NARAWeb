@@ -48,8 +48,8 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
       return "";
     }
 
-    const dayLabel = timeLeft.days === 1 ? "Day" : "Days";
-    return `${timeLeft.days} ${dayLabel}`;
+    const dayLabel = timeLeft.days === 0 ? "Day" : "Days";
+    return `${timeLeft.days + 1} ${dayLabel}`;
   };
 
 

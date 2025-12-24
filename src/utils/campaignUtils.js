@@ -1,7 +1,7 @@
 export const campaigns = [
     {
         name: "X-Mas Sale (Flat 25% off)! LIVE NOW!",
-        targetDate: "2025-12-25T00:00:00",
+        targetDate: "2025-12-26T00:00:00",
         offerTag: "25% Off"
     },
     {
