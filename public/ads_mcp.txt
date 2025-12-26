@@ -1,0 +1,4 @@
+1. Facebook Ads Manager
+2. Meta business feed
+3. google ads
+4. amazon ads  (http://advertising.amazon.com/API/docs/en-us/index)
