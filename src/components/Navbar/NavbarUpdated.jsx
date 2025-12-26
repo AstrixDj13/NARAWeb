@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import SliderNavbar from "./SliderNavbar";
 import CartIcon from "../CartIcon";
 import { useDispatch } from "react-redux";
 import { setAppTheme } from "../../store";
-import { getCollections } from "../../apis/Collections"; // No longer needed if "Browse Collections" is removed
+import { getCollections } from "../../apis/Collections";
 
 import AuthModal from "../Auth/AuthModal";
 import { useSelector } from "react-redux";
@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  // const [collections, setCollections] = useState([]); // Not needed if "Browse Collections" is removed
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false); // State for mobile slider menu (controlled by hamburger)
   const [isScrolled, setIsScrolled] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -39,21 +39,6 @@ const Navbar = () => {
   useEffect(() => {
     fetchCollections();
   }, []);
-
-  // Fetch collections from API - REMOVED if "Browse Collections" is gone
-  /*
-  useEffect(() => {
-    const fetchCollections = async () => {
-      try {
-        const all = await getCollections();
-        setCollections(all.reverse());
-      } catch (error) {
-        console.error("Failed to load collections:", error);
-      }
-    };
-    fetchCollections();
-  }, []);
-  */
 
   // Theme handling
   useEffect(() => {
@@ -82,14 +67,6 @@ const Navbar = () => {
   // Toggle mobile menu
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
-  {/*const bgClass = isScrolled
-    ? theme === "light"
-      ? "bg-white text-black"
-      : "bg-black text-white"
-    : theme === "light"
-    ? "bg-transparent text-black"
-    : "bg-transparent text-white";*/}
-
   const bgClass = isScrolled
     ? theme === "light"
       ? "bg-white text-black"
@@ -98,21 +75,19 @@ const Navbar = () => {
       ? "bg-white text-black"
       : "bg-black text-white";
 
+  const isHomePage = location.pathname === "/";
+
   return (
     <div className="relative">
       <nav
         className={
           !isScrolled
-            ? `top-[6.9rem] fixed left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
-            : `fixed top-[6.4rem] left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
+            ? `${isHomePage ? "top-[5.7rem]" : "top-0"} fixed left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
+            : `fixed ${isHomePage ? "top-[5.7rem]" : "top-0"} left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
         }
       >
         {/* Left Section: Hamburger and Logo */}
         <div className="flex items-center space-x-4">
-          {/*<button onClick={toggleMenu} className="text-4xl font-bold text-white">
-            &#9776; */} {/* Hamburger always visible */}
-          {/*</button>*/}
-
           <button
             onClick={toggleMenu}
             className={`text-3xl font-bold ${isScrolled
@@ -151,8 +126,6 @@ const Navbar = () => {
 
         {/* Right Section: Navigation (Clothing) and Icons */}
         <div className="flex gap-6 items-center">
-
-
 
           {/* Right-side Icons */}
           <div className="flex items-center md:space-x-5 space-x-2">
@@ -200,7 +173,6 @@ const Navbar = () => {
               />
             </button>
 
-            {/*<CartIcon theme={theme} OnHomePageHeroSection={!isScrolled} />*/}
             <CartIcon theme={theme} />
           </div>
         </div>

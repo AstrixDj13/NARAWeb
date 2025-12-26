@@ -1,31 +1,32 @@
 import { useState, useEffect } from 'react';
 import { getCollections, getCollectionById } from '../apis/Collections';
+import { getActiveCampaigns } from '../utils/campaignUtils';
 
 let offerCollectionsPromise = null;
 
 const fetchOfferCollections = async () => {
     try {
         const collections = await getCollections();
-        const xmasCollection = collections.find(c => c.title === "X'MAS Sale");
-        const b1g1Collection = collections.find(c => c.title === "Buy1-Get1 Sale");
+        const activeCampaigns = getActiveCampaigns();
+        const productOfferMap = new Map(); // productId -> offerTag
 
-        const xmasProductIds = new Set();
-        const b1g1ProductIds = new Set();
-
-        if (xmasCollection) {
-            const { products } = await getCollectionById(xmasCollection.id);
-            products.forEach(p => xmasProductIds.add(p.productId));
+        for (const campaign of activeCampaigns) {
+            const collection = collections.find(c => c.title === campaign.collectionTitle);
+            if (collection) {
+                const { products } = await getCollectionById(collection.id);
+                products.forEach(p => {
+                    // Only set if not already set (priority to first campaign found, or could refine logic)
+                    if (!productOfferMap.has(p.productId)) {
+                        productOfferMap.set(p.productId, campaign.offerTag);
+                    }
+                });
+            }
         }
 
-        if (b1g1Collection) {
-            const { products } = await getCollectionById(b1g1Collection.id);
-            products.forEach(p => b1g1ProductIds.add(p.productId));
-        }
-
-        return { xmasProductIds, b1g1ProductIds };
+        return productOfferMap;
     } catch (error) {
         console.error("Failed to fetch offer collections:", error);
-        return { xmasProductIds: new Set(), b1g1ProductIds: new Set() };
+        return new Map();
     }
 };
 
@@ -37,14 +38,8 @@ export const useOfferTag = (productId) => {
             offerCollectionsPromise = fetchOfferCollections();
         }
 
-        offerCollectionsPromise.then(({ xmasProductIds, b1g1ProductIds }) => {
-            if (xmasProductIds.has(productId)) {
-                setOfferTag("25% Off");
-            } else if (b1g1ProductIds.has(productId)) {
-                setOfferTag("Buy1Get1");
-            } else {
-                setOfferTag(null);
-            }
+        offerCollectionsPromise.then((productOfferMap) => {
+            setOfferTag(productOfferMap.get(productId) || null);
         });
     }, [productId]);
 

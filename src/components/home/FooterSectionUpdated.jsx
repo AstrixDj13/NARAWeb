@@ -64,7 +64,7 @@ const FooterSection = () => {
 
       {/* Main footer content */}
       <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
 
           {/* Column 1: SHOP */}
           <div>
@@ -90,7 +90,34 @@ const FooterSection = () => {
             </ul>
           </div>
 
-          {/* Column 2: CONTACT US */}
+          {/* Column 2: POLICIES */}
+          <div>
+            <h3 className="font-semibold text-base mb-4 uppercase tracking-wider">Policies</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  to="/return_policies"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                >
+                  Returns
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/exchange_policies"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                >
+                  Exchange
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: CONTACT US */}
           <div>
             <h3 className="font-semibold text-base mb-4 uppercase tracking-wider">Contact Us</h3>
             <ul className="space-y-3">
@@ -129,7 +156,7 @@ const FooterSection = () => {
             </ul>
           </div>
 
-          {/* Column 3: SOCIAL */}
+          {/* Column 4: SOCIAL */}
           <div>
             <h3 className="font-semibold text-base mb-4 uppercase tracking-wider">Follow Us</h3>
             <div className="flex space-x-5">
@@ -167,7 +194,7 @@ const FooterSection = () => {
             </div>
           </div>
 
-          {/* Column 4: NEWSLETTER */}
+          {/* Column 5: NEWSLETTER */}
           <div>
             <h3 className="font-semibold text-base mb-4 uppercase tracking-wider">Stay in the Loop</h3>
             <p className="mb-4 text-sm text-gray-400 leading-relaxed">

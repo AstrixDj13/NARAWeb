@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { campaigns, calculateTimeLeft } from '../../utils/campaignUtils';
+import { getActiveCampaigns, calculateTimeLeft } from '../../utils/campaignUtils';
 
 const CampaignCountdown = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [timeLeft, setTimeLeft] = useState({});
     const [isSliding, setIsSliding] = useState(false);
 
-    const currentCampaign = campaigns[currentIndex];
+    const activeCampaigns = getActiveCampaigns();
+
+    if (activeCampaigns.length === 0) return null;
+
+    const currentCampaign = activeCampaigns[currentIndex];
 
     // Update countdown every second
     useEffect(() => {
@@ -22,16 +26,18 @@ const CampaignCountdown = () => {
 
     // Auto-slide every 10 seconds
     useEffect(() => {
+        if (activeCampaigns.length <= 1) return; // Don't slide if 0 or 1 campaign
+
         const slideTimer = setInterval(() => {
             setIsSliding(true);
             setTimeout(() => {
-                setCurrentIndex((prevIndex) => (prevIndex + 1) % campaigns.length);
+                setCurrentIndex((prevIndex) => (prevIndex + 1) % activeCampaigns.length);
                 setIsSliding(false);
             }, 300); // Transition duration
         }, 10000); // 10 seconds
 
         return () => clearInterval(slideTimer);
-    }, []);
+    }, [activeCampaigns.length]);
 
     return (
         <div className="relative overflow-hidden w-full">
@@ -66,9 +72,9 @@ const CampaignCountdown = () => {
             </div>
 
             {/* Dot indicators */}
-            {campaigns.length > 1 && (
+            {activeCampaigns.length > 1 && (
                 <div className="flex justify-center gap-1 mt-1">
-                    {campaigns.map((_, index) => (
+                    {activeCampaigns.map((_, index) => (
                         <button
                             key={index}
                             onClick={() => {

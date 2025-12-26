@@ -15,6 +15,7 @@ const NewsletterPopup = () => {
         if (!hasSeenPopup) {
             const timer = setTimeout(() => {
                 setIsOpen(true);
+                sessionStorage.setItem("hasSeenNewsletterPopup", "true");
             }, 5000); // Show after 5 seconds
             return () => clearTimeout(timer);
         }

@@ -19,6 +19,8 @@ const Orders = React.lazy(() => import("../pages/Orders"));
 const CollectionDetail = React.lazy(() => import("../pages/CollectionDetail"));
 const BehindTheScreen = React.lazy(() => import("../pages/BehindTheScreen"));
 const BlogPost = React.lazy(() => import("../pages/BlogPost"));
+const Return_Policies = React.lazy(() => import("../pages/Return_Policies"));
+const Exchange_Policies = React.lazy(() => import("../pages/Exchange_Policies"));
 
 
 
@@ -34,6 +36,14 @@ export const router = createBrowserRouter([
       {
         path: "about",
         element: <LazyComponent component={<AboutUs />} />,
+      },
+      {
+        path: "return_policies",
+        element: <LazyComponent component={<Return_Policies />} />,
+      },
+      {
+        path: "exchange_policies",
+        element: <LazyComponent component={<Exchange_Policies />} />,
       },
       {
         path: "behind",

@@ -14,6 +14,7 @@ import NewestArrivals from "../components/home/NewArrivals";
 import NewsletterPopup from "../components/home/NewsletterPopup";
 import UGCSection from "../components/home/UGCSection";
 import CampaignCountdown from "../components/countdown/CampaignCountdown";
+import { getActiveCampaigns } from "../utils/campaignUtils";
 import { motion } from "framer-motion";
 
 // Inline CSS for marquee animation
@@ -85,15 +86,22 @@ const DiscountPopup = () => {
 };
 
 {/* Announcement panel with floating text - Fixed at top */ }
-const marqueeMessages = [
-  "Christmas Sale: FLAT 25% OFF*!",
-  "B1G1 on the Entire MEL Edit!",
-];
+// const marqueeMessages = [
+//   "Christmas Sale: FLAT 25% OFF*!",
+//   "B1G1 on the Entire MEL Edit!",
+// ];
 
 const Home = () => {
   const [theme] = useState(localStorage.getItem("theme") || "light");
   const [isScrolled, setIsScrolled] = useState(false);
   const [index, setIndex] = useState(0);
+  const [activeMarqueeMessages, setActiveMarqueeMessages] = useState([]);
+
+  useEffect(() => {
+    const campaigns = getActiveCampaigns();
+    const messages = campaigns.map(c => c.marqueeMessage).filter(Boolean);
+    setActiveMarqueeMessages(messages);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -104,31 +112,34 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
+    if (activeMarqueeMessages.length === 0) return;
     const interval = setInterval(() => {
-      setIndex((i) => (i + 1) % marqueeMessages.length);
+      setIndex((i) => (i + 1) % activeMarqueeMessages.length);
     }, 16000); // total time per message
     return () => clearInterval(interval);
-  }, []);
+  }, [activeMarqueeMessages]);
 
   return (
     <div className="dark:bg-black">
       {/* Global marquee styles */}
       <style>{marqueeStyle}</style>
 
-      <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold py-1 overflow-hidden">
-        <motion.div
-          key={index}
-          initial={{ x: "-100%" }}
-          animate={{ x: "100%" }}
-          transition={{
-            duration: 16,
-            ease: "linear",
-          }}
-          className="whitespace-nowrap text-center"
-        >
-          {marqueeMessages[index]}
-        </motion.div>
-      </div>
+      {activeMarqueeMessages.length > 0 && (
+        <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold py-1 overflow-hidden">
+          <motion.div
+            key={index}
+            initial={{ x: "-100%" }}
+            animate={{ x: "100%" }}
+            transition={{
+              duration: 16,
+              ease: "linear",
+            }}
+            className="whitespace-nowrap text-center"
+          >
+            {activeMarqueeMessages[index]}
+          </motion.div>
+        </div>
+      )}
 
 
       {/* <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold">
