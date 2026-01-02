@@ -82,8 +82,8 @@ const Navbar = () => {
       <nav
         className={
           !isScrolled
-            ? `${isHomePage ? "top-[5.7rem]" : "top-0"} fixed left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
-            : `fixed ${isHomePage ? "top-[5.7rem]" : "top-0"} left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
+            ? `${isHomePage ? "top-[0rem]" : "top-0"} fixed left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
+            : `fixed ${isHomePage ? "top-[0rem]" : "top-0"} left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
         }
       >
         {/* Left Section: Hamburger and Logo */}

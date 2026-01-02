@@ -75,7 +75,7 @@ const TopSection = () => {
   return (
     <div
       id="carouselExampleSlidesOnly"
-      className="carousel slide relative mt-[10rem]"
+      className="carousel slide relative mt-[8rem] sm:mt-[5rem]"
       data-bs-ride="carousel"
       data-bs-interval="5000"
       ref={carouselRef}

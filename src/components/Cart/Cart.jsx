@@ -193,7 +193,7 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
                 <YouMayAlsoLike />
 
                 {/* Offers Section */}
-                <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                {/*<div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
                   <h3 className="font-bold text-sm mb-2">Available Offers</h3>
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2 text-xs">
@@ -205,7 +205,7 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
                       <p className="text-gray-700 dark:text-gray-300">B1G1 on the Entire MEL Edit</p>
                     </div>
                   </div>
-                </div>
+                </div>*/}
 
 
                 {/* Subtotal and Checkout Section Combined */}

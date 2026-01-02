@@ -124,7 +124,7 @@ const Home = () => {
       {/* Global marquee styles */}
       <style>{marqueeStyle}</style>
 
-      {activeMarqueeMessages.length > 0 && (
+      {/*{activeMarqueeMessages.length > 0 && (
         <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold py-1 overflow-hidden">
           <motion.div
             key={index}
@@ -139,7 +139,7 @@ const Home = () => {
             {activeMarqueeMessages[index]}
           </motion.div>
         </div>
-      )}
+      )}*/}
 
 
       {/* <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold">
@@ -149,11 +149,11 @@ const Home = () => {
       </div> */}
 
       {/* Campaign Countdown Section - Fixed below marquee */}
-      <div
+      {/*<div
         className="fixed top-6 left-0 w-full z-[60] flex justify-center items-center py-2 transition-colors duration-300 bg-[#0e2a1a] text-yellow-400"
       >
         <CampaignCountdown />
-      </div>
+      </div>*/}
 
       {/* Discount popup */}
       {/* <DiscountPopup /> */}
