@@ -241,6 +241,7 @@ app.post('/api/reviews', (req, res) => {
 
 // GET all votes
 app.get('/api/ugc-votes', (req, res) => {
+  res.set('Cache-Control', 'no-store');
   // Return simple format for frontend: { videoId: count }
   // Also return user specific vote status if userId is provided in query
   const { userId } = req.query;

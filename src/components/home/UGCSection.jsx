@@ -92,11 +92,11 @@ const UGCSection = () => {
     useEffect(() => {
         const fetchVotes = async () => {
             // Skip fetching if user voted recently (prevent see-saw effect)
-            if (Date.now() - lastVotedTime.current < 2000) return;
+            if (Date.now() - lastVotedTime.current < 5000) return;
 
             try {
                 const userId = user?.id || user?._id; // Handle different ID formats
-                const query = userId ? `?userId=${userId}` : '';
+                const query = userId ? `?userId=${userId}&t=${Date.now()}` : `?t=${Date.now()}`;
                 const response = await fetch(`/api/ugc-votes${query}`);
                 const data = await response.json();
                 if (data.votes) {
