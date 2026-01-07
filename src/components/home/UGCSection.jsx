@@ -107,6 +107,11 @@ const UGCSection = () => {
         }
 
         fetchVotes();
+
+        // Poll for real-time updates every 2 seconds
+        const interval = setInterval(fetchVotes, 2000);
+
+        return () => clearInterval(interval);
     }, []);
 
     const handleVote = async (e, videoFilename) => {
