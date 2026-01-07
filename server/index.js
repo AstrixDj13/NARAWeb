@@ -32,7 +32,9 @@ let containerClient;
 
 // In-Memory Data Stores
 let newsletterData = [];
+
 let reviewsData = [];
+let ugcVotesData = {}; // Format: { "videoFilename": count }
 
 // Initialize Azure
 if (AZURE_STORAGE_CONNECTION_STRING) {
@@ -126,6 +128,22 @@ async function initializeData() {
       } catch (e) { console.error("Error reading local reviews file", e); }
     }
   }
+
+  // Load UGC Votes
+  const azureVotes = await downloadFromAzure('ugc_votes_data.json');
+  if (azureVotes) {
+    ugcVotesData = azureVotes;
+    console.log(`Loaded UGC votes from Azure.`);
+  } else {
+    // Fallback to local file
+    const localFile = path.join(__dirname, 'ugc_votes_data.json');
+    if (fs.existsSync(localFile)) {
+      try {
+        ugcVotesData = JSON.parse(fs.readFileSync(localFile, 'utf8'));
+        console.log(`Loaded UGC votes from local file.`);
+      } catch (e) { console.error("Error reading local votes file", e); }
+    }
+  }
 }
 
 initializeData();
@@ -216,6 +234,51 @@ app.post('/api/reviews', (req, res) => {
   } catch (error) {
     console.error('Error saving review:', error);
     res.status(500).json({ error: 'Failed to save review' });
+  }
+});
+
+// UGC Votes Endpoints
+
+// GET all votes
+app.get('/api/ugc-votes', (req, res) => {
+  res.json({ votes: ugcVotesData });
+});
+
+// POST toggle vote
+app.post('/api/ugc-votes', (req, res) => {
+  try {
+    const { videoId, increment } = req.body; // increment: true (upvote) or false (remove vote)
+
+    if (!videoId) {
+      return res.status(400).json({ error: 'Video ID is required' });
+    }
+
+    if (!ugcVotesData[videoId]) {
+      ugcVotesData[videoId] = 0;
+    }
+
+    if (increment) {
+      ugcVotesData[videoId]++;
+    } else {
+      ugcVotesData[videoId] = Math.max(0, ugcVotesData[videoId] - 1);
+      if (ugcVotesData[videoId] === 0) {
+        delete ugcVotesData[videoId];
+      }
+    }
+
+    // Sync to Azure (Background)
+    uploadToAzure('ugc_votes_data.json', ugcVotesData);
+
+    // Sync to Local (Backup/Dev)
+    try {
+      const dataFile = path.join(__dirname, 'ugc_votes_data.json');
+      fs.writeFileSync(dataFile, JSON.stringify(ugcVotesData, null, 2));
+    } catch (e) { console.error("Error writing local votes file", e); }
+
+    res.json({ success: true, votes: ugcVotesData });
+  } catch (error) {
+    console.error('Error saving vote:', error);
+    res.status(500).json({ error: 'Failed to save vote' });
   }
 });
 

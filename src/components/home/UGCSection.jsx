@@ -15,13 +15,17 @@ import {
 import { toast } from "sonner";
 import CartToast from "../utils/CartToast";
 import { toast as customToast } from "react-toastify";
-import { FaShoppingCart, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
+import { FaShoppingCart, FaVolumeMute, FaVolumeUp, FaHeart, FaTrophy } from "react-icons/fa";
 
 const UGCSection = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [addingToCart, setAddingToCart] = useState(null);
     const [openSizeSelector, setOpenSizeSelector] = useState(null); // Track which product has size selector open
+
+
+    const [votes, setVotes] = useState({});
+    const [userVotes, setUserVotes] = useState({});
 
     const [mutedStates, setMutedStates] = useState({});
 
@@ -62,7 +66,7 @@ const UGCSection = () => {
                         (f) =>
                             normalize(f.replace(".mp4", "")) === normalize(p.title)
                     );
-                    return match ? { ...p, videoSrc: `/ugc_videos/${match}` } : null;
+                    return match ? { ...p, videoSrc: `/ugc_videos/${match}`, videoFilename: match } : null;
                 })
                 .filter(Boolean);
 
@@ -79,7 +83,67 @@ const UGCSection = () => {
         };
 
         fetchData();
+
     }, []);
+
+    /* ---------------- FETCH VOTES ---------------- */
+    useEffect(() => {
+        const fetchVotes = async () => {
+            try {
+                const response = await fetch('/api/ugc-votes');
+                const data = await response.json();
+                if (data.votes) {
+                    setVotes(data.votes);
+                }
+            } catch (error) {
+                console.error("Error fetching votes:", error);
+            }
+        };
+
+        // Load user votes from local storage
+        const storedUserVotes = localStorage.getItem('ugc_user_votes');
+        if (storedUserVotes) {
+            setUserVotes(JSON.parse(storedUserVotes));
+        }
+
+        fetchVotes();
+    }, []);
+
+    const handleVote = async (e, videoFilename) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const hasVoted = userVotes[videoFilename];
+        const newHasVoted = !hasVoted;
+
+        // Optimistic update
+        setVotes(prev => ({
+            ...prev,
+            [videoFilename]: Math.max(0, (prev[videoFilename] || 0) + (newHasVoted ? 1 : -1))
+        }));
+
+        setUserVotes(prev => {
+            const newState = { ...prev, [videoFilename]: newHasVoted };
+            localStorage.setItem('ugc_user_votes', JSON.stringify(newState));
+            return newState;
+        });
+
+        try {
+            await fetch('/api/ugc-votes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ videoId: videoFilename, increment: newHasVoted })
+            });
+        } catch (error) {
+            console.error("Error submitting vote:", error);
+            // Revert on error (optional, keeping it simple for now)
+        }
+    };
+
+    // Calculate winner
+    const winningVideo = Object.entries(votes).reduce((max, [id, count]) => {
+        return count > (max.count || 0) ? { id, count } : max;
+    }, { id: null, count: 0 });
 
     /* ---------------- DESKTOP AUTOPLAY ---------------- */
     useEffect(() => {
@@ -276,8 +340,16 @@ const UGCSection = () => {
                                 className="w-full h-full object-cover"
                                 loop
                                 muted
+
                                 playsInline
                             />
+
+                            {/* TROPHY ICON (WINNER) */}
+                            {winningVideo.count > 0 && winningVideo.id === product.videoFilename && (
+                                <div className="absolute top-3 left-3 z-10 bg-yellow-400 text-black p-2 rounded-full shadow-lg animate-bounce">
+                                    <FaTrophy size={16} />
+                                </div>
+                            )}
 
                             {/* MUTE / UNMUTE BUTTON */}
                             <button
@@ -313,6 +385,15 @@ const UGCSection = () => {
                                     {product.title}
                                 </h3>
                                 <p className="text-xs mb-2">INR {product.price}</p>
+
+                                {/* VOTE BUTTON */}
+                                <button
+                                    onClick={(e) => handleVote(e, product.videoFilename)}
+                                    className="flex items-center gap-1 text-xs bg-white/20 hover:bg-white/30 px-2 py-1 rounded-full mb-2 transition-colors w-fit"
+                                >
+                                    <FaHeart className={userVotes[product.videoFilename] ? "text-red-500" : "text-white"} />
+                                    <span>{votes[product.videoFilename] || 0}</span>
+                                </button>
 
                                 <div className="flex gap-2 mt-2 relative">
                                     <Link
