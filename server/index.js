@@ -34,7 +34,7 @@ let containerClient;
 let newsletterData = [];
 
 let reviewsData = [];
-let ugcVotesData = {}; // Format: { "videoFilename": count }
+let ugcVotesData = {}; // Format: { "videoFilename": { count: number, voters: [userIds] } }
 
 // Initialize Azure
 if (AZURE_STORAGE_CONNECTION_STRING) {
@@ -241,29 +241,74 @@ app.post('/api/reviews', (req, res) => {
 
 // GET all votes
 app.get('/api/ugc-votes', (req, res) => {
-  res.json({ votes: ugcVotesData });
+  // Return simple format for frontend: { videoId: count }
+  // Also return user specific vote status if userId is provided in query
+  const { userId } = req.query;
+
+  const simpleVotes = {};
+  const userVotedVideos = {};
+
+  Object.keys(ugcVotesData).forEach(key => {
+    const entry = ugcVotesData[key];
+    // Handle migration from old number format to object format
+    const count = typeof entry === 'number' ? entry : (entry.count || 0);
+    simpleVotes[key] = count;
+
+    if (userId && typeof entry === 'object' && entry.voters && entry.voters.includes(userId)) {
+      userVotedVideos[key] = true;
+    }
+  });
+
+  res.json({ votes: simpleVotes, userVotedVideos });
 });
 
 // POST toggle vote
 app.post('/api/ugc-votes', (req, res) => {
   try {
-    const { videoId, increment } = req.body; // increment: true (upvote) or false (remove vote)
+    const { videoId, increment, userId } = req.body; // increment: true (upvote) or false (remove vote)
 
     if (!videoId) {
       return res.status(400).json({ error: 'Video ID is required' });
     }
 
+    // Initialize if missing
     if (!ugcVotesData[videoId]) {
-      ugcVotesData[videoId] = 0;
+      ugcVotesData[videoId] = { count: 0, voters: [] };
+    }
+    // Migration: Convert old number format to object
+    if (typeof ugcVotesData[videoId] === 'number') {
+      ugcVotesData[videoId] = { count: ugcVotesData[videoId], voters: [] };
     }
 
-    if (increment) {
-      ugcVotesData[videoId]++;
-    } else {
-      ugcVotesData[videoId] = Math.max(0, ugcVotesData[videoId] - 1);
-      if (ugcVotesData[videoId] === 0) {
-        delete ugcVotesData[videoId];
+    const entry = ugcVotesData[videoId];
+
+    if (userId) {
+      // Logged-in user logic
+      const hasVoted = entry.voters.includes(userId);
+
+      if (increment) {
+        if (!hasVoted) {
+          entry.voters.push(userId);
+          entry.count++;
+        }
+      } else {
+        if (hasVoted) {
+          entry.voters = entry.voters.filter(id => id !== userId);
+          entry.count = Math.max(0, entry.count - 1);
+        }
       }
+    } else {
+      // Guest logic (just update count)
+      if (increment) {
+        entry.count++;
+      } else {
+        entry.count = Math.max(0, entry.count - 1);
+      }
+    }
+
+    // Cleanup if count is 0 and no voters (optional, but keeps it clean)
+    if (entry.count === 0 && entry.voters.length === 0) {
+      delete ugcVotesData[videoId];
     }
 
     // Sync to Azure (Background)
@@ -275,7 +320,14 @@ app.post('/api/ugc-votes', (req, res) => {
       fs.writeFileSync(dataFile, JSON.stringify(ugcVotesData, null, 2));
     } catch (e) { console.error("Error writing local votes file", e); }
 
-    res.json({ success: true, votes: ugcVotesData });
+    // Return updated simple votes
+    const simpleVotes = {};
+    Object.keys(ugcVotesData).forEach(key => {
+      const e = ugcVotesData[key];
+      simpleVotes[key] = typeof e === 'number' ? e : e.count;
+    });
+
+    res.json({ success: true, votes: simpleVotes });
   } catch (error) {
     console.error('Error saving vote:', error);
     res.status(500).json({ error: 'Failed to save vote' });

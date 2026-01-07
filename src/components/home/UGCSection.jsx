@@ -32,10 +32,12 @@ const UGCSection = () => {
     const videoRefs = useRef([]);
     const manuallyPaused = useRef(new Set());
     const manuallyUnmuted = useRef(new Set());
+    const lastVotedTime = useRef(0);
 
     const isMobile = window.matchMedia("(max-width: 640px)").matches;
 
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const user = useSelector((state) => state.user);
     const accessToken = useSelector((state) => state.user.accessToken);
     const cartId = useSelector((state) => state.cart.id);
     const dispatch = useDispatch();
@@ -89,11 +91,20 @@ const UGCSection = () => {
     /* ---------------- FETCH VOTES ---------------- */
     useEffect(() => {
         const fetchVotes = async () => {
+            // Skip fetching if user voted recently (prevent see-saw effect)
+            if (Date.now() - lastVotedTime.current < 2000) return;
+
             try {
-                const response = await fetch('/api/ugc-votes');
+                const userId = user?.id || user?._id; // Handle different ID formats
+                const query = userId ? `?userId=${userId}` : '';
+                const response = await fetch(`/api/ugc-votes${query}`);
                 const data = await response.json();
                 if (data.votes) {
                     setVotes(data.votes);
+                }
+                if (data.userVotedVideos) {
+                    // Merge server-side user votes with local storage (server takes precedence if logged in)
+                    setUserVotes(prev => ({ ...prev, ...data.userVotedVideos }));
                 }
             } catch (error) {
                 console.error("Error fetching votes:", error);
@@ -118,6 +129,8 @@ const UGCSection = () => {
         e.preventDefault();
         e.stopPropagation();
 
+        lastVotedTime.current = Date.now();
+
         const hasVoted = userVotes[videoFilename];
         const newHasVoted = !hasVoted;
 
@@ -134,10 +147,11 @@ const UGCSection = () => {
         });
 
         try {
+            const userId = user?.id || user?._id;
             await fetch('/api/ugc-votes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ videoId: videoFilename, increment: newHasVoted })
+                body: JSON.stringify({ videoId: videoFilename, increment: newHasVoted, userId })
             });
         } catch (error) {
             console.error("Error submitting vote:", error);

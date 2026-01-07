@@ -9,8 +9,9 @@ import {
   setProductsinCart,
   setCheckoutUrl,
   deleteCart,
+  setUser,
 } from "./store";
-import { updateCustomerDefaultAddress } from "./apis/getAccoutDetailsAPI";
+import getAccountDetailsAPI, { updateCustomerDefaultAddress } from "./apis/getAccoutDetailsAPI";
 import createCart, {
   getCheckoutURL,
   getItemsInCartAPI,
@@ -62,8 +63,21 @@ function App() {
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
 
-    if (accessToken)
+    if (accessToken) {
       dispatch(setAuthStatus({ accessToken, isAuthenticated: true }));
+      getAccountDetailsAPI()
+        .then((customer) => {
+          dispatch(
+            setUser({
+              id: customer.id,
+              fullName: customer.firstName + " " + customer.lastName,
+              email: customer.email,
+              phone: customer.phone,
+            })
+          );
+        })
+        .catch((err) => console.error("Failed to fetch user details", err));
+    }
 
     const cartId = localStorage.getItem("cartId");
 
