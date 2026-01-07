@@ -41,6 +41,8 @@ const UGCSection = () => {
     const accessToken = useSelector((state) => state.user.accessToken);
     const cartId = useSelector((state) => state.cart.id);
     const dispatch = useDispatch();
+    const pendingVotes = useRef(new Set());
+
 
     const videoFiles = [
         "Faux 9 to 5 Crop Women's Blazer.mp4",
@@ -92,15 +94,28 @@ const UGCSection = () => {
     useEffect(() => {
         const fetchVotes = async () => {
             // Skip fetching if user voted recently (prevent see-saw effect)
-            if (Date.now() - lastVotedTime.current < 5000) return;
+            //if (Date.now() - lastVotedTime.current < 5000) return;
 
             try {
                 const userId = user?.id || user?._id; // Handle different ID formats
                 const query = userId ? `?userId=${userId}&t=${Date.now()}` : `?t=${Date.now()}`;
                 const response = await fetch(`/api/ugc-votes${query}`);
                 const data = await response.json();
+                //if (data.votes) {
+                //    setVotes(data.votes);
+                //}
                 if (data.votes) {
-                    setVotes(data.votes);
+                    setVotes(prev => {
+                        const merged = { ...prev };
+
+                        Object.entries(data.votes).forEach(([videoId, count]) => {
+                            if (!pendingVotes.current.has(videoId)) {
+                                merged[videoId] = count;
+                            }
+                        });
+
+                        return merged;
+                    });
                 }
                 if (data.userVotedVideos) {
                     // Merge server-side user votes with local storage (server takes precedence if logged in)
@@ -129,7 +144,9 @@ const UGCSection = () => {
         e.preventDefault();
         e.stopPropagation();
 
-        lastVotedTime.current = Date.now();
+        pendingVotes.current.add(videoFilename);
+
+        //lastVotedTime.current = Date.now();
 
         const hasVoted = userVotes[videoFilename];
         const newHasVoted = !hasVoted;
@@ -156,6 +173,11 @@ const UGCSection = () => {
         } catch (error) {
             console.error("Error submitting vote:", error);
             // Revert on error (optional, keeping it simple for now)
+        } finally {
+            // Release lock AFTER backend settles
+            setTimeout(() => {
+                pendingVotes.current.delete(videoFilename);
+            }, 800);
         }
     };
 
