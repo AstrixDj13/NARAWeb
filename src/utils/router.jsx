@@ -21,6 +21,7 @@ const BehindTheScreen = React.lazy(() => import("../pages/BehindTheScreen"));
 const BlogPost = React.lazy(() => import("../pages/BlogPost"));
 const Return_Policies = React.lazy(() => import("../pages/Return_Policies"));
 const Exchange_Policies = React.lazy(() => import("../pages/Exchange_Policies"));
+const UGCCollaboration = React.lazy(() => import("../pages/UGCCollaboration"));
 
 
 
@@ -64,6 +65,10 @@ export const router = createBrowserRouter([
       {
         path: "product/:id",
         element: <LazyComponent component={<ProductsDetail />} />,
+      },
+      {
+        path: "ugc-collaboration",
+        element: <LazyComponent component={<UGCCollaboration />} />,
       },
       {
         element: <RedirectWhenLoggedIn />,

@@ -35,6 +35,7 @@ let newsletterData = [];
 
 let reviewsData = [];
 let ugcVotesData = {}; // Format: { "videoFilename": { count: number, voters: [userIds] } }
+let ugcCollaborationData = [];
 
 // Initialize Azure
 if (AZURE_STORAGE_CONNECTION_STRING) {
@@ -142,6 +143,22 @@ async function initializeData() {
         ugcVotesData = JSON.parse(fs.readFileSync(localFile, 'utf8'));
         console.log(`Loaded UGC votes from local file.`);
       } catch (e) { console.error("Error reading local votes file", e); }
+    }
+  }
+
+  // Load UGC Collaboration Data
+  const azureCollaboration = await downloadFromAzure('ugc_collaboration_data.json');
+  if (azureCollaboration) {
+    ugcCollaborationData = azureCollaboration;
+    console.log(`Loaded ${ugcCollaborationData.length} collaboration entries from Azure.`);
+  } else {
+    // Fallback to local file
+    const localFile = path.join(__dirname, 'ugc_collaboration_data.json');
+    if (fs.existsSync(localFile)) {
+      try {
+        ugcCollaborationData = JSON.parse(fs.readFileSync(localFile, 'utf8'));
+        console.log(`Loaded ${ugcCollaborationData.length} collaboration entries from local file.`);
+      } catch (e) { console.error("Error reading local collaboration file", e); }
     }
   }
 }
@@ -332,6 +349,87 @@ app.post('/api/ugc-votes', (req, res) => {
   } catch (error) {
     console.error('Error saving vote:', error);
     res.status(500).json({ error: 'Failed to save vote' });
+  }
+});
+
+// POST UGC Collaboration Form
+app.post('/api/ugc-collaboration', async (req, res) => {
+  try {
+    const { name, email, phone, city, socialHandle, followers, ugcLink, brandsWorkedWith, contentIdeas } = req.body;
+
+    if (!name || !email || !phone) {
+      return res.status(400).json({ error: 'Name, Email, and Phone are required' });
+    }
+
+    const newEntry = {
+      id: Date.now().toString(),
+      name,
+      email,
+      phone,
+      city,
+      socialHandle,
+      followers,
+      ugcLink,
+      brandsWorkedWith,
+      contentIdeas,
+      timestamp: new Date().toISOString()
+    };
+
+    // Update Memory
+    ugcCollaborationData.push(newEntry);
+
+    // Sync JSON to Azure (Background)
+    uploadToAzure('ugc_collaboration_data.json', ugcCollaborationData);
+
+    // Sync JSON to Local (Backup/Dev)
+    try {
+      const dataFile = path.join(__dirname, 'ugc_collaboration_data.json');
+      fs.writeFileSync(dataFile, JSON.stringify(ugcCollaborationData, null, 2));
+    } catch (e) { console.error("Error writing local collaboration file", e); }
+
+    // Convert to CSV and Sync
+    try {
+      const headers = ['ID', 'Name', 'Email', 'Phone', 'City', 'Social Handle', 'Followers', 'UGC Link', 'Brands Worked With', 'Content Ideas', 'Timestamp'];
+      const csvRows = [headers.join(',')];
+
+      ugcCollaborationData.forEach(entry => {
+        const row = [
+          entry.id,
+          `"${(entry.name || '').replace(/"/g, '""')}"`,
+          `"${(entry.email || '').replace(/"/g, '""')}"`,
+          `"${(entry.phone || '').replace(/"/g, '""')}"`,
+          `"${(entry.city || '').replace(/"/g, '""')}"`,
+          `"${(entry.socialHandle || '').replace(/"/g, '""')}"`,
+          `"${(entry.followers || '').replace(/"/g, '""')}"`,
+          `"${(entry.ugcLink || '').replace(/"/g, '""')}"`,
+          `"${(entry.brandsWorkedWith || '').replace(/"/g, '""')}"`,
+          `"${(entry.contentIdeas || '').replace(/"/g, '""')}"`,
+          entry.timestamp
+        ];
+        csvRows.push(row.join(','));
+      });
+
+      const csvContent = csvRows.join('\n');
+
+      // Sync CSV to Azure
+      if (containerClient) {
+        const blobClient = containerClient.getBlockBlobClient('ugc_collaboration.csv');
+        await blobClient.upload(csvContent, csvContent.length);
+        console.log(`Synced ugc_collaboration.csv to Azure.`);
+      }
+
+      // Sync CSV to Local
+      const csvFile = path.join(__dirname, 'ugc_collaboration.csv');
+      fs.writeFileSync(csvFile, csvContent);
+
+    } catch (e) {
+      console.error("Error generating/saving CSV", e);
+    }
+
+    res.json({ success: true, message: 'Application submitted successfully!' });
+  } catch (error) {
+    console.error('Error saving collaboration data:', error);
+    res.status(500).json({ error: 'Failed to submit application' });
   }
 });
 

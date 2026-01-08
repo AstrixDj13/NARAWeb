@@ -479,7 +479,19 @@ const UGCSection = () => {
                     ))}
                 </div>
             </div>
-        </section>
+
+            <div className="text-center mt-8">
+                <p className="text-lg font-medium mb-2">Wana join? Fill in...</p>
+                <Link
+                    to="/ugc-collaboration"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block text-[#1F4A40] font-bold uppercase tracking-wide border-b-2 border-[#1F4A40] hover:text-[#16332b] hover:border-[#16332b] transition-colors"
+                >
+                    Create. Collaborate. Get Featured.
+                </Link>
+            </div>
+        </section >
     );
 };
 
