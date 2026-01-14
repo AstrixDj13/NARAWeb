@@ -481,7 +481,7 @@ const UGCSection = () => {
             </div>
 
             <div className="text-center mt-8">
-                <p className="text-lg font-medium mb-2">Wana join? Fill in...</p>
+                <p className="text-lg font-medium mb-2">Wanna join? Fill in...</p>
                 <Link
                     to="/ugc-collaboration"
                     target="_blank"
