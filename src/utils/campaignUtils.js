@@ -15,6 +15,14 @@ export const campaigns = [
         collectionTitle: "Buy1-Get1 Sale",
         marqueeMessage: "B1G1 on the Entire MEL Edit!"
     },
+    {
+        id: "laya",
+        name: "Laya: The Work Edit! Coming Soon!",
+        targetDate: "2026-01-31T00:00:00",
+        offerTag: "",
+        collectionTitle: "LAYA: The Work Edit",
+        marqueeMessage: "LAYA: The Work Edit! Coming Soon!"
+    }
 ];
 
 export const isActive = (campaign) => {

@@ -96,6 +96,7 @@ const Home = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [index, setIndex] = useState(0);
   const [activeMarqueeMessages, setActiveMarqueeMessages] = useState([]);
+  const [animationKey, setAnimationKey] = useState(0);
 
   useEffect(() => {
     const campaigns = getActiveCampaigns();
@@ -115,6 +116,7 @@ const Home = () => {
     if (activeMarqueeMessages.length === 0) return;
     const interval = setInterval(() => {
       setIndex((i) => (i + 1) % activeMarqueeMessages.length);
+      setAnimationKey(prev => prev + 1);
     }, 16000); // total time per message
     return () => clearInterval(interval);
   }, [activeMarqueeMessages]);
@@ -124,10 +126,10 @@ const Home = () => {
       {/* Global marquee styles */}
       <style>{marqueeStyle}</style>
 
-      {/*{activeMarqueeMessages.length > 0 && (
+      {activeMarqueeMessages.length > 0 && (
         <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold py-1 overflow-hidden">
           <motion.div
-            key={index}
+            key={animationKey}
             initial={{ x: "-100%" }}
             animate={{ x: "100%" }}
             transition={{
@@ -139,7 +141,7 @@ const Home = () => {
             {activeMarqueeMessages[index]}
           </motion.div>
         </div>
-      )}*/}
+      )}
 
 
       {/* <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold">
@@ -149,11 +151,11 @@ const Home = () => {
       </div> */}
 
       {/* Campaign Countdown Section - Fixed below marquee */}
-      {/*<div
+      <div
         className="fixed top-6 left-0 w-full z-[60] flex justify-center items-center py-2 transition-colors duration-300 bg-[#0e2a1a] text-yellow-400"
       >
         <CampaignCountdown />
-      </div>*/}
+      </div>
 
       {/* Discount popup */}
       {/* <DiscountPopup /> */}
