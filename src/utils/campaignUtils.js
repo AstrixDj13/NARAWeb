@@ -17,11 +17,11 @@ export const campaigns = [
     },
     {
         id: "laya",
-        name: "Laya: The Work Edit! Coming Soon!",
+        name: "Laya: The Work Edit, Coming Soon!",
         targetDate: "2026-02-07T00:00:00",
         offerTag: "",
         collectionTitle: "LAYA: The Work Edit",
-        marqueeMessage: "LAYA: The Work Edit! Coming Soon!"
+        marqueeMessage: "LAYA: The Work Edit, Coming Soon!"
     }
 ];
 
