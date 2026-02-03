@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 import NavbarRelative from "../components/Navbar/NavbarRelative";
-import { getProductById } from "../apis/Products";
+import { getProductById, getProductByHandle } from "../apis/Products";
 import Loading from "../components/utils/Loading";
 import ImageGallery from "../components/productsDetail/ImageGallery";
 import DetailSection from "../components/productsDetail/DetailSection";
@@ -40,6 +40,23 @@ export default function ProductsDetailPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [collectionId, setCollectionId] = useState(null);
   const [concernedCollectionId, setConcernedCollectionId] = useState(null);
+
+  const fetchProductInfoByHandle = async (handle) => {
+    try {
+      const fetchedProduct = await getProductByHandle(handle);
+      setProduct(fetchedProduct);
+      setConcernedCollectionId(fetchedProduct.concernedCollectionId);
+      setCollectionId(fetchedProduct.collectionId);
+      updateSizes(fetchedProduct);
+      updateDefaultColorAndSize(fetchedProduct);
+      updateColors(fetchedProduct);
+      updateModelInfo(fetchedProduct);
+    } catch (error) {
+      console.error("Error fetching product info by handle:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchProductInfo = async (productId) => {
     try {
@@ -153,8 +170,12 @@ export default function ProductsDetailPage() {
   };
 
   useEffect(() => {
-    fetchProductInfo(params.id);
-  }, [params.id]);
+    if (params.handle) {
+      fetchProductInfoByHandle(params.handle);
+    } else if (params.id) {
+      fetchProductInfo(params.id);
+    }
+  }, [params.id, params.handle]);
 
   useEffect(() => {
     const camefrompage = query.get("camefrompage");

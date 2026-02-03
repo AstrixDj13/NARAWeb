@@ -41,7 +41,7 @@ const ProductCard = ({ product, className }) => {
         return '';
     }, [product]);
 
-    const link = product.link || (product.id ? `/product/${encodeURIComponent(product.id)}` : '#');
+    const link = product.link || (product.handle ? `/products/${product.handle}` : (product.id ? `/product/${encodeURIComponent(product.id)}` : '#'));
     const title = product.title || product.description;
     const badge = product.badge || product.label;
 

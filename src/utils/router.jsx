@@ -67,6 +67,10 @@ export const router = createBrowserRouter([
         element: <LazyComponent component={<ProductsDetail />} />,
       },
       {
+        path: "products/:handle",
+        element: <LazyComponent component={<ProductsDetail />} />,
+      },
+      {
         path: "ugc-collaboration",
         element: <LazyComponent component={<UGCCollaboration />} />,
       },
