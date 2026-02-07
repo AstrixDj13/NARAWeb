@@ -23,8 +23,8 @@ export const campaigns = [
         id: "laya",
         name: "Laya: The Work Edit, Coming Soon!",
         startDate: "2026-01-02T00:00:00+05:30",
-        endDate: "2026-02-07T16:59:59+05:30",
-        targetDate: "2026-02-07T16:59:59+05:30",
+        endDate: "2026-02-07T17:29:59+05:30",
+        targetDate: "2026-02-07T17:29:59+05:30",
         offerTag: "",
         collectionTitle: "LAYA: The Work Edit",
         marqueeMessage: "LAYA: The Work Edit, Coming Soon!"
