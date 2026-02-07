@@ -2,6 +2,8 @@ export const campaigns = [
     {
         id: "xmas",
         name: "X-Mas Sale (Flat 25% off)! LIVE NOW!",
+        startDate: "2025-12-20T00:00:00+05:30",
+        endDate: "2025-12-26T00:00:00+05:30",
         targetDate: "2025-12-26T00:00:00+05:30",
         offerTag: "25% Off",
         collectionTitle: "X'MAS Sale",
@@ -10,6 +12,8 @@ export const campaigns = [
     {
         id: "b1g1",
         name: "Stock Clearance:B1G1! LIVE NOW!",
+        startDate: "2025-12-27T00:00:00+05:30",
+        endDate: "2026-01-01T00:00:00+05:30",
         targetDate: "2026-01-01T00:00:00+05:30",
         offerTag: "Buy1Get1",
         collectionTitle: "Buy1-Get1 Sale",
@@ -18,17 +22,30 @@ export const campaigns = [
     {
         id: "laya",
         name: "Laya: The Work Edit, Coming Soon!",
-        targetDate: "2026-02-07T17:30:00+05:30",
+        startDate: "2026-01-02T00:00:00+05:30",
+        endDate: "2026-02-07T16:59:59+05:30",
+        targetDate: "2026-02-07T16:59:59+05:30",
         offerTag: "",
         collectionTitle: "LAYA: The Work Edit",
         marqueeMessage: "LAYA: The Work Edit, Coming Soon!"
+    },
+    {
+        id: "laya-start",
+        name: "Laya: The Work Edit, LIVE NOW!",
+        startDate: "2026-02-07T17:30:00+05:30",
+        endDate: "2026-02-15T23:59:59+05:30",
+        targetDate: "2026-02-15T23:59:59+05:30",
+        offerTag: "",
+        collectionTitle: "LAYA: The Work Edit",
+        marqueeMessage: "LAYA: The Work Edit, LIVE NOW!"
     }
 ];
 
 export const isActive = (campaign) => {
     const now = new Date();
-    const target = new Date(campaign.targetDate);
-    return target > now;
+    const start = new Date(campaign.startDate);
+    const end = new Date(campaign.endDate);
+    return now >= start && now <= end;
 };
 
 export const getActiveCampaigns = () => {
