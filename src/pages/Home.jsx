@@ -159,13 +159,14 @@ const Home = () => {
 
       {/* Discount popup */}
       {/* <DiscountPopup /> */}
-      <NewsletterPopup />
+      {/* <NewsletterPopup /> */}
 
       <Navbar />
       <TopSection />
-      <NewestArrivals />
+
       {/*<BehindTheScreen />*/}
       <CollectionCarousel />
+      <NewestArrivals />
       <UGCSection />
       {/* <MidSection /> */}
       <Spotlight />
