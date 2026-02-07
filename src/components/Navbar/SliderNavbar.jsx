@@ -204,7 +204,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                   })}
 
                 {collections
-                  ?.filter(item => item.title === "Chaon: The Summer Edit 2025") // Only pick Bestsellers
+                  ?.filter(item => item.title === "LAYA - The Work Edit") // Only pick Bestsellers
                   .map((item, index) => {
                     return (
                       <li key={index}>
