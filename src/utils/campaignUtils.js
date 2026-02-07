@@ -2,7 +2,7 @@ export const campaigns = [
     {
         id: "xmas",
         name: "X-Mas Sale (Flat 25% off)! LIVE NOW!",
-        targetDate: "2025-12-26T00:00:00",
+        targetDate: "2025-12-26T00:00:00+05:30",
         offerTag: "25% Off",
         collectionTitle: "X'MAS Sale",
         marqueeMessage: "Christmas Sale: FLAT 25% OFF*!"
@@ -10,7 +10,7 @@ export const campaigns = [
     {
         id: "b1g1",
         name: "Stock Clearance:B1G1! LIVE NOW!",
-        targetDate: "2026-01-01T00:00:00",
+        targetDate: "2026-01-01T00:00:00+05:30",
         offerTag: "Buy1Get1",
         collectionTitle: "Buy1-Get1 Sale",
         marqueeMessage: "B1G1 on the Entire MEL Edit!"
@@ -18,7 +18,7 @@ export const campaigns = [
     {
         id: "laya",
         name: "Laya: The Work Edit, Coming Soon!",
-        targetDate: "2026-02-07T17:30:00",
+        targetDate: "2026-02-07T17:30:00+05:30",
         offerTag: "",
         collectionTitle: "LAYA: The Work Edit",
         marqueeMessage: "LAYA: The Work Edit, Coming Soon!"
