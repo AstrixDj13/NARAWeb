@@ -33,7 +33,11 @@
       s.parentNode.insertBefore(t, s)
     }(window, document, 'script',
       'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1523356445621374');
+    //fbq('init', '1523356445621374');
+    fbq('init', '1523356445621374', {
+      em: 'email@email.com', // Values will be hashed automatically by the pixel using SHA-256
+      ph: '1234567890',
+    });
     fbq('track', 'PageView');
   </script>
   <!-- End Meta Pixel Code -->
