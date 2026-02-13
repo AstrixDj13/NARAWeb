@@ -21,21 +21,12 @@ export const campaigns = [
     },
     {
         id: "laya",
-        name: "Laya: The Work Edit, Coming Soon!",
+        name: "Laya: The Work Edit, LIVE NOW!",
         startDate: "2026-01-02T00:00:00+05:30",
         endDate: "2026-02-07T17:29:59+05:30",
         targetDate: "2026-02-07T17:29:59+05:30",
         offerTag: "",
-        collectionTitle: "LAYA: The Work Edit",
-        marqueeMessage: "LAYA: The Work Edit, Coming Soon!"
-    },
-    {
-        id: "laya-start",
-        name: "Laya: The Work Edit, LIVE NOW!",
-        startDate: "2026-02-07T17:30:00+05:30",
-        endDate: "2026-02-15T23:59:59+05:30",
-        targetDate: "2026-02-15T23:59:59+05:30",
-        offerTag: "",
+        showOnExpiry: true,
         collectionTitle: "LAYA: The Work Edit",
         marqueeMessage: "LAYA: The Work Edit, LIVE NOW!"
     }
@@ -45,6 +36,13 @@ export const isActive = (campaign) => {
     const now = new Date();
     const start = new Date(campaign.startDate);
     const end = new Date(campaign.endDate);
+
+    // Check if campaign is active based on dates OR if it's set to show on expiry
+    if (campaign.showOnExpiry) {
+        // If showOnExpiry is true, we only care that it has started
+        return now >= start;
+    }
+
     return now >= start && now <= end;
 };
 
