@@ -20,12 +20,20 @@ import createCart, {
 import { getProductVariantDetail } from "./apis/Products";
 import Howler from "howler";
 import Chatbot from "./components/Chatbot";
+import useEventTracker from "./hooks/EventTracker";
 function App() {
   const dispatch = useDispatch();
   const fetchedCartId = useSelector((state) => state.cart.id);
   const { pathname } = useLocation();
   const [soundOn, setSound] = useState(true);
   const soundRef = useRef(null);
+
+  // Analytics Tracking
+  const { trackEvent } = useEventTracker();
+
+  useEffect(() => {
+    trackEvent('page_view', { page_path: pathname });
+  }, [pathname, trackEvent]);
 
 
   const fetchAllItemsInCart = async (cartId) => {

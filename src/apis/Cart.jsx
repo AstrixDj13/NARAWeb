@@ -332,6 +332,9 @@ export async function getItemsInCartAPI(cartId) {
               }
               product {
                 title
+                metafield(namespace: "custom", key: "stock_quantity") {
+                  value
+                }
               }
             }
           }
@@ -442,6 +445,9 @@ export async function addItemToCart(cartId, variantId) {
                 }
                 product {
                   title
+                  metafield(namespace: "custom", key: "stock_quantity") {
+                    value
+                  }
                 }
               }
             }

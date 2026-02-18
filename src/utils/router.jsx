@@ -22,6 +22,7 @@ const BlogPost = React.lazy(() => import("../pages/BlogPost"));
 const Return_Policies = React.lazy(() => import("../pages/Return_Policies"));
 const Exchange_Policies = React.lazy(() => import("../pages/Exchange_Policies"));
 const UGCCollaboration = React.lazy(() => import("../pages/UGCCollaboration"));
+const CartPage = React.lazy(() => import("../pages/CartPage"));
 
 
 
@@ -73,6 +74,10 @@ export const router = createBrowserRouter([
       {
         path: "ugc-collaboration",
         element: <LazyComponent component={<UGCCollaboration />} />,
+      },
+      {
+        path: "cart",
+        element: <LazyComponent component={<CartPage />} />,
       },
       {
         element: <RedirectWhenLoggedIn />,

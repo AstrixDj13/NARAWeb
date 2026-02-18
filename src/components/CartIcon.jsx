@@ -1,16 +1,17 @@
-import Cart from "./Cart/Cart";
-import { useSelector, useDispatch } from "react-redux";
-import { setIsCartOpen } from "../store";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 export default function CartIcon({ theme, OnHomePageHeroSection }) {
-  const dispatch = useDispatch();
-  const cartOpen = useSelector((state) => state.cart.isCartOpen);
+  const navigate = useNavigate();
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
-  const toggleCartOpen = () => {
-    dispatch(setIsCartOpen(!cartOpen));
+
+  const handleCartClick = () => {
+    navigate("/cart");
   };
+
   return (
     <>
-      <div className="relative cursor-pointer  " onClick={toggleCartOpen}>
+      <div className="relative cursor-pointer  " onClick={handleCartClick}>
         <div
           className={`absolute z-50 bg-black ${OnHomePageHeroSection ? "!bg-[#ffff] !text-black" : null
             }  dark:!bg-[#fff] text-[#fff] dark:text-black text-[70%] p-0 rounded-full flex items-center justify-center top-0 right-0 w-4 h-4 `}
@@ -27,8 +28,6 @@ export default function CartIcon({ theme, OnHomePageHeroSection }) {
           alt="light mode icon"
         />
       </div>
-
-      <Cart toggleCartOpen={toggleCartOpen} cartOpen={cartOpen} />
     </>
   );
 }

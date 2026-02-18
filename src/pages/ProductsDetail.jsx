@@ -224,12 +224,15 @@ export default function ProductsDetailPage() {
               imageRefs={imageRefs}
             />
             <div className="xl:w-2/5 md:w-3/4 flex flex-col gap-8 p-4    !pb-12 !px-8 xl:overflow-auto xl:h-screen xl:!pb-36 scrollbar-hide ">
+              <ActionButtons />
               <DetailSection
                 title={product.title}
                 descriptionHtml={product.descriptionHtml}
                 cameFrom={cameFrom}
                 productId={product.id}
               />
+
+
 
               {/* Color Section */}
 
@@ -241,7 +244,7 @@ export default function ProductsDetailPage() {
                 productId={product.id}
               />
 
-              <ActionButtons />
+
               {/* <button onClick={()=>{
 
                 toast(<CartToast />)

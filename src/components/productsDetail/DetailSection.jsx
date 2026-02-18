@@ -72,15 +72,25 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
         </div>
         <h2 className="font-black xl:text-2xl text-xl"> {title}</h2>{" "}
         {/*{product?.title}*/}
-        <h3 className="tracking-tight font-semibold text-xl">
+        <h3 className="tracking-tight font-semibold text-xl flex items-center gap-2">
           {productOutOfStock ? (
             <span className="p-2 rounded-full text-white bg-red-500">
               out of stock
             </span>
           ) : currentVariant ? (
-            currentVariant?.node.price.currencyCode +
-            " " +
-            parseFloat(currentVariant?.node.price.amount).toFixed(2)
+            <>
+              <span className="line-through text-gray-500 text-base">
+                {currentVariant?.node.price.currencyCode}{" "}
+                {(parseFloat(currentVariant?.node.price.amount) * 1.15).toFixed(
+                  2
+                )}
+              </span>
+              <span>
+                {currentVariant?.node.price.currencyCode +
+                  " " +
+                  parseFloat(currentVariant?.node.price.amount).toFixed(2)}
+              </span>
+            </>
           ) : (
             <Skeleton
               variant="rectangular"

@@ -241,21 +241,27 @@ export default function ActionButtons() {
         )}
       </button>
 
-      <div className="realtive">
-        <button
-          disabled={!currentVariant}
-          className="relative mr-2 disabled:text-gray-200 px-4 py-2 border-2 shadow-lg xl:!shadow-none"
-          onClick={buyNowHandler}
-        >
-          {buyNowBtnClicked && (
-            <div className="absolute flex items-center justify-center top-0 right-0 left-0 bottom-0">
-              <Spinner />
-            </div>
-          )}
+      <button
+        disabled={!currentVariant}
+        className="relative mr-2 disabled:text-gray-200 px-4 py-1 border-2 shadow-lg xl:!shadow-none flex flex-col items-center justify-center gap-1 min-w-[120px]"
+        onClick={buyNowHandler}
+      >
+        {buyNowBtnClicked && (
+          <div className="absolute flex items-center justify-center top-0 right-0 left-0 bottom-0">
+            <Spinner />
+          </div>
+        )}
 
-          <span className={buyNowBtnClicked && "opacity-0"}>Buy Now</span>
-        </button>
-      </div>
+        <span className={buyNowBtnClicked ? "opacity-0" : "flex items-center gap-2"}>
+          Buy Now
+          <div className="flex items-center gap-[3px]">
+            <img src="/icons/upi.png" alt="UPI" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
+            <img src="/icons/phonepe.jpg" alt="PhonePe" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
+            <img src="/icons/gpay.webp" alt="GPay" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
+            <span className="text-[10px] bg-white text-black font-bold px-[3px] rounded">+18</span>
+          </div>
+        </span>
+      </button>
 
       {/* <button className="px-2 py-2 border-2 shadow-lg flex items-center justify-center">
         <MdBookmarkBorder size={24} />

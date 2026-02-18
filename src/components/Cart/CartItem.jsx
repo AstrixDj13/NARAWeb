@@ -14,6 +14,8 @@ export default function CartItem({
   cartLineId,
   cartId,
   productId,
+  stockLeft,
+  className,
 }) {
   // State
   const [productQuantity, setProductQuantity] = useState();
@@ -145,7 +147,7 @@ export default function CartItem({
 
   // Render
   return (
-    <div className="flex gap-2 z-100 sm:h-32 h-24 pb-2 border-b-2 dark:bg-black dark:text-white">
+    <div className={`flex gap-2 z-100 pb-2 border-b-2 dark:bg-black dark:text-white ${className || "sm:h-32 h-24"}`}>
       {productIsUpdating ? (
         <Skeleton
           variant="rectangular"
@@ -153,12 +155,12 @@ export default function CartItem({
         />
       ) : (
         <>
-          <div className="flex w-1/3">
+          <div className="flex w-1/3 items-center justify-center">
             <img
               title="image"
               src={src}
               alt="Product"
-              className="object-cover w-full h-full"
+              className="object-contain w-full h-full max-h-full"
             />
           </div>
 
@@ -168,13 +170,26 @@ export default function CartItem({
                 <h1 className="font-bold w-full overflow-hidden text-ellipsis line-clamp-2">
                   {title}
                 </h1>
-                <p className="text-xs sm:text-base">
+                <p className="text-xs sm:text-base flex items-center gap-1">
                   {pricePerItem?.currencyCode}{" "}
+                  <span className="line-through text-gray-500 text-xs sm:text-xs mr-1">
+                    {(
+                      pricePerItem?.amount *
+                      1.0 *
+                      productQuantity *
+                      1.15
+                    ).toFixed(2)}
+                  </span>
                   <strong className="font-black">
                     {(pricePerItem?.amount * 1.0 * productQuantity).toFixed(2)}
                   </strong>{" "}
                   | Size: <strong className="font-bold">{size}</strong>
                 </p>
+                {stockLeft && (
+                  <p className="text-red-500 text-xs font-bold mt-1">
+                    {stockLeft}
+                  </p>
+                )}
               </div>
 
               <div className="text-xs sm:text-base flex flex-row gap-2">
