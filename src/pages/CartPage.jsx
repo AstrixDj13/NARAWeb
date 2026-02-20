@@ -12,6 +12,7 @@ import { Skeleton } from "@mui/material";
 import { HiArrowNarrowLeft } from "react-icons/hi";
 import TrustBadges from "../components/productsDetail/TrustBadges";
 import Coupons from "../components/Cart/Coupons";
+import FooterSectionUpdated from "../components/home/FooterSectionUpdated";
 
 export default function CartPage() {
     const totalQuantityInCart = useSelector((state) => state.cart.totalQuantity);
@@ -69,16 +70,25 @@ export default function CartPage() {
         }, 0);
     };
 
+    // Calculate savings
+    const calculateSavings = () => {
+        if (!productsInCart || productsInCart.length === 0) return 0;
+        return productsInCart.reduce((savings, item) => {
+            const price = parseFloat(item?.node?.merchandise?.price?.amount || 0);
+            const quantity = item?.node?.quantity || 0;
+            return savings + 200 * quantity;
+        }, 0);
+    };
     const subtotal = calculateSubtotal();
     const DELIVERY_FEE = 100;
-    const savings = (subtotal * 0.15) + DELIVERY_FEE; // 15% Loss Aversion Savings + Waived Delivery Fee
+    const savings = calculateSavings() + DELIVERY_FEE; // 15% Loss Aversion Savings + Waived Delivery Fee
 
     return (
         <div className="flex flex-col min-h-screen bg-[#F7F7F7] dark:bg-black dark:text-white font-antikor">
             <NavbarRelative />
 
-            <div className="flex flex-col items-center justify-center flex-grow p-4 mt-[74px]">
-                <div className="w-full max-w-4xl bg-white dark:!bg-black dark:border dark:border-gray-800 shadow-md rounded-lg p-6">
+            <div className="flex flex-col items-center justify-center flex-grow px-0 pt-4 pb-0 sm:p-4 md:p-8 mt-[74px]">
+                <div className="w-full xl:w-full dark:border dark:border-gray-800 rounded-lg p-3 sm:p-2 md:p-6">
                     <div className="flex items-center justify-between border-b pb-4 mb-4 dark:border-gray-800">
                         <h1 className="text-3xl font-black text-gray-900 dark:text-white">YOUR CART</h1>
                         <span className="text-gray-900 dark:text-white">{totalQuantityInCart} Items</span>
@@ -118,8 +128,8 @@ export default function CartPage() {
                                         <div className="flex justify-between items-center text-gray-600 dark:text-gray-400">
                                             <span className="font-semibold text-lg text-green-600 dark:text-green-400">Delivery</span>
                                             <div className="flex items-center gap-[5px]">
-                                                <span className="font-semibold text-lg text-green-600 dark:text-green-400">FREE</span>
                                                 <span className="line-through text-red-500">₹{DELIVERY_FEE}</span>
+                                                <span className="font-semibold text-lg text-green-600 dark:text-green-400">FREE</span>
                                             </div>
                                         </div>
 
@@ -140,6 +150,7 @@ export default function CartPage() {
                                         <p className="text-xs text-gray-500 dark:text-gray-400 text-right">
                                             Taxes and shipping calculated at checkout
                                         </p>
+                                        <Coupons />
 
                                         <div className="flex flex-col gap-4 mt-4">
                                             {/* <button
@@ -200,11 +211,12 @@ export default function CartPage() {
                                 <TrustBadges />
                             </div>
                         )}
-                        <Coupons />
+
                         <YouMayAlsoLike />
                     </div>
                 </div>
             </div>
+            <FooterSectionUpdated />
         </div >
     );
 }

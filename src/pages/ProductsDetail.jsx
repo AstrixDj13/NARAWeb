@@ -223,8 +223,11 @@ export default function ProductsDetailPage() {
               scrollToImage={scrollToImage}
               imageRefs={imageRefs}
             />
+
             <div className="xl:w-2/5 md:w-3/4 flex flex-col gap-8 p-4    !pb-12 !px-8 xl:overflow-auto xl:h-screen xl:!pb-36 scrollbar-hide ">
-              <ActionButtons />
+              <div className="sticky top-[-1px] z-20 bg-[#F7F7F7] dark:bg-black py-2 xl:py-4 -mt-2 xl:-mt-4">
+                <ActionButtons />
+              </div>
               <DetailSection
                 title={product.title}
                 descriptionHtml={product.descriptionHtml}

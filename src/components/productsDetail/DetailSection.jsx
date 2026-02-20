@@ -81,7 +81,7 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
             <>
               <span className="line-through text-gray-500 text-base">
                 {currentVariant?.node.price.currencyCode}{" "}
-                {(parseFloat(currentVariant?.node.price.amount) * 1.15).toFixed(
+                {(parseFloat(currentVariant?.node.price.amount) + 200).toFixed(
                   2
                 )}
               </span>
