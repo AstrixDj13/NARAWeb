@@ -47,7 +47,7 @@ const ReviewSection = ({ productId }) => {
         }
     };
 
-    const averageRating = reviews.length
+    const averageRating = reviews?.length
         ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
         : 0;
 
@@ -64,7 +64,7 @@ const ReviewSection = ({ productId }) => {
                             <FaStar key={i} className={i < Math.round(averageRating) ? "text-yellow-400" : "text-gray-300"} />
                         ))}
                     </div>
-                    <p className="text-sm text-gray-500 mt-1">{reviews.length} reviews</p>
+                    <p className="text-sm text-gray-500 mt-1">{reviews?.length || 0} reviews</p>
                 </div>
             </div>
 
@@ -72,7 +72,7 @@ const ReviewSection = ({ productId }) => {
             <div className="space-y-6 mb-12">
                 {isLoading ? (
                     <p>Loading reviews...</p>
-                ) : reviews.length > 0 ? (
+                ) : reviews?.length > 0 ? (
                     reviews.map((review) => (
                         <div key={review.id} className="border-b border-gray-100 pb-6 dark:border-gray-800">
                             <div className="flex items-center justify-between mb-2">

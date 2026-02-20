@@ -5,11 +5,11 @@ import axios from "axios";
 export const fixCheckoutUrl = (text) => {
   if (!text) return text;
   // Replace narawear.com with the actual Shopify checkout domain globally
-  return text.replace(/http:\/\/narawear\.com/g, 'https://narawear.myshopify.com')
-    .replace(/https:\/\/narawear\.com/g, 'https://narawear.myshopify.com');
+  return text.replace(/http:\/\/narawear\.com/g, 'https://www.narawear.com')
+    .replace(/https:\/\/narawear\.com/g, 'https://www.narawear.com');
 };
 
-export const gidToProductUrl = (gid, domain = "https://narawear.com/product/") => {
+export const gidToProductUrl = (gid, domain = "https://www.narawear.com/product/") => {
   if (!gid) return null;
   // Extract the ID part if needed, but the user's snippet just encoded the whole GID.
   // "create the product url from the gid://.......0614 using th function"
