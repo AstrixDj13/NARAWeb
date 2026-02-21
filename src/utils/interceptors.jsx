@@ -5,8 +5,8 @@ import axios from "axios";
 export const fixCheckoutUrl = (text) => {
   if (!text) return text;
   // Replace narawear.com with the actual Shopify checkout domain globally
-  return text.replace(/http:\/\/narawear\.com/g, 'https://www.narawear.com')
-    .replace(/https:\/\/narawear\.com/g, 'https://www.narawear.com');
+  return text.replace(/http:\/\/narawear\.com/g, 'https://narawear.myshopify.com')
+    .replace(/https:\/\/narawear\.com/g, 'https://narawear.myshopify.com');
 };
 
 export const gidToProductUrl = (gid, domain = "https://www.narawear.com/product/") => {
