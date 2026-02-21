@@ -2,7 +2,7 @@ import React from "react";
 import Navbar2 from "../components/Navbar/Navbar2";
 import TopSection from "../components/about/TopSection";
 import FabricStorySection from "../components/about/FabricStorySection";
-import FooterSection from "../components/home/FooterSection";
+import FooterSection from "../components/home/FooterSectionUpdated";
 import NavbarRelative from "../components/Navbar/NavbarRelative"
 
 import Breadcrumb from "../components/common/Breadcrumb";
