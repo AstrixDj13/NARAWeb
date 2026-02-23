@@ -148,10 +148,14 @@ query getProductById($id: ID!) {
     // Extract all collections
     const collections = productData.collections.edges.map((edge) => edge.node);
 
-    // Identify the concerned collection (e.g., Tops, Bottoms, Co-ords)
-    const concernedCollection = collections.find((collection) =>
-      ["Tops", "Bottoms", "Co-ord sets", "Saaz: The Festive Collection"].includes(collection.title)
-    );
+    // Identify the concerned collection (prioritize LAYA first)
+    let concernedCollection = collections.find((collection) => collection.title === "LAYA - The Work Edit");
+
+    if (!concernedCollection) {
+      concernedCollection = collections.find((collection) =>
+        ["Tops", "Bottoms", "Co-ord sets", "Saaz: The Festive Collection"].includes(collection.title)
+      );
+    }
 
     // Set the concerned collection ID
     productData.concernedCollectionId = concernedCollection?.id;
@@ -307,10 +311,14 @@ query getProductByHandle($handle: String!) {
     // Extract all collections
     const collections = productData.collections.edges.map((edge) => edge.node);
 
-    // Identify the concerned collection
-    const concernedCollection = collections.find((collection) =>
-      ["Tops", "Bottoms", "Co-ord sets", "Saaz: The Festive Collection"].includes(collection.title)
-    );
+    // Identify the concerned collection (prioritize LAYA first)
+    let concernedCollection = collections.find((collection) => collection.title === "LAYA - The Work Edit");
+
+    if (!concernedCollection) {
+      concernedCollection = collections.find((collection) =>
+        ["Tops", "Bottoms", "Co-ord sets", "Saaz: The Festive Collection"].includes(collection.title)
+      );
+    }
 
     // Set the concerned collection ID
     productData.concernedCollectionId = concernedCollection?.id;

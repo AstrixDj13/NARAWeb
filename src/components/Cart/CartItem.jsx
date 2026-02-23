@@ -194,10 +194,10 @@ export default function CartItem({
               <div className="text-xs sm:text-base flex flex-row gap-2">
                 <button
                   className="disabled:text-gray-400 px-2 bg-[#F7F7F7] border-1 dark:bg-black dark:text-white"
-                  onClick={increaseQuantityHandler}
+                  onClick={decreaseQuantityHandler}
                   disabled={quantityUpdating}
                 >
-                  +
+                  &mdash;
                 </button>
                 {quantityUpdating ? (
                   <Skeleton
@@ -213,10 +213,10 @@ export default function CartItem({
                 )}
                 <button
                   className="disabled:text-gray-400 px-2 bg-[#F7F7F7] border-1 dark:bg-black dark:text-white"
-                  onClick={decreaseQuantityHandler}
+                  onClick={increaseQuantityHandler}
                   disabled={quantityUpdating}
                 >
-                  &mdash;
+                  +
                 </button>
               </div>
             </div>

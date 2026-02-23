@@ -100,7 +100,7 @@ function App() {
     <div className="cursor-custom dark:!bg-black font-antikor">
       <Toaster position="top-center" richColors />
       <Outlet />
-      <Chatbot /> {/* ✅ Chatbot with Shopify MCP integration */}
+      {pathname === "/" && <Chatbot />} {/* ✅ Chatbot with Shopify MCP integration */}
     </div>
   );
 }
