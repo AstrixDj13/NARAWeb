@@ -52,7 +52,12 @@ const BlogCarousel = () => {
                         <div key={i} className="relative overflow-hidden rounded-lg">
                           <img
                             src={src}
+                            srcSet={`${src.replace('.webp', '-400.webp')} 400w, ${src} 1200w`}
+                            sizes="(max-width: 600px) 400px, 1200px"
                             alt={`${blog.title} - Image ${i + 1}`}
+                            loading="lazy"
+                            width="400"
+                            height="300"
                             className="w-full h-48 md:h-56 object-cover hover:scale-105 transition-transform duration-300"
                           />
                         </div>
@@ -121,8 +126,8 @@ const BlogCarousel = () => {
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`w-3 h-3 rounded-full transition-colors ${index === currentSlide
-                    ? 'bg-green-800 dark:bg-[#D8E3B1]'
-                    : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                  ? 'bg-green-800 dark:bg-[#D8E3B1]'
+                  : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
                   }`}
                 onMouseEnter={() => setAutoPlay(false)}
                 onMouseLeave={() => setAutoPlay(true)}

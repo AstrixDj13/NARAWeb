@@ -13,10 +13,10 @@ At NARA, we're here to change that. We've taken the rich textures of Ikat, Ajrak
 • Wear your Ajrak skirt with sneakers (because comfort > rules).
 • Layer a chikankari kurta over trousers for a work-friendly fit.`,
         images: [
-            "/blog1/blog1_1.jpeg",
-            "/blog1/blog1_2.jpeg",
-            "/blog1/blog1_3.jpeg",
-            "/blog1/blog1_4.JPG"
+            "/blog1/blog1_1.webp",
+            "/blog1/blog1_2.webp",
+            "/blog1/blog1_3.webp",
+            "/blog1/blog1_4.webp"
         ],
         cta: "Heritage belongs in your everyday life. Shop the collection here.",
         link: "/blog/heritage-prints"
@@ -48,10 +48,10 @@ The new aesthetic is all about contrast, think temple earrings with sneakers, or
 **Founder's Tip:**
 "If you can wear it for Diwali and a random Sunday brunch, it's worth investing in." – Ishika, Founder of NARA`,
         images: [
-            "/blog2/blog2_1.jpeg",
-            "/blog2/blog2_2.jpeg",
-            "/blog2/blog2_3.jpeg",
-            "/blog2/blog2_4.JPG"
+            "/blog2/blog2_1.webp",
+            "/blog2/blog2_2.webp",
+            "/blog2/blog2_3.webp",
+            "/blog2/blog2_4.webp"
         ],
         cta: "Our take on these trends is coming very soon. Get ready to shop for pieces that look traditional, feel comfortable, and photograph like a dream.",
         link: "/blog/festive-trends-2025"
@@ -70,10 +70,10 @@ Chaon was born from that feeling, the sweet relief of finding shade in the middl
 • Step 2: Crafting silhouettes that are flattering and practical.
 • Step 3: Shooting the collection in settings that capture the essence of Indian summer.`,
         images: [
-            "/blog3/blog3_1.jpg",
-            "/blog3/blog3_2.jpg",
-            "/blog3/blog3_3.jpeg",
-            "/blog3/blog3_4.jpeg"
+            "/blog3/blog3_1.webp",
+            "/blog3/blog3_2.webp",
+            "/blog3/blog3_3.webp",
+            "/blog3/blog3_4.webp"
         ],
         cta: "Find your summer shade. Shop Chaon now.",
         link: "/blog/chaon-summer-edit"

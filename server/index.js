@@ -2,11 +2,15 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import compression from 'compression';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Enable Gzip compression (and brotli depending on Node version)
+app.use(compression());
 
 app.use(cors());
 app.use(express.json());
@@ -21,7 +25,17 @@ const __dirname = path.dirname(__filename);
 
 // Serve static files from the React app
 const distPath = path.join(__dirname, '../dist');
-app.use(express.static(distPath));
+app.use(express.static(distPath, {
+  setHeaders: (res, path, stat) => {
+    // Aggressive caching for hashed assets, images, fonts
+    if (path.match(/\.(js|css|woff2?|ttf|png|jpe?g|gif|svg|webp|avif|ico)$/i)) {
+      res.set('Cache-Control', 'public, max-age=31536000, immutable');
+    } else if (path.endsWith('.html')) {
+      // Don't cache index.html to ensure users always get the latest bundle pointers
+      res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+  }
+}));
 
 // Azure Storage Configuration
 const AZURE_STORAGE_CONNECTION_STRING = process.env.AZURE_STORAGE_CONNECTION_STRING;

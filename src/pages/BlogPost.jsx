@@ -70,7 +70,12 @@ const BlogPost = () => {
                     <div className="h-64 md:h-96 w-full relative">
                         <img
                             src={blog.images[0]}
+                            srcSet={`${blog.images[0].replace('.webp', '-400.webp')} 400w, ${blog.images[0]} 1200w`}
+                            sizes="(max-width: 600px) 400px, 1200px"
                             alt={blog.title}
+                            fetchpriority="high"
+                            width="1200"
+                            height="600"
                             className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
@@ -97,7 +102,12 @@ const BlogPost = () => {
                                 <div key={index} className="rounded-lg overflow-hidden h-64">
                                     <img
                                         src={src}
+                                        srcSet={`${src.replace('.webp', '-400.webp')} 400w, ${src} 1200w`}
+                                        sizes="(max-width: 600px) 400px, 600px"
                                         alt={`${blog.title} - ${index + 2}`}
+                                        loading="lazy"
+                                        width="600"
+                                        height="400"
                                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                                     />
                                 </div>

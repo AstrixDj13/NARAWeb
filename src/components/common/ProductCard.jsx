@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import VideoLazy from '../loaders/VideoLazy';
 import { useOfferTag } from '../../hooks/useOfferTag';
+import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 
 const ProductCard = ({ product, className }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -61,6 +62,9 @@ const ProductCard = ({ product, className }) => {
     const currentImage = images[currentImageIndex];
     const isVideo = currentImage?.endsWith('.webm') || product.mediaType === 'video';
 
+    const mobileUrl = isVideo ? null : getOptimizedImageUrl(currentImage, 400);
+    const desktopUrl = isVideo ? null : getOptimizedImageUrl(currentImage, 600);
+
     return (
         <div
             className={`flex-shrink-0 w-[300px] sm:w-1/3 lg:w-full ${className || ''}`}
@@ -80,11 +84,13 @@ const ProductCard = ({ product, className }) => {
                     ) : (
                         <div className="w-full h-full bg-gray-100">
                             <LazyLoadImage
-                                src={currentImage}
+                                src={desktopUrl}
+                                srcSet={`${mobileUrl} 400w, ${desktopUrl} 600w`}
+                                sizes="(max-width: 600px) 400px, 600px"
                                 alt={title}
                                 className="w-full h-full object-cover transition-opacity duration-300 ease-in-out"
-                                width="100%"
-                                height="100%"
+                                width="600"
+                                height="800"
                                 effect="opacity"
                             />
                         </div>

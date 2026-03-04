@@ -189,6 +189,8 @@ const FooterSection = () => {
                   src="/home/navbar/WhatsApp.svg.webp"
                   alt="WhatsApp"
                   className="w-6 h-6 opacity-70 hover:opacity-100 transition-opacity duration-200"
+                  width="24"
+                  height="24"
                 />
               </a>
             </div>

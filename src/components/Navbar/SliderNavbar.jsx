@@ -289,6 +289,8 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     src="/home/navbar/WhatsApp.svg.webp"
                     alt="whatsapp"
                     className="w-6 h-6"
+                    width="24"
+                    height="24"
                   />
                 </a>
                 {/*<div className="flex items-center space-x-1  md:space-x-2  bg-white px-2 rounded-xl ">

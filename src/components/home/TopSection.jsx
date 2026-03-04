@@ -4,6 +4,7 @@ import topImage from "../../assets/home/backgroundImage.png";
 import CarouselImage from "../../assets/home/carouselImage.jpeg";
 import { getCollections } from "../../apis/Collections";
 import { Link } from "react-router-dom";
+import { getOptimizedImageUrl } from "../../utils/imageOptimizer";
 
 const TopSection = () => {
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -62,6 +63,26 @@ const TopSection = () => {
   }, []);
 
   useEffect(() => {
+    if (allCollections.length > 0) {
+      const firstCollection = allCollections[0];
+      const mobileUrl = getOptimizedImageUrl(firstCollection.imageSrc, 600);
+      const desktopUrl = getOptimizedImageUrl(firstCollection.imageSrc, 1600);
+
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.imageSrcset = `${mobileUrl} 600w, ${desktopUrl} 1600w`;
+      link.imageSizes = "(max-width: 600px) 600px, 1600px";
+      link.fetchPriority = "high";
+      document.head.appendChild(link);
+
+      return () => {
+        document.head.removeChild(link);
+      };
+    }
+  }, [allCollections]);
+
+  useEffect(() => {
     const carouselElement = carouselRef.current;
 
     if (carouselElement) {
@@ -75,7 +96,7 @@ const TopSection = () => {
   return (
     <div
       id="carouselExampleSlidesOnly"
-      className="carousel slide relative mt-[8rem] sm:mt-[10rem]"
+      className="carousel slide relative mt-[8rem] sm:mt-[10rem] min-h-[97vh] w-full"
       data-bs-ride="carousel"
       data-bs-interval="5000"
       ref={carouselRef}
@@ -83,20 +104,29 @@ const TopSection = () => {
       <div className="carousel-inner h-[97vh] bg-black">
         {/* third image */}
 
-        {allCollections.map((collection, index) => (
-          <div
-            key={collection.id}
-            className={`carousel-item relative w-full h-full ${index === 0 ? "active" : ""
-              }`}
-          >
-            <img
-              title="image"
-              src={collection.imageSrc}
-              className="filter brightness-75 block w-full h-full object-cover"
-              alt={collection.title}
-            />
-          </div>
-        ))}
+        {allCollections.map((collection, index) => {
+          const mobileUrl = getOptimizedImageUrl(collection.imageSrc, 600);
+          const desktopUrl = getOptimizedImageUrl(collection.imageSrc, 1600);
+
+          return (
+            <div
+              key={collection.id}
+              className={`carousel-item relative w-full h-full ${index === 0 ? "active" : ""
+                }`}
+            >
+              <img
+                title="image"
+                src={desktopUrl}
+                srcSet={`${mobileUrl} 600w, ${desktopUrl} 1600w`}
+                sizes="(max-width: 600px) 600px, 1600px"
+                className="filter brightness-75 block w-full h-full object-cover"
+                alt={collection.title}
+                fetchpriority={index === 0 ? "high" : "auto"}
+                loading={index === 0 ? "eager" : "lazy"}
+              />
+            </div>
+          )
+        })}
         {/* Text and buttons */}
         <div className="absolute bottom-28 left-12 text-left text-white">
           {/*<h5 className="text-sm">Summer collection, 2025</h5>*/}
