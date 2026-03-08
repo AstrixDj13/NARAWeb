@@ -169,7 +169,7 @@ export default function ProductsDetailPage() {
       ) : (
         <div className="flex flex-col bg-[#F7F7F7] dark:bg-black dark:text-[#ffff] font-antikor xl:max-h-screen overflow-x-hidden w-full lg:overflow-hidden">
           <NavbarRelative />
-
+          {/*Ticker appears only on product page*/}
           <ProductTicker />
 
           <div className="flex flex-col gap-4 items-center justify-center xl:items-start xl:justify-center xl:flex-row dark:bg-black xl:!p-2 p-2 w-full overflow-x-hidden">
