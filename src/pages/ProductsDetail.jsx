@@ -63,8 +63,8 @@ export default function ProductsDetailPage() {
     try {
       const fetchedProduct = await getProductById(productId);
       setProduct(fetchedProduct);
-      setConcernedCollectionId(fetchedProduct.concernedCollectionId); // Set the concerned collection ID
-      setCollectionId(fetchedProduct.collectionId); // Assuming collectionId is part of the product data
+      setConcernedCollectionId(fetchedProduct.concernedCollectionId);
+      setCollectionId(fetchedProduct.collectionId);
       updateSizes(fetchedProduct);
       updateDefaultColorAndSize(fetchedProduct);
       updateColors(fetchedProduct);
@@ -167,26 +167,26 @@ export default function ProductsDetailPage() {
       {isLoading ? (
         <PageLoader />
       ) : (
-        <div className=" flex flex-col bg-[#F7F7F7] dark:bg-black dark:text-[#ffff]  font-antikor xl-h-screen xl:max-h-screen lg:overflow-hidden">
+        <div className="flex flex-col bg-[#F7F7F7] dark:bg-black dark:text-[#ffff] font-antikor xl:max-h-screen overflow-x-hidden w-full lg:overflow-hidden">
           <NavbarRelative />
 
           <ProductTicker />
 
-          <div className=" flex flex-col gap-4 items-center justify-center xl:items-start xl:justify-center xl:flex-row dark:bg-black xl:!p-2 p-2 ">
-            {/* breadcrumb  */}
-            <div className="md:w-3/4 flex xl:hidden text-sm gap-4 font-outfit w-full ">
-              <Link className="underline flex items-center gap-3" to="/">
+          <div className="flex flex-col gap-4 items-center justify-center xl:items-start xl:justify-center xl:flex-row dark:bg-black xl:!p-2 p-2 w-full overflow-x-hidden">
+            {/* breadcrumb */}
+            <div className="md:w-3/4 flex xl:hidden text-sm gap-4 font-outfit w-full overflow-hidden">
+              <Link className="underline flex items-center gap-3 shrink-0" to="/">
                 Home{" "}
                 <img title="image" src="/icons/leftTriangleIcon.svg" alt="" />
               </Link>
               <Link
                 to={cameFrom.link}
-                className="underline whitespace-nowrap flex items-center gap-3"
+                className="underline whitespace-nowrap flex items-center gap-3 shrink-0"
               >
                 {cameFrom.page}{" "}
                 <img title="image" src="/icons/leftTriangleIcon.svg" alt="" />
               </Link>
-              <Link className="text-[#656565] whitespace-nowrap overflow-hidden text-ellipsis ">
+              <Link className="text-[#656565] whitespace-nowrap overflow-hidden text-ellipsis">
                 {product.title}
               </Link>
             </div>
@@ -200,7 +200,7 @@ export default function ProductsDetailPage() {
               imageRefs={imageRefs}
             />
 
-            <div className="xl:w-2/5 md:w-3/4 flex flex-col gap-8 p-4    !pb-12 !px-8 xl:overflow-auto xl:h-screen xl:!pb-36 scrollbar-hide ">
+            <div className="xl:w-2/5 md:w-3/4 w-full flex flex-col gap-8 p-4 !pb-12 !px-8 xl:overflow-auto xl:h-screen xl:!pb-36 scrollbar-hide">
               <div className="sticky top-[-1px] z-20 bg-[#F7F7F7] dark:bg-black py-2 xl:py-4 -mt-2 xl:-mt-4">
                 <ActionButtons />
               </div>
@@ -211,10 +211,7 @@ export default function ProductsDetailPage() {
                 productId={product.id}
               />
 
-
-
-              {/* Color Section */}
-
+              {/* Variants / Color Section */}
               <VariantsController
                 scrollToImageBySrc={scrollToImageBySrc}
                 colorsArray={product.colorsArray}
@@ -223,31 +220,12 @@ export default function ProductsDetailPage() {
                 productId={product.id}
               />
 
-
-              {/* <button onClick={()=>{
-
-                toast(<CartToast />)
-              }} className="bg-red-500 p-2 text-white">Click to view Toast</button>
-              <ToastContainer hideProgressBar={true} closeButton={false} position="bottom-center" style={{backgroundColor: 0}} /> */}
-
-              <img title="image" src="/dividers/star_divider.svg" alt="" />
-              {/* Fabric Name Section */}
-              {/* <div className="bg-[#D8E3B11C] border-2 border-[#D8E3B1] p-4 flex flex-col gap-4">
-                        <div className="flex gap-4">
-                          <img title="image" src="/test/star.svg" alt="" />
-                          <h2 className="font-bold text-2xl">Fabric Name</h2>
-                          <img title="image" src="/test/star.svg" alt="" />
-                        </div>
-                        <p>
-                          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                          Incidunt doloribus eaque dicta sit architecto cum hic eum
-                          dolore
-                          <br />
-                          explicabo possimus, enim quae nobis nemo soluta qui officia
-                          aliquam alias! Quam!
-                        </p>
-                      </div> */}
-              {/* Fabric Name section ends here */}
+              <img
+                className="w-full h-auto object-cover overflow-hidden"
+                title="image"
+                src="/dividers/star_divider.svg"
+                alt=""
+              />
 
               <ReviewSection productId={product.id} />
               <TrustBadges />
