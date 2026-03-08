@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { getCollections, getCollectionById } from "../../apis/Collections";
+import { IoClose } from "react-icons/io5";
 
 export default function SizeChart({ productId }) {
     const [showTops, setShowTops] = useState(false);
     const [showBottoms, setShowBottoms] = useState(false);
     const [showMenTops, setShowMenTops] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     const topsData = [
         { label: "Chest", xs: "34", s: "36", m: "38", l: "40" },
@@ -129,10 +131,44 @@ export default function SizeChart({ productId }) {
     const isCoords = showTops && showBottoms;
 
     return (
-        <div className="mt-8 font-antikor w-full max-w-xl mx-auto">
-            {showTops && <Table title={isCoords ? "Tops" : ""} data={topsData} columns={defaultColumns} />}
-            {showBottoms && <Table title={isCoords ? "Bottoms" : ""} data={bottomsData} columns={defaultColumns} />}
-            {showMenTops && <Table title="" data={menTopsData} columns={menColumns} />}
-        </div>
+        <>
+            <button
+                onClick={() => setIsOpen(true)}
+                className="text-sm underline font-semibold flex items-center gap-1 hover:text-gray-600 transition-colors"
+                title="View Size Chart"
+                type="button"
+            >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+                Size Chart
+            </button>
+
+            {isOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 transition-opacity backdrop-blur-sm"
+                    onClick={() => setIsOpen(false)}>
+                    <div
+                        className="bg-white dark:bg-[#111] p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto relative shadow-2xl"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <button
+                            onClick={() => setIsOpen(false)}
+                            className="absolute top-4 right-4 text-2xl text-gray-500 hover:text-black dark:hover:text-white transition-colors p-1"
+                            type="button"
+                        >
+                            <IoClose />
+                        </button>
+
+                        <h2 className="text-3xl font-bold mb-6 text-center font-antikor">Size Guide</h2>
+
+                        <div className="font-antikor w-full mx-auto">
+                            {showTops && <Table title={isCoords ? "Tops" : ""} data={topsData} columns={defaultColumns} />}
+                            {showBottoms && <Table title={isCoords ? "Bottoms" : ""} data={bottomsData} columns={defaultColumns} />}
+                            {showMenTops && <Table title="" data={menTopsData} columns={menColumns} />}
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }

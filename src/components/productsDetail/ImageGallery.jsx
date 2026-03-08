@@ -1,4 +1,4 @@
-import { FaChevronUp, FaChevronDown } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useRef } from "react";
 import classes from "./imageGallery.module.css";
 import ImageWithSkeleton from "../utils/ImageWithSkeleton";
@@ -17,66 +17,65 @@ export default function ImageGallery({
   const isMobile = window.innerWidth < 768;
 
   return (
-    <div className="flex w-full gap-2 lg:w-[50%] h-[460px] md:h-[790px] xl:h-[calc(100vh-90px)]">
-      {/* Thumbnails */}
-      <div className="flex h-full flex-col items-center gap-4 w-1/5">
-        <div
-          className={`h-full overflow-auto ${classes["hide-scrollbar"]} lg:w-28 w-16`}
-        >
-          {images?.map((el, index) => (
-            <div
-              key={index}
-              onClick={() => scrollToImage(index)}
-              className={`mb-4 h-[102px] lg:h-[150px] cursor-pointer border-2 ${index === currentIndex ? "border-black" : "border-transparent"
-                }`}
-            >
-              <ImageWithSkeleton img={el?.node?.src} name={index + 1} />
-            </div>
-          ))}
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <button
-            onClick={handleUp}
-            className="w-12 h-12 rounded-full border-2 flex items-center justify-center"
-          >
-            <FaChevronUp />
-          </button>
-          <button
-            onClick={handleDown}
-            className="w-12 h-12 rounded-full border-2 flex items-center justify-center"
-          >
-            <FaChevronDown />
-          </button>
-        </div>
-      </div>
-
-      {/* Main Image */}
+    <div className="relative flex w-full lg:w-[50%] h-[460px] md:h-[790px] xl:h-[calc(100vh-90px)]">
+      {/* Main Image Slider */}
       <div
         ref={containerRef}
-        className="xl:w-full xl:h-full w-full sm:w-[641px] h-[460px] md:h-[790px] overflow-hidden"
+        className="w-full h-full relative overflow-hidden bg-white dark:bg-black"
       >
         {images?.map((el, index) => (
           <div
             key={el?.node?.src}
             ref={(el) => (imageRefs.current[index] = el)}
-            className="w-full h-full"
+            className={`absolute top-0 left-0 w-full h-full transition-opacity duration-300 ${index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+              }`}
           >
             {index === currentIndex &&
               (isMobile ? (
                 <MobileZoomImage img={el?.node?.src} />
               ) : (
-                <ZoomableImage
-                  img={el?.node?.src}
-                  name={index + 1}
-                  active
-                />
+                <ZoomableImage img={el?.node?.src} name={index + 1} active />
               ))}
           </div>
         ))}
+
+        {/* Navigation Arrows */}
+        {images?.length > 1 && (
+          <>
+            <button
+              onClick={handleUp}
+              className="absolute left-2 lg:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 lg:w-12 lg:h-12 bg-white/80 dark:bg-black/60 rounded-full flex items-center justify-center shadow-md hover:bg-white dark:hover:bg-black text-black dark:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Previous image"
+              disabled={currentIndex === 0}
+            >
+              <FaChevronLeft className="mr-1 lg:mr-0" />
+            </button>
+            <button
+              onClick={handleDown}
+              className="absolute right-2 lg:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 lg:w-12 lg:h-12 bg-white/80 dark:bg-black/60 rounded-full flex items-center justify-center shadow-md hover:bg-white dark:hover:bg-black text-black dark:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Next image"
+              disabled={currentIndex === images.length - 1}
+            >
+              <FaChevronRight className="ml-1 lg:ml-0" />
+            </button>
+          </>
+        )}
+
+        {/* Pagination Dots */}
+        {images?.length > 1 && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => scrollToImage(index)}
+                className={`h-2.5 rounded-full transition-all ${index === currentIndex ? "bg-black dark:bg-white w-6" : "bg-gray-400 dark:bg-gray-600 w-2.5"
+                  }`}
+                aria-label={`Go to image ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
-
-
     </div>
   );
 }

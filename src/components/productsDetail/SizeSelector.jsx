@@ -3,10 +3,14 @@ import SizeChart from "./SizeChart";
 export default function SizeSelector({ sizes, defaultSize, selectSize, productId }) {
 
   return (
-    <div className="flex flex-col gap-4 tracking-tighter">
-      <h2 className="font-bold text-lg">
-        Select Size
-      </h2>
+    <div className="flex flex-col gap-4 tracking-tighter w-full">
+      <div className="flex justify-between items-center w-full">
+        <h2 className="font-bold text-lg tracking-tighter">
+          Select Size
+        </h2>
+        {/* Size Chart Component */}
+        <SizeChart productId={productId} />
+      </div>
 
       <div className="flex gap-4">
         {sizes.map((size) => (
@@ -29,9 +33,6 @@ export default function SizeSelector({ sizes, defaultSize, selectSize, productId
             </button>
           ))} */}
       </div>
-
-      {/* Size Chart Component */}
-      <SizeChart productId={productId} />
     </div>
   );
 }

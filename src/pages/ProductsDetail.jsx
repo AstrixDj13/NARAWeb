@@ -18,6 +18,7 @@ import useQuery from "../hooks/useQuery";
 import RelatedProducts from "../components/productsDetail/RelatedProducts";
 import ReviewSection from "../components/productsDetail/ReviewSection";
 import TrustBadges from "../components/productsDetail/TrustBadges";
+import ProductTicker from "../components/productsDetail/ProductTicker";
 
 export default function ProductsDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -106,66 +107,39 @@ export default function ProductsDetailPage() {
     setModelInfo(modelOption?.values || []);
   };
 
-  // Throttle function
-  function throttle(fn, delay) {
-    let lastCall = 0;
-    return function (...args) {
-      const now = new Date().getTime();
-      if (now - lastCall < delay) {
-        return;
-      }
-      lastCall = now;
-      return fn(...args);
-    };
-  }
-
   const scrollToImage = useCallback(
-    throttle((index) => {
-      const imageElement = imageRefs.current[index];
-      if (imageElement) {
-        const container = imageRefs.current[0]?.parentElement;
-        const offsetTop = imageElement?.offsetTop - container?.offsetTop;
-        container?.scrollTo({ top: offsetTop, behavior: "smooth" });
+    (index) => {
+      if (index >= 0 && index < product?.images?.edges?.length) {
         setCurrentIndex(index);
       }
-    }, 300),
-    []
+    },
+    [product]
   );
 
   const scrollToImageBySrc = useCallback(
-    throttle((imageSrc) => {
-      const imageElementIndex = imageRefs.current.findIndex(
-        (div) => div?.querySelector("img")?.src === imageSrc
+    (imageSrc) => {
+      const imageElementIndex = product?.images?.edges.findIndex(
+        (edge) => edge.node.src === imageSrc
       );
 
       if (imageElementIndex !== -1) {
-        const imageElement = imageRefs.current[imageElementIndex];
-        if (imageElement) {
-          const container = imageRefs.current[0]?.parentElement;
-          // Calculate the offset relative to the container
-          const offsetTop =
-            imageElement.getBoundingClientRect().top +
-            container.scrollTop -
-            container.getBoundingClientRect().top;
-          container.scrollTo({ top: offsetTop, behavior: "smooth" });
-          setCurrentIndex(imageElementIndex);
-        }
+        setCurrentIndex(imageElementIndex);
       } else {
         console.warn(`Image with src ${imageSrc} not found.`);
       }
-    }, 300), // Throttling to every 300ms
-    []
+    },
+    [product]
   );
 
   const handleUp = () => {
     if (currentIndex > 0) {
-      scrollToImage(currentIndex - 1);
+      setCurrentIndex(currentIndex - 1);
     }
   };
 
   const handleDown = () => {
-    if (currentIndex < imageRefs.current.length - 1) {
-      scrollToImage(currentIndex + 1);
+    if (product?.images?.edges && currentIndex < product.images.edges.length - 1) {
+      setCurrentIndex(currentIndex + 1);
     }
   };
 
@@ -196,7 +170,9 @@ export default function ProductsDetailPage() {
         <div className=" flex flex-col bg-[#F7F7F7] dark:bg-black dark:text-[#ffff]  font-antikor xl-h-screen xl:max-h-screen lg:overflow-hidden">
           <NavbarRelative />
 
-          <div className="mt-[74px]  flex flex-col gap-4 items-center justify-center xl:items-start xl:justify-center xl:flex-row dark:bg-black xl:!p-2 p-2 ">
+          <ProductTicker />
+
+          <div className=" flex flex-col gap-4 items-center justify-center xl:items-start xl:justify-center xl:flex-row dark:bg-black xl:!p-2 p-2 ">
             {/* breadcrumb  */}
             <div className="md:w-3/4 flex xl:hidden text-sm gap-4 font-outfit w-full ">
               <Link className="underline flex items-center gap-3" to="/">

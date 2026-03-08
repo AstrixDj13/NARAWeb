@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
+import { FaTshirt, FaRegHeart, FaGift, FaPalette } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 const TrustBadges = () => {
     const badges = [
@@ -34,31 +36,86 @@ const TrustBadges = () => {
                     <path d="M8 2H16M8 22H16" stroke="#1E7B74" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
             ),
-            title: "Express Shipping",
+            title: "Express\nShipping",
             description: "Dispatch in 24 hrs",
+        },
+        {
+            icon: <FaRegHeart className="w-10 h-10 text-[#1E7B74]" />,
+            title: "Thoughtful\ndesigns",
+            description: "Made with care",
+        },
+        {
+            icon: <FaTshirt className="w-10 h-10 text-[#1E7B74]" />,
+            title: "Comfortable\neveryday wear",
+            description: "All-day comfort",
+        },
+        {
+            icon: <FaGift className="w-10 h-10 text-[#1E7B74]" />,
+            title: "Offers for\n1st time buyers",
+            description: "Special discounts",
+        },
+        {
+            icon: <FaPalette className="w-10 h-10 text-[#1E7B74]" />,
+            title: "Heritage\nPrints",
+            description: "Traditional motifs",
         },
     ];
 
+    const scrollContainerRef = useRef(null);
+
+    const scroll = (direction) => {
+        if (scrollContainerRef.current) {
+            const scrollAmount = 200;
+            if (direction === "left") {
+                scrollContainerRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+            } else {
+                scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+            }
+        }
+    };
+
     return (
-        <div className="py-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="py-4 relative group">
+            {/* Left Scroll Button (visible on hover/desktop) */}
+            <button
+                onClick={() => scroll("left")}
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 hidden md:group-hover:flex w-8 h-8 bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-full items-center justify-center shadow hover:bg-gray-50 text-black dark:text-white"
+                aria-label="Scroll left"
+            >
+                <FaChevronLeft className="text-sm" />
+            </button>
+
+            <div
+                ref={scrollContainerRef}
+                className="flex overflow-x-auto gap-6 snap-x snap-mandatory scrollbar-hide px-2 md:px-8 py-2 w-full"
+                style={{ scrollBehavior: 'smooth' }}
+            >
                 {badges.map((badge, index) => (
                     <div
                         key={index}
-                        className="flex flex-col items-center text-center gap-2"
+                        className="flex flex-col items-center justify-center text-center gap-2 min-w-[140px] md:min-w-[160px] snap-center shrink-0 pt-2"
                     >
-                        <div className="mb-1">
+                        <div className="mb-2 flex items-center justify-center h-12 w-12 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-[#1E7B74]">
                             {badge.icon}
                         </div>
-                        <div>
-                            <h3 className="font-bold text-base mb-1">{badge.title}</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <div className="max-w-[130px]">
+                            <h3 className="font-bold text-sm md:text-base mb-1 leading-snug whitespace-pre-wrap">{badge.title}</h3>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
                                 {badge.description}
                             </p>
                         </div>
                     </div>
                 ))}
             </div>
+
+            {/* Right Scroll Button (visible on hover/desktop) */}
+            <button
+                onClick={() => scroll("right")}
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 hidden md:group-hover:flex w-8 h-8 bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-full items-center justify-center shadow hover:bg-gray-50 text-black dark:text-white"
+                aria-label="Scroll right"
+            >
+                <FaChevronRight className="text-sm" />
+            </button>
         </div>
     );
 };
