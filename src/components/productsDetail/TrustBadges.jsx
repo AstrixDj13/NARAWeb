@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { FaTshirt, FaRegHeart, FaGift, FaPalette } from "react-icons/fa";
+import { FaTshirt, FaRegHeart, FaGift, FaPalette, FaShippingFast } from "react-icons/fa";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 const TrustBadges = () => {
@@ -29,13 +29,7 @@ const TrustBadges = () => {
             description: "No hassle returns",
         },
         {
-            icon: (
-                <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13 16V12L16 14M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#1E7B74" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M3 3L6 6M21 3L18 6M12 7V12" stroke="#1E7B74" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M8 2H16M8 22H16" stroke="#1E7B74" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-            ),
+            icon: <FaShippingFast className="w-10 h-10 text-[#1E7B74]" />,
             title: "Express\nShipping",
             description: "Dispatch in 24 hrs",
         },
