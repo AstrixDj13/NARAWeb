@@ -31,7 +31,7 @@ const Policies = () => {
                                 <li>Return requests must be made within 14–30 days of delivery</li>
                                 <li>Items must be unused, unworn, unwashed, and in original condition</li>
                                 <li>Original tags and packaging must be intact and attached</li>
-                                <li>Sale or discounted items are final sale and not eligible for return or exchange</li>
+                                <li>Sales of discounted items are final sales and not eligible for return or exchange</li>
                                 <li>Proof of purchase (order number or receipt) is mandatory</li>
                                 <li>Requests made after the return window will not be accepted</li>
                                 <li>Items showing signs of wear, damage, or alteration will be rejected</li>
