@@ -24,8 +24,8 @@ export default function AddressesSection() {
       dispatch(setAddresses(sortedAddresses));
     } catch (err) {
       console.log(err);
-   
-    }finally{
+
+    } finally {
       dispatch(setAreAddressesLoading(false));
     }
   };
@@ -35,7 +35,7 @@ export default function AddressesSection() {
   }, [defaultAddressId]);
 
   return (
-    <>{areAddressesLoading? <Skeleton
+    <>{areAddressesLoading ? <Skeleton
       variant="rectangular"
       className="w-full h-auto p-12 dark:bg-white"
     /> : <>
@@ -45,28 +45,28 @@ export default function AddressesSection() {
           onClick={openAddressForm}
           className="active:bg-gray-100 border-2 px-2 py-1"
         >
-          Add New Aadress 
+          Add New Address
         </button>
         {addressFormOpen && <AddressForm closeForm={closeAddressForm} />}
       </div>
 
       <div className=" flex flex-wrap box-border justify-between gap-2">
-        
+
         {userAddresses.map((address) => (
-          
+
           <AddressCard
             key={address?.id}
             fullName={address?.name}
             addressLine={address?.formatted?.join(", ")}
             phone={address?.phone}
             addressId={address?.id}
-            fullAddressObject = {address}
+            fullAddressObject={address}
           />
         ))}
-        
+
       </div>
-      </>
-      }
+    </>
+    }
     </>
   );
 }

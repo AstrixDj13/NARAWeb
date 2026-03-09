@@ -1,5 +1,5 @@
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import classes from "./imageGallery.module.css";
 import ImageWithSkeleton from "../utils/ImageWithSkeleton";
 import ZoomableImage from "../utils/ZoomableImage";
@@ -16,12 +16,44 @@ export default function ImageGallery({
   const containerRef = useRef(null);
   const isMobile = window.innerWidth < 768;
 
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
+  // Minimum swipe distance (in px) to trigger slide
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null); // otherwise the swipe is fired even with usual touch events
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && currentIndex < (images?.length || 0) - 1) {
+      handleDown(); // next image
+    }
+    if (isRightSwipe && currentIndex > 0) {
+      handleUp(); // previous image
+    }
+  };
+
   return (
     <div className="relative flex w-full lg:w-[50%] h-[460px] md:h-[790px] xl:h-[calc(100vh-90px)]">
       {/* Main Image Slider */}
       <div
         ref={containerRef}
         className="w-full h-full relative overflow-hidden bg-white dark:bg-black"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
         {images?.map((el, index) => (
           <div
