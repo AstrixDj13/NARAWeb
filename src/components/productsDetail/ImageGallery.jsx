@@ -71,8 +71,18 @@ export default function ImageGallery({
           </div>
         ))}
 
+        {/* Invisible overlay for capturing touch events reliably on mobile */}
+        {isMobile && (
+          <div
+            className="absolute inset-0 z-[15]"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          />
+        )}
+
         {/* Navigation Arrows */}
-        {images?.length > 1 && (
+        {!isMobile && images?.length > 1 && (
           <>
             <button
               onClick={handleUp}
@@ -95,12 +105,12 @@ export default function ImageGallery({
 
         {/* Pagination Dots */}
         {images?.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2 pointer-events-none">
             {images.map((_, index) => (
               <button
                 key={index}
                 onClick={() => scrollToImage(index)}
-                className={`h-2.5 rounded-full transition-all ${index === currentIndex ? "bg-black dark:bg-white w-6" : "bg-gray-400 dark:bg-gray-600 w-2.5"
+                className={`h-2.5 rounded-full transition-all pointer-events-auto ${index === currentIndex ? "bg-black dark:bg-white w-6" : "bg-gray-400 dark:bg-gray-600 w-2.5"
                   }`}
                 aria-label={`Go to image ${index + 1}`}
               />
