@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { FaTshirt, FaRegHeart, FaGift, FaPalette, FaShippingFast } from "react-icons/fa";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
@@ -56,6 +56,23 @@ const TrustBadges = () => {
     ];
 
     const scrollContainerRef = useRef(null);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (scrollContainerRef.current) {
+                const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+
+                // If reached the end, scroll back to the start
+                if (Math.ceil(scrollLeft + clientWidth) >= scrollWidth - 1) {
+                    scrollContainerRef.current.scrollTo({ left: 0, behavior: "smooth" });
+                } else {
+                    scrollContainerRef.current.scrollBy({ left: 200, behavior: "smooth" });
+                }
+            }
+        }, 3000); // Auto-slide every 3 seconds
+
+        return () => clearInterval(interval);
+    }, []);
 
     const scroll = (direction) => {
         if (scrollContainerRef.current) {
