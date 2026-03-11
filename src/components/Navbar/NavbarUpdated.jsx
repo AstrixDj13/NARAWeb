@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { Link, useLocation } from "react-router-dom";
 import SliderNavbar from "./SliderNavbar";
 import CartIcon from "../CartIcon";
@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { setAppTheme } from "../../store";
 import { getCollections } from "../../apis/Collections";
 
-import AuthModal from "../Auth/AuthModal";
+const AuthModal = lazy(() => import("../Auth/AuthModal"));
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -180,7 +180,9 @@ const Navbar = () => {
 
       {/* SliderNavbar (Mobile Menu) - This remains untouched and should work as before */}
       <SliderNavbar isOpen={isOpen} toggleMenu={toggleMenu} allCollections={allCollections} />
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      <Suspense fallback={null}>
+        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      </Suspense>
     </div>
   );
 };

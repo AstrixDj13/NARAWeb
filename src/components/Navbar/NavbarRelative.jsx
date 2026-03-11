@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import SliderNavbar from "./SliderNavbar";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 import CartIcon from "../CartIcon";
 import { useDispatch } from "react-redux";
 import { setAppTheme } from "../../store";

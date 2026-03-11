@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Suspense, lazy } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation } from "react-router-dom";
 import { Toaster, toast } from "sonner";
@@ -18,9 +18,8 @@ import createCart, {
   updateBuyersIndentity,
 } from "./apis/Cart";
 import { getProductVariantDetail } from "./apis/Products";
-import Howler from "howler";
-import Chatbot from "./components/Chatbot";
 import useEventTracker from "./hooks/EventTracker";
+const Chatbot = lazy(() => import("./components/Chatbot"));
 function App() {
   const dispatch = useDispatch();
   const fetchedCartId = useSelector((state) => state.cart.id);
@@ -100,7 +99,11 @@ function App() {
     <div className="cursor-custom dark:!bg-black font-antikor">
       <Toaster position="top-center" richColors />
       <Outlet />
-      {pathname === "/" && <Chatbot />} {/* ✅ Chatbot with Shopify MCP integration */}
+      {pathname === "/" && (
+        <Suspense fallback={null}>
+          <Chatbot />
+        </Suspense>
+      )} {/* ✅ Chatbot with Shopify MCP integration */}
     </div>
   );
 }

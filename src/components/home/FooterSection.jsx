@@ -1,5 +1,5 @@
 import React from "react";
-import "@fortawesome/fontawesome-free/css/all.min.css";
+import { FaChevronUp } from "react-icons/fa";
 
 const FooterSection = () => {
   const scrollToTop = () => {
@@ -17,7 +17,7 @@ const FooterSection = () => {
         >
           <p>Scroll up</p>
           <div className="text-2xl">
-            <i className="fas fa-chevron-up"></i>
+            <FaChevronUp />
           </div>
         </div>
 

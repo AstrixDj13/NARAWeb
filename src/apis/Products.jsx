@@ -331,7 +331,9 @@ query getProductByHandle($handle: String!) {
   }
 }
 
-
+//src: url(transform: {maxWidth: 800, preferredContentType: WEBP})
+//url: url(transform: {maxWidth: 800, preferredContentType: WEBP})
+//for Product.jsx, Collections.jsx and getAllProducts.jsx
 
 export async function getProductVariantDetail(variantId) {
   const query = `

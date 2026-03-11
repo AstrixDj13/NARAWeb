@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { getCollections } from "../../apis/Collections";
 import backendApi from "../../utils/backendApi";
-import "@fortawesome/fontawesome-free/css/all.min.css";
+import { FaChevronUp, FaMapMarkerAlt, FaEnvelope, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { toast } from "sonner";
 
 const FooterSection = () => {
@@ -58,7 +58,7 @@ const FooterSection = () => {
           onClick={scrollToTop}
         >
           <span className="mr-2">Back to top</span>
-          <i className="fas fa-chevron-up"></i>
+          <FaChevronUp />
         </div>
       </div>
 
@@ -122,7 +122,7 @@ const FooterSection = () => {
             <h3 className="font-semibold text-base mb-4 uppercase tracking-wider">Contact Us</h3>
             <ul className="space-y-3">
               <li className="flex items-start text-sm text-gray-400">
-                <i className="fas fa-map-marker-alt mt-1 mr-3 text-gray-500 flex-shrink-0"></i>
+                <FaMapMarkerAlt className="mt-1 mr-3 text-gray-500 flex-shrink-0" />
                 <a
                   href={
                     (() => {
@@ -144,7 +144,7 @@ const FooterSection = () => {
                 </a>
               </li>
               <li className="flex items-center text-sm text-gray-400">
-                <i className="fas fa-envelope mr-3 text-gray-500"></i>
+                <FaEnvelope className="mr-3 text-gray-500" />
                 <a
                   href="mailto:info@narawear.com?subject=Support%20Request&body=Hello%20NARA%20Team,"
                   aria-label="Email Nara Wear"
@@ -167,7 +167,7 @@ const FooterSection = () => {
                 className="text-gray-400 hover:text-white transition-colors duration-200"
                 aria-label="Instagram"
               >
-                <i className="fab fa-instagram text-2xl"></i>
+                <FaInstagram className="text-2xl" />
               </a>
               <a
                 href="https://www.linkedin.com/company/narawear"
@@ -176,7 +176,7 @@ const FooterSection = () => {
                 className="text-gray-400 hover:text-white transition-colors duration-200"
                 aria-label="LinkedIn"
               >
-                <i className="fab fa-linkedin text-2xl"></i>
+                <FaLinkedin className="text-2xl" />
               </a>
               <a
                 href="https://wa.me/919930835594"
