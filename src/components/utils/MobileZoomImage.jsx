@@ -1,6 +1,6 @@
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
-export default function MobileZoomImage({ img }) {
+export default function MobileZoomImage({ img, isPriority }) {
     return (
         <div className="relative w-full h-full">
             {/* UX Hint */}
@@ -23,6 +23,8 @@ export default function MobileZoomImage({ img }) {
                         src={img}
                         alt="product"
                         draggable={false}
+                        fetchpriority={isPriority ? "high" : "auto"}
+                        loading={isPriority ? "eager" : "lazy"}
                         className="w-full h-full object-cover"
                     />
                 </TransformComponent>

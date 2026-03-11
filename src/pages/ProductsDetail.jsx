@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import NavbarRelative from "../components/Navbar/NavbarRelative";
 import { getProductById, getProductByHandle } from "../apis/Products";
 import Loading from "../components/utils/Loading";
@@ -39,6 +39,9 @@ export default function ProductsDetailPage() {
   const params = useParams();
   const imageRefs = useRef([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const location = useLocation();
+  const preloadImageSrc = location.state?.imageSrc;
+
   const [collectionId, setCollectionId] = useState(null);
   const [concernedCollectionId, setConcernedCollectionId] = useState(null);
 
@@ -164,6 +167,15 @@ export default function ProductsDetailPage() {
 
   return (
     <>
+      {preloadImageSrc && (
+        <img
+          src={preloadImageSrc}
+          alt="product-preload"
+          style={{ display: "none" }}
+          fetchpriority="high"
+          loading="eager"
+        />
+      )}
       {isLoading ? (
         <PageLoader />
       ) : (

@@ -71,7 +71,7 @@ const ProductCard = ({ product, className }) => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <Link to={link}>
+            <Link to={link} state={{ imageSrc: currentImage }}>
                 <div className="w-full bg-gray-200 min-h-[350px] relative overflow-hidden rounded-lg aspect-[3/4]">
                     {isVideo ? (
                         <div className="w-full h-full object-center object-cover">

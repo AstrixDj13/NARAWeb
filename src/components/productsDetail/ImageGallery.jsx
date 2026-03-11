@@ -62,12 +62,11 @@ export default function ImageGallery({
             className={`absolute top-0 left-0 w-full h-full transition-opacity duration-300 ${index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
               }`}
           >
-            {index === currentIndex &&
-              (isMobile ? (
-                <MobileZoomImage img={el?.node?.src} />
-              ) : (
-                <ZoomableImage img={el?.node?.src} name={index + 1} active />
-              ))}
+            {isMobile ? (
+              <MobileZoomImage img={el?.node?.src} isPriority={index === 0} />
+            ) : (
+              <ZoomableImage img={el?.node?.src} name={index + 1} active={index === currentIndex} isPriority={index === 0} />
+            )}
           </div>
         ))}
 

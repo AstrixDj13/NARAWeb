@@ -6,7 +6,7 @@ const MAX_ZOOM = 4;
 const ZOOM_STEP = 0.2;
 const PAN_SPEED = 0.3; // Adjust this (0.1 = very slow, 1 = normal, 2 = fast)
 
-export default function ZoomableImage({ img, active }) {
+export default function ZoomableImage({ img, active, isPriority }) {
     const [loading, setLoading] = useState(true);
     const [scale, setScale] = useState(1);
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -116,6 +116,8 @@ export default function ZoomableImage({ img, active }) {
                 ref={imageRef}
                 src={img}
                 draggable={false}
+                fetchpriority={isPriority ? "high" : "auto"}
+                loading={isPriority ? "eager" : "lazy"}
                 onLoad={() => setLoading(false)}
                 style={{
                     width: "100%",

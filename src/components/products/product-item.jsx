@@ -21,7 +21,7 @@ const ProductItem = ({
   console.log("Received stockLeft:", stockLeft);
   productId = encodeURIComponent(productId); //Bad code
   return (
-    <Link to={`/product/${productId}?camefrompage=Products`}>
+    <Link to={`/product/${productId}?camefrompage=Products`} state={{ imageSrc: img }}>
       <div className="flex flex-col justify-between h-full font-antikor tracking-tighter xl:w-[350px] md:w-[320px] w-full cursor-pointer hover:brightness-75">
         <div className="w-full md:h-[400px] h-[300px] lg:h-[477px] relative">
           <ImageWithSkeleton img={img} name={name} />

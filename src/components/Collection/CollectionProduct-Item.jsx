@@ -68,6 +68,7 @@ const CollectionProductItem = ({
       to={`/product/${productId}?camefrompage=collection&title=${collectionTitle}&id=${encodeURIComponent(
         collectionId
       )}`}
+      state={{ imageSrc: img }}
     >
       <div
         className="flex flex-col h-full font-sans tracking-tighter xl:w-[23vw] lg:w-[30vw] md:w-[40vw] w-full cursor-pointer hover:brightness-75"
