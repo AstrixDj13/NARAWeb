@@ -13,7 +13,15 @@ const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   // Draggable state
-  const [position, setPosition] = useState({ x: window.innerWidth - 180, y: window.innerHeight - 180 });
+  const getInitialPosition = () => {
+    if (typeof window === 'undefined') return { x: 0, y: 0 };
+    const isMobile = window.innerWidth < 768;
+    return {
+      x: isMobile ? window.innerWidth - 100 : window.innerWidth - 180,
+      y: isMobile ? window.innerHeight - 120 : window.innerHeight - 180
+    };
+  };
+  const [position, setPosition] = useState(getInitialPosition());
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const dragRef = useRef(null);
@@ -64,9 +72,11 @@ const Chatbot = () => {
   // Handle window resize to keep widget on screen
   useEffect(() => {
     const handleResize = () => {
+      const isMobile = window.innerWidth < 768;
+      const botSize = isMobile ? 80 : 160;
       setPosition(prev => ({
-        x: Math.min(prev.x, window.innerWidth - 60),
-        y: Math.min(prev.y, window.innerHeight - 60)
+        x: Math.min(prev.x, window.innerWidth - botSize),
+        y: Math.min(prev.y, window.innerHeight - botSize)
       }));
     };
     window.addEventListener('resize', handleResize);
@@ -93,9 +103,11 @@ const Chatbot = () => {
       const newY = e.clientY - dragOffset.y;
 
       // Boundary checks
+      const isMobile = window.innerWidth < 768;
+      const botSize = isMobile ? 80 : 160;
       setPosition({
-        x: Math.max(0, Math.min(newX, window.innerWidth - 60)), // Simple boundary for now
-        y: Math.max(0, Math.min(newY, window.innerHeight - 60))
+        x: Math.max(0, Math.min(newX, window.innerWidth - botSize)),
+        y: Math.max(0, Math.min(newY, window.innerHeight - botSize))
       });
     }
   }, [isDragging, dragOffset, isOpen]);
@@ -124,9 +136,11 @@ const Chatbot = () => {
       const newX = touch.clientX - dragOffset.x;
       const newY = touch.clientY - dragOffset.y;
 
+      const isMobile = window.innerWidth < 768;
+      const botSize = isMobile ? 80 : 160;
       setPosition({
-        x: Math.max(0, Math.min(newX, window.innerWidth - 60)),
-        y: Math.max(0, Math.min(newY, window.innerHeight - 60))
+        x: Math.max(0, Math.min(newX, window.innerWidth - botSize)),
+        y: Math.max(0, Math.min(newY, window.innerHeight - botSize))
       });
     }
   }, [isDragging, dragOffset]);
@@ -516,15 +530,15 @@ Current cart_id: ${cartId || 'none (will create new cart on first add)'}`,
               src="/cat.gif"
               alt="Chat with us"
               draggable="false"
-              className="w-40 h-40 object-contain drop-shadow-xl select-none"
+              className="w-20 h-20 md:w-40 md:h-40 object-contain drop-shadow-xl select-none"
             />
             {/* Auto-greeting speech bubble */}
             {showGreeting && greetingMessage && (
               <div
-                className="absolute -top-16 right-0 bg-white text-slate-800 px-4 py-2.5 rounded-2xl shadow-lg text-sm font-medium pointer-events-none animate-bounce-slow"
+                className="absolute -top-12 md:-top-16 right-0 bg-white text-slate-800 px-3 py-2 md:px-4 md:py-2.5 rounded-2xl shadow-lg text-xs md:text-sm font-medium pointer-events-none animate-bounce-slow"
                 style={{
-                  minWidth: '220px',
-                  maxWidth: '280px',
+                  minWidth: window.innerWidth < 768 ? '160px' : '220px',
+                  maxWidth: window.innerWidth < 768 ? '200px' : '280px',
                   animation: 'fadeInUp 0.3s ease-out'
                 }}
               >
