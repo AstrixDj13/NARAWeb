@@ -18,7 +18,7 @@ const Chatbot = () => {
     const isMobile = window.innerWidth < 768;
     return {
       x: isMobile ? 12 : 30,
-      y: isMobile ? 90 : 110
+      y: isMobile ? 200 : 180 // Increased Y significantly
     };
   };
   const [position, setPosition] = useState(getInitialPosition());
@@ -105,9 +105,10 @@ const Chatbot = () => {
       // Boundary checks
       const isMobile = window.innerWidth < 768;
       const botSize = isMobile ? 80 : 160;
+      const minTop = isMobile ? 180 : 120; // prevent dragging under navbar
       setPosition({
         x: Math.max(0, Math.min(newX, window.innerWidth - botSize)),
-        y: Math.max(0, Math.min(newY, window.innerHeight - botSize))
+        y: Math.max(minTop, Math.min(newY, window.innerHeight - botSize))
       });
     }
   }, [isDragging, dragOffset, isOpen]);
@@ -138,9 +139,10 @@ const Chatbot = () => {
 
       const isMobile = window.innerWidth < 768;
       const botSize = isMobile ? 80 : 160;
+      const minTop = isMobile ? 180 : 160; // prevent dragging under navbar
       setPosition({
         x: Math.max(0, Math.min(newX, window.innerWidth - botSize)),
-        y: Math.max(0, Math.min(newY, window.innerHeight - botSize))
+        y: Math.max(minTop, Math.min(newY, window.innerHeight - botSize))
       });
     }
   }, [isDragging, dragOffset]);
@@ -511,9 +513,10 @@ Current cart_id: ${cartId || 'none (will create new cart on first add)'}`,
           left: position.x,
           top: position.y,
           cursor: isDragging ? 'grabbing' : 'grab',
-          touchAction: 'none'
+          touchAction: 'none',
+          zIndex: 99999
         }}
-        className="z-50 group select-none"
+        className="group select-none"
       >
         <button
           onClick={(e) => {
