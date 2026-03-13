@@ -17,8 +17,8 @@ const Chatbot = () => {
     if (typeof window === 'undefined') return { x: 0, y: 0 };
     const isMobile = window.innerWidth < 768;
     return {
-      x: isMobile ? window.innerWidth - 100 : window.innerWidth - 180,
-      y: isMobile ? window.innerHeight - 120 : window.innerHeight - 180
+      x: isMobile ? 12 : 30,
+      y: isMobile ? 90 : 110
     };
   };
   const [position, setPosition] = useState(getInitialPosition());
@@ -535,7 +535,7 @@ Current cart_id: ${cartId || 'none (will create new cart on first add)'}`,
             {/* Auto-greeting speech bubble */}
             {showGreeting && greetingMessage && (
               <div
-                className="absolute -top-12 md:-top-16 right-0 bg-white text-slate-800 px-3 py-2 md:px-4 md:py-2.5 rounded-2xl shadow-lg text-xs md:text-sm font-medium pointer-events-none animate-bounce-slow"
+                className="absolute -top-12 md:-top-16 left-0 md:left-4 bg-white text-slate-800 px-3 py-2 md:px-4 md:py-2.5 rounded-2xl shadow-lg text-xs md:text-sm font-medium pointer-events-none animate-bounce-slow"
                 style={{
                   minWidth: window.innerWidth < 768 ? '160px' : '220px',
                   maxWidth: window.innerWidth < 768 ? '200px' : '280px',
@@ -546,7 +546,7 @@ Current cart_id: ${cartId || 'none (will create new cart on first add)'}`,
                   {greetingMessage}
                   {/* Speech bubble tail */}
                   <div
-                    className="absolute -bottom-2 right-8 w-0 h-0"
+                    className="absolute -bottom-2 left-6 md:left-12 w-0 h-0"
                     style={{
                       borderLeft: '8px solid transparent',
                       borderRight: '8px solid transparent',
@@ -558,7 +558,7 @@ Current cart_id: ${cartId || 'none (will create new cart on first add)'}`,
             )}
             {/* Hover tooltip - only show when greeting is not visible */}
             {!showGreeting && (
-              <div className="absolute -top-10 right-0 bg-white text-slate-800 px-3 py-1.5 rounded-xl shadow-lg text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              <div className="absolute -top-10 left-0 md:left-4 bg-white text-slate-800 px-3 py-1.5 rounded-xl shadow-lg text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                 Chat with us! 👋
               </div>
             )}
@@ -581,7 +581,7 @@ Current cart_id: ${cartId || 'none (will create new cart on first add)'}`,
     return {
       position: 'fixed',
       left: Math.min(Math.max(8, position.x), maxLeft),
-      top: Math.min(Math.max(50, position.y), maxTop),
+      top: Math.min(Math.max(80, position.y), maxTop),
       width: chatWidth,
       height: chatHeight,
     };
