@@ -135,6 +135,14 @@ const detectPageType = (path) => {
     return 'other';
 };
 
+// Helper: Get Meta Cookies for Facebook CAPI Server-side passing
+const getMetaCookies = () => {
+    const fbp = document.cookie.match(/_fbp=([^;]+)/)?.[1];
+    const fbc = document.cookie.match(/_fbc=([^;]+)/)?.[1];
+    return { fbp, fbc };
+};
+
+
 // Geography caching to avoid redundant API calls
 let geoDataCache = null;
 const fetchGeoData = async () => {
@@ -208,6 +216,9 @@ export const useEventTracker = () => {
             page_title: document.title,
             page_type: detectPageType(window.location.pathname),
             page_referrer: document.referrer || sessionStorage.getItem('original_referrer'),
+
+            // Meta cookies
+            ...getMetaCookies(),
 
             // Custom Properties override
             ...properties,
