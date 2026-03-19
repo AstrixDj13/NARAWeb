@@ -7,6 +7,7 @@ const GET_ALL_PRODUCTS_QUERY = `
       node {
         id
         title
+        handle
         images(first: 5) {
           nodes {
             url

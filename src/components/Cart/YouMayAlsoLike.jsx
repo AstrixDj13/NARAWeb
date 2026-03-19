@@ -75,7 +75,7 @@ const YouMayAlsoLike = () => {
                         className="flex-none w-32 flex flex-col gap-1"
                     >
                         <Link
-                            to={`/product/${encodeURIComponent(product.productId)}?camefrompage=Cart`}
+                            to={product.handle ? `/products/${product.handle}?camefrompage=Cart` : `/product/${product.productId ? decodeURIComponent(product.productId).split('/').pop() : ''}?camefrompage=Cart`}
                             className="flex flex-col gap-2"
                         >
                             <div className="relative w-full h-32 bg-gray-100 rounded-md overflow-hidden">

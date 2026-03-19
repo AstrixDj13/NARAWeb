@@ -1,6 +1,7 @@
 import api from "../utils/interceptors";
 
 export async function getProductById(productId) {
+  const formattedId = productId.includes("gid://") ? productId : `gid://shopify/Product/${productId}`;
   const query = `
 query getProductById($id: ID!) {
   product(id: $id) {
@@ -78,7 +79,7 @@ query getProductById($id: ID!) {
 
   `;
 
-  const variables = { id: productId };
+  const variables = { id: formattedId };
 
   try {
     const response = await api.post("", {
@@ -336,6 +337,7 @@ query getProductByHandle($handle: String!) {
 //for Product.jsx, Collections.jsx and getAllProducts.jsx
 
 export async function getProductVariantDetail(variantId) {
+  const formattedId = variantId.includes("gid://") ? variantId : `gid://shopify/ProductVariant/${variantId}`;
   const query = `
     query getProductVariantById($id: ID!) {
       node(id: $id) {
@@ -364,7 +366,7 @@ export async function getProductVariantDetail(variantId) {
     }
   `;
 
-  const variables = { id: variantId };
+  const variables = { id: formattedId };
 
   try {
     const response = await api.post("", {

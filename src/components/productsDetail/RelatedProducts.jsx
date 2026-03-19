@@ -33,34 +33,35 @@ const RelatedProducts = ({ collectionId, productId }) => {
 
 
   return (
-    
-        <div className="bg-[#f7f7f7] dark:bg-black dark:text-[#ffff] xl:pt-12 pb-24 xl:pb-6 overflow-hidden min-h-screen ">
-          <h1 className="p-4 font-bold text-3xl  ">Related Products </h1>
-        {isLoading ? (
-          <PageLoader  />
-        ) : (
-          
-          <div className="flex flex-wrap gap-4 justify-center  py-4">
-            
-            {products.map((product, index) => (
-              <ProductItem
-                key={product.id}
-                img={product?.variants?.nodes[0]?.image?.src}
-                colors={colors}
-                setActiveProductColor={setActiveProductColor}
-                price={product?.variants?.nodes[0]?.price?.amount}
-                name={product.title}
-                discount={""}
-                message={""}
-                productId={product.id}
-              />
-            ))}
 
-          </div>
-        )}
+    <div className="bg-[#f7f7f7] dark:bg-black dark:text-[#ffff] xl:pt-12 pb-24 xl:pb-6 overflow-hidden min-h-screen ">
+      <h1 className="p-4 font-bold text-3xl  ">Related Products </h1>
+      {isLoading ? (
+        <PageLoader />
+      ) : (
+
+        <div className="flex flex-wrap gap-4 justify-center  py-4">
+
+          {products.map((product, index) => (
+            <ProductItem
+              key={product.id}
+              img={product?.variants?.nodes[0]?.image?.src}
+              colors={colors}
+              setActiveProductColor={setActiveProductColor}
+              price={product?.variants?.nodes[0]?.price?.amount}
+              name={product.title}
+              discount={""}
+              message={""}
+              productId={product.id}
+              handle={product.handle}
+            />
+          ))}
 
         </div>
-     
+      )}
+
+    </div>
+
   );
 };
 

@@ -438,7 +438,7 @@ const UGCSection = () => {
 
                                 <div className="flex gap-2 mt-2 relative">
                                     <Link
-                                        to={`/product/${encodeURIComponent(product.productId)}`}
+                                        to={product.handle ? `/products/${product.handle}` : `/product/${product.productId ? decodeURIComponent(product.productId).split('/').pop() : ''}`}
                                         className="flex-1 bg-white/20 hover:bg-white/30 text-white py-2 rounded text-xs flex items-center justify-center transition-colors border border-white/30"
                                     >
                                         View

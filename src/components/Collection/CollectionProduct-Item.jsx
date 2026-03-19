@@ -21,12 +21,14 @@ const CollectionProductItem = ({
   price,
   img,
   productId,
+  handle,
   collectionTitle,
   collectionId,
   stockLeft,
 }) => {
   const offerTag = useOfferTag(productId);
-  productId = encodeURIComponent(productId); //Bad code
+  const numericProductId = productId ? decodeURIComponent(productId).split('/').pop() : '';
+  const numericCollectionId = collectionId ? decodeURIComponent(collectionId).split('/').pop() : '';
   const navigate = useNavigate();
   const [bookmark, setBookmark] = useState(false);
   const [addToCart, setAddToCart] = useState(false);
@@ -65,9 +67,7 @@ const CollectionProductItem = ({
 
   return (
     <Link
-      to={`/product/${productId}?camefrompage=collection&title=${collectionTitle}&id=${encodeURIComponent(
-        collectionId
-      )}`}
+      to={handle ? `/products/${handle}?camefrompage=collection&title=${encodeURIComponent(collectionTitle)}&id=${numericCollectionId}` : `/product/${numericProductId}?camefrompage=collection&title=${encodeURIComponent(collectionTitle)}&id=${numericCollectionId}`}
       state={{ imageSrc: img }}
     >
       <div
@@ -123,9 +123,7 @@ const CollectionProductItem = ({
               <div className="border w-8 h-8 grid place-items-center cursor-pointer" onClick={() => handleAddtocard("remove")}><GoDash /></div>
             </div> */}
           <ViewButton
-            link={`/product/${productId}?camefrompage=collection&title=${collectionTitle}&id=${encodeURIComponent(
-              collectionId
-            )}`}
+            link={handle ? `/products/${handle}?camefrompage=collection&title=${encodeURIComponent(collectionTitle)}&id=${numericCollectionId}` : `/product/${numericProductId}?camefrompage=collection&title=${encodeURIComponent(collectionTitle)}&id=${numericCollectionId}`}
           />
           {/* Bookmark button */}
           {/* <div className="font-medium flex gap-1 items-center cursor-pointer" onClick={handleBookmark}>

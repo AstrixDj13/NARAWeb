@@ -83,6 +83,7 @@ export default function CollectionDetail() {
                   name={product.title}
                   stockLeft={product.stockLeft}
                   productId={product.productId}
+                  handle={product.handle}
                   cameFromLink={`/collection?id=${query.get("id")}`}
                   collectionTitle={collection.title}
                   collectionId={query.get("id")}

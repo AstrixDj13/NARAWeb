@@ -42,7 +42,8 @@ const ProductCard = ({ product, className }) => {
         return '';
     }, [product]);
 
-    const link = product.link || (product.handle ? `/products/${product.handle}` : (product.id ? `/product/${encodeURIComponent(product.id)}` : '#'));
+    const numericProductId = product.id ? decodeURIComponent(product.id).split('/').pop() : '';
+    const link = product.link || (product.handle ? `/products/${product.handle}` : (product.id ? `/product/${numericProductId}` : '#'));
     const title = product.title || product.description;
     const badge = product.badge || product.label;
 

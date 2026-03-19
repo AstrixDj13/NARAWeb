@@ -41,8 +41,9 @@ export async function getCollections() {
 }
 
 export async function getCollectionById(collectionId) {
+  const formattedId = collectionId.includes("gid://") ? collectionId : `gid://shopify/Collection/${collectionId}`;
   const query = `{
-  collection(id: "${collectionId}") {
+  collection(id: "${formattedId}") {
     descriptionHtml
     title
     products(first: 100) {
@@ -50,6 +51,7 @@ export async function getCollectionById(collectionId) {
         node {
           id
           title
+          handle
           metafield(namespace: "custom", key: "stock_quantity") {
             value
           }
@@ -100,6 +102,7 @@ export async function getCollectionById(collectionId) {
     console.log(collectionData.products.edges);
     const products = collectionData.products.edges.map((product) => ({
       title: product.node.title,
+      handle: product.node.handle,
       imageSrc: product.node.variants.edges[0].node.image?.url,
       price: product.node.variants.edges[0].node.price.amount,
       productId: product.node.id,

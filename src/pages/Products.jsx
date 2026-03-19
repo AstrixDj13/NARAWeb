@@ -102,6 +102,7 @@ const Products = () => {
                     discount={""}
                     message={""}
                     productId={product.id}
+                    handle={product.handle}
                   />
                 ))
               )}

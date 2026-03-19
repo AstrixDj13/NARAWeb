@@ -15,13 +15,14 @@ const ProductItem = ({
   price,
   img,
   productId,
+  handle,
   stockLeft,
 }) => {
   const offerTag = useOfferTag(productId);
   console.log("Received stockLeft:", stockLeft);
-  productId = encodeURIComponent(productId); //Bad code
+  const numericProductId = productId ? decodeURIComponent(productId).split('/').pop() : '';
   return (
-    <Link to={`/product/${productId}?camefrompage=Products`} state={{ imageSrc: img }}>
+    <Link to={handle ? `/products/${handle}?camefrompage=Products` : `/product/${numericProductId}?camefrompage=Products`} state={{ imageSrc: img }}>
       <div className="flex flex-col justify-between h-full font-antikor tracking-tighter xl:w-[350px] md:w-[320px] w-full cursor-pointer hover:brightness-75">
         <div className="w-full md:h-[400px] h-[300px] lg:h-[477px] relative">
           <ImageWithSkeleton img={img} name={name} />
@@ -65,7 +66,7 @@ const ProductItem = ({
           )}
         </div>
         <div className="mt-auto">
-          <ViewButton link={`/product/${productId}?camefrompage=Products`} />
+          <ViewButton link={handle ? `/products/${handle}?camefrompage=Products` : `/product/${numericProductId}?camefrompage=Products`} />
         </div>
       </div>
       {/* <div className="flex justify-between py-2">
