@@ -238,4 +238,44 @@ export const useEventTracker = () => {
     return { trackEvent };
 };
 
+export const useProductScrollTracker = (product) => {
+    const { trackEvent } = useEventTracker();
+    const scrollMilestones = useRef(new Set());
+
+    useEffect(() => {
+        if (!product || !product.id) return;
+
+        const handleScroll = () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight;
+            const winHeight = window.innerHeight;
+
+            // Prevent division by zero if document height is too small
+            if (docHeight <= winHeight) return;
+
+            const scrollPercent = (scrollTop / (docHeight - winHeight)) * 100;
+
+            const milestones = [25, 50, 75, 100];
+
+            milestones.forEach((milestone) => {
+                if (scrollPercent >= milestone && !scrollMilestones.current.has(milestone)) {
+                    scrollMilestones.current.add(milestone);
+                    trackEvent(`scroll_depth_${milestone}`, {
+                        product_id: product.id,
+                        product_name: product.title,
+                        product_handle: product.handle,
+                        category: product.category,
+                    });
+                }
+            });
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        // Check initial state in case the page is already scrolled or short
+        handleScroll();
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [product, trackEvent]);
+};
+
 export default useEventTracker;

@@ -17,6 +17,7 @@ const TopSection = () => {
     "C Grade Products",
     "UGC_Collection",
     "Men's Top",
+    "MEL collection"
   ];
 
   const fetchCollections = async () => {

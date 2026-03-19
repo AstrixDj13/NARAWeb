@@ -19,6 +19,7 @@ import RelatedProducts from "../components/productsDetail/RelatedProducts";
 import ReviewSection from "../components/productsDetail/ReviewSection";
 import TrustBadges from "../components/productsDetail/TrustBadges";
 import ProductTicker from "../components/productsDetail/ProductTicker";
+import { useProductScrollTracker, useEventTracker } from "../hooks/EventTracker";
 
 export default function ProductsDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -164,6 +165,25 @@ export default function ProductsDetailPage() {
       setCameFrom({ page: camefrompage, link: `/${camefrompage}` });
     }
   }, []);
+
+  const { trackEvent } = useEventTracker();
+
+  // Track 'view_item' when product data finishes loading
+  useEffect(() => {
+    if (product && product.id) {
+      const firstVariant = product?.variants?.edges?.[0]?.node;
+      trackEvent('view_item', {
+        product_id: product.id,
+        variant_id: firstVariant?.id,
+        product_name: product.title,
+        price: firstVariant?.price?.amount || product?.priceRange?.minVariantPrice?.amount,
+        collection: collectionId || concernedCollectionId,
+        in_stock: firstVariant?.availableForSale || false
+      });
+    }
+  }, [product?.id, trackEvent]);
+
+  useProductScrollTracker(product?.id ? product : null);
 
   return (
     <>
