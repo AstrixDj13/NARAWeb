@@ -24,7 +24,7 @@ const ProductItem = ({
   return (
     <Link to={handle ? `/products/${handle}?camefrompage=Products` : `/product/${numericProductId}?camefrompage=Products`} state={{ imageSrc: img }}>
       <div className="flex flex-col justify-between h-full font-antikor tracking-tighter xl:w-[350px] md:w-[320px] w-full cursor-pointer hover:brightness-75">
-        <div className="w-full md:h-[400px] h-[300px] lg:h-[477px] relative">
+        <div className="w-full aspect-[4/5] xl:aspect-[3/4] relative">
           <ImageWithSkeleton img={img} name={name} />
           {offerTag && (
             <div className="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 z-10">

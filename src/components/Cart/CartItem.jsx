@@ -4,6 +4,7 @@ import { setProductsinCart, setTotalQuantityInCart } from "../../store";
 import { updateLineItem, removeCartLine } from "../../apis/Cart";
 import { Skeleton } from "@mui/material";
 import { toast } from "sonner";
+import { useEventTracker } from "../../hooks/EventTracker";
 
 export default function CartItem({
   src,
@@ -26,6 +27,7 @@ export default function CartItem({
   const totalQuantityInCart = useSelector((state) => state.cart.totalQuantity);
   const productsInCart = useSelector((state) => state.cart.productsInCart);
   const dispatch = useDispatch();
+  const { trackEvent } = useEventTracker();
 
   // Effect
   useEffect(() => {
@@ -92,6 +94,15 @@ export default function CartItem({
         throw new Error(
           "Could not remove product from the cart! Please try again after you refresh the page or later."
         );
+
+      trackEvent('remove_from_cart', {
+        product_id: productId,
+        product_name: title,
+        price: pricePerItem?.amount,
+        currency: pricePerItem?.currencyCode,
+        quantity_removed: productQuantity,
+        variant_size: size
+      });
 
       const updatedProducts = productsInCart.filter(
         (el) => el.node.id !== cartLineId

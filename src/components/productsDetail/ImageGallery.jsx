@@ -46,7 +46,7 @@ export default function ImageGallery({
   };
 
   return (
-    <div className="relative flex w-full lg:w-[50%] h-[460px] md:h-[790px] xl:h-[calc(100vh-90px)]">
+    <div className="relative flex w-full lg:w-[50%] aspect-[4/5] xl:aspect-[3/4]">
       {/* Main Image Slider */}
       <div
         ref={containerRef}
