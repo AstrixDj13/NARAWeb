@@ -18,7 +18,7 @@ export default function MobileZoomImage({ img, isPriority }) {
                 pinch={{ step: 6 }}
                 panning={{ velocityDisabled: true }}
             >
-                <TransformComponent>
+                <TransformComponent wrapperStyle={{ width: "100%", height: "100%" }} contentStyle={{ width: "100%", height: "100%" }}>
                     <img
                         src={img}
                         alt="product"
