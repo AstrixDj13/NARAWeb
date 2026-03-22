@@ -31,14 +31,14 @@ const Coupons = () => {
                     <Link to="/products" className="flex items-center gap-4 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                         <div className="w-32 h-32 flex-shrink-0">
                             <img
-                                src="/icons/offer1.jpg"
+                                src="/offer/NARA_10_off.webp"
                                 alt="Special Offer"
                                 className="w-full h-full object-contain"
                             />
                         </div>
                         <div className="flex flex-col gap-1">
                             <p className="text-sm font-medium text-gray-600 dark:text-gray-600">
-                                Not applicable to products from new collection
+                                Unlock this exclusive offer by signing in and applying code <span className="font-bold">FIRSTORDER</span> at checkout.
                             </p>
                         </div>
                     </Link>
