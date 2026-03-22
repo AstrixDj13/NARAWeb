@@ -95,7 +95,7 @@ export default function CartItem({
           "Could not remove product from the cart! Please try again after you refresh the page or later."
         );
 
-      trackEvent('remove_from_cart', {
+      trackEvent('RemoveFromCart', {
         product_id: productId,
         product_name: title,
         price: pricePerItem?.amount,

@@ -260,7 +260,7 @@ export const useProductScrollTracker = (product) => {
             milestones.forEach((milestone) => {
                 if (scrollPercent >= milestone && !scrollMilestones.current.has(milestone)) {
                     scrollMilestones.current.add(milestone);
-                    trackEvent(`scroll_depth_${milestone}`, {
+                    trackEvent(`ScrollDepth${milestone}`, {
                         product_id: product.id,
                         product_name: product.title,
                         product_handle: product.handle,

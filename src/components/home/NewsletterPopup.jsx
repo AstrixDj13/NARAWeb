@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { MuiTelInput } from "mui-tel-input";
 import backendApi from "../../utils/backendApi";
+import { useEventTracker } from "../../hooks/EventTracker";
 
 const NewsletterPopup = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const { trackEvent } = useEventTracker();
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [loading, setLoading] = useState(false);
@@ -39,6 +41,7 @@ const NewsletterPopup = () => {
             const data = response.data;
 
             if (response.status === 200) {
+                trackEvent('Lead', { method: "Popup Newsletter" });
                 toast.success(data.message || "Successfully subscribed!");
                 handleClose();
             } else {

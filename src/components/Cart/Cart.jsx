@@ -11,6 +11,7 @@ import { Skeleton } from "@mui/material";
 import { setCheckoutUrl, setProductsinCart } from "../../store";
 import CartItem from "./CartItem";
 import YouMayAlsoLike from "./YouMayAlsoLike";
+import { useEventTracker } from "../../hooks/EventTracker";
 
 export default function Cart({ toggleCartOpen, cartOpen }) {
   const totalQuantityInCart = useSelector((state) => state.cart.totalQuantity);
@@ -18,8 +19,10 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
   const cartId = useSelector((state) => state.cart.id);
   const productsInCart = useSelector((state) => state.cart.productsInCart);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  //const accessToken = useSelector((state) => state.user.accessToken);
   const accessToken = useSelector((state) => state.user.accessToken);
   const dispatch = useDispatch();
+  const { trackEvent } = useEventTracker();
 
   const [cartLoading, setCartLoading] = useState(false);
   const [itemsQuantity, setItemsQuantity] = useState(0);
@@ -59,6 +62,9 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
         // Continue to checkout even if this fails
       }
     }
+
+    trackEvent('InitiateCheckout', { value: subtotal, currency: "INR", num_items: totalQuantityInCart });
+    //trackEvent('Purchase', { value: subtotal, currency: "INR", num_items: totalQuantityInCart });
 
     window.location.href = fixedUrl;
   };

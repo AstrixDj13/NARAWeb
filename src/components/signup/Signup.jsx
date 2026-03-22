@@ -8,9 +8,11 @@ import SignupApi from "../../apis/SignupApi";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { useEventTracker } from "../../hooks/EventTracker";
 
 function SignupSection() {
   const navigate = useNavigate();
+  const { trackEvent } = useEventTracker();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("");
@@ -77,6 +79,7 @@ function SignupSection() {
         email,
         password,
       });
+      trackEvent('CompleteRegistration', { method: "Email Signup" });
       toast.success("Signup successful!");
       console.log("Signup successful:", response);
       navigate("/login");

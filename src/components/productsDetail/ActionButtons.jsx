@@ -21,9 +21,11 @@ import { useState } from "react";
 import Spinner from "../utils/Spinner";
 import CartToast from "../utils/CartToast";
 import { ToastContainer, toast as customToast } from "react-toastify";
+import { useEventTracker } from "../../hooks/EventTracker";
 export default function ActionButtons() {
   const [addingToThecart, setAddingToTheCart] = useState(false);
   const [buyNowBtnClicked, setBuyNowBtnClicked] = useState(false);
+  const { trackEvent } = useEventTracker();
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const accessToken = useSelector((state) => state.user.accessToken);
 
@@ -114,6 +116,12 @@ export default function ActionButtons() {
     }
 
     const variantId = currentVariant.node.id;
+
+    trackEvent('AddToCart', {
+      variant_id: variantId,
+      currency: "INR"
+    });
+
     if (cartId) {
       const variantId = currentVariant.node.id;
       addAnotherItemToTheCart(cartId, variantId);
@@ -141,6 +149,8 @@ export default function ActionButtons() {
         toast.error("Unable to get checkout URL. Please try again.");
         return;
       }
+      trackEvent('InitiateCheckout', { variant_id: variantId, currency: "INR" });
+      trackEvent('Purchase', { variant_id: variantId, currency: "INR" });
       window.location.href = checkoutUrl;
     } catch (error) {
       console.error(error);
@@ -189,6 +199,8 @@ export default function ActionButtons() {
         toast.error("Unable to get checkout URL. Please try again.");
         return;
       }
+      trackEvent('InitiateCheckout', { variant_id: variantId, currency: "INR" });
+      //trackEvent('Purchase', { variant_id: variantId, currency: "INR" });
       window.location.href = checkoutUrl;
     } catch (error) {
       console.error(error);

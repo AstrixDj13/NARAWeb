@@ -4,11 +4,13 @@ import { getCollections } from "../../apis/Collections";
 import backendApi from "../../utils/backendApi";
 import { FaChevronUp, FaMapMarkerAlt, FaEnvelope, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { toast } from "sonner";
+import { useEventTracker } from "../../hooks/EventTracker";
 
 const FooterSection = () => {
   const [allCollections, setAllCollections] = useState([]);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const { trackEvent } = useEventTracker();
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -17,6 +19,7 @@ const FooterSection = () => {
     setLoading(true);
     try {
       const response = await backendApi.post("/api/newsletter", { email });
+      trackEvent('Lead', { method: "Footer Newsletter" });
       toast.success(response.data.message || "Successfully subscribed!");
       setEmail("");
     } catch (error) {

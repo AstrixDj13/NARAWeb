@@ -172,7 +172,7 @@ export default function ProductsDetailPage() {
   useEffect(() => {
     if (product && product.id) {
       const firstVariant = product?.variants?.edges?.[0]?.node;
-      trackEvent('view_item', {
+      trackEvent('ViewContent', {
         product_id: product.id,
         variant_id: firstVariant?.id,
         product_name: product.title,

@@ -31,7 +31,7 @@ function App() {
   const { trackEvent } = useEventTracker();
 
   useEffect(() => {
-    trackEvent('page_view', { page_path: pathname });
+    trackEvent('PageView', { page_path: pathname });
   }, [pathname, trackEvent]);
 
 
