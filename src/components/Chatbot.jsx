@@ -501,74 +501,18 @@ Current cart_id: ${cartId || 'none (will create new cart on first add)'}`,
     }
   };
 
-  // Floating Widget UI
+  useEffect(() => {
+    const handleOpenChat = () => {
+      setIsOpen(true);
+      setShowGreeting(false);
+    };
+    window.addEventListener('open-chatbot', handleOpenChat);
+    return () => window.removeEventListener('open-chatbot', handleOpenChat);
+  }, []);
+
+  // Return null when closed as the trigger is now in the Navbar
   if (!isOpen) {
-    return (
-      <div
-        ref={dragRef}
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
-        style={{
-          position: 'fixed',
-          left: position.x,
-          top: position.y,
-          cursor: isDragging ? 'grabbing' : 'grab',
-          touchAction: 'none',
-          zIndex: 99999
-        }}
-        className="group select-none"
-      >
-        <button
-          onClick={(e) => {
-            if (!isDragging && !hasDragged.current) {
-              setIsOpen(true);
-              setShowGreeting(false); // Hide greeting when chat opens
-            }
-          }}
-          className="p-0 bg-transparent border-none outline-none transition-transform hover:scale-110"
-          aria-label="Open Chat"
-        >
-          <div className="relative">
-            <img
-              src="/cat.gif"
-              alt="Chat with us"
-              draggable="false"
-              className="w-20 h-20 md:w-40 md:h-40 object-contain drop-shadow-xl select-none"
-            />
-            {/* Auto-greeting speech bubble */}
-            {showGreeting && greetingMessage && (
-              <div
-                className="absolute -top-12 md:-top-16 left-0 md:left-4 bg-white text-slate-800 px-3 py-2 md:px-4 md:py-2.5 rounded-2xl shadow-lg text-xs md:text-sm font-medium pointer-events-none animate-bounce-slow"
-                style={{
-                  minWidth: window.innerWidth < 768 ? '160px' : '220px',
-                  maxWidth: window.innerWidth < 768 ? '200px' : '280px',
-                  animation: 'fadeInUp 0.3s ease-out'
-                }}
-              >
-                <div className="relative">
-                  {greetingMessage}
-                  {/* Speech bubble tail */}
-                  <div
-                    className="absolute -bottom-2 left-6 md:left-12 w-0 h-0"
-                    style={{
-                      borderLeft: '8px solid transparent',
-                      borderRight: '8px solid transparent',
-                      borderTop: '8px solid white'
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-            {/* Hover tooltip - only show when greeting is not visible */}
-            {!showGreeting && (
-              <div className="absolute -top-10 left-0 md:left-4 bg-white text-slate-800 px-3 py-1.5 rounded-xl shadow-lg text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                Chat with us! 👋
-              </div>
-            )}
-          </div>
-        </button>
-      </div>
-    );
+    return null;
   }
 
   // Calculate responsive dimensions for the chat window

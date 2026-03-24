@@ -14,6 +14,8 @@ import NewestArrivals from "../components/home/NewArrivals";
 import NewsletterPopup from "../components/home/NewsletterPopup";
 import UGCSection from "../components/home/UGCSection";
 import CampaignCountdown from "../components/countdown/CampaignCountdown";
+import TrustBadges from "../components/productsDetail/TrustBadges";
+import ProductTicker from "../components/productsDetail/ProductTicker";
 import { getActiveCampaigns } from "../utils/campaignUtils";
 import { motion } from "framer-motion";
 
@@ -143,29 +145,29 @@ const Home = () => {
         </div>
       )}
 
-
+      <ProductTicker isHomePage={true} hasMarquee={activeMarqueeMessages.length > 0} />
       {/* <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold">
         <div className="announcement-container py-0.3">
           <div className="marquee">Christmas Sale: FLAT 25% OFF*!</div>
         </div>
       </div> */}
 
-      {/* Campaign Countdown Section - Fixed below marquee */}
-      <div
-        className="fixed top-6 left-0 w-full z-[60] flex justify-center items-center py-2 transition-colors duration-300 bg-[#0e2a1a] text-yellow-400"
-      >
-        <CampaignCountdown />
-      </div>
+      {/* Campaign Countdown Section */}
+      <CampaignCountdown />
 
       {/* Discount popup */}
       {/* <DiscountPopup /> */}
       {/* <NewsletterPopup /> */}
 
       <Navbar />
+      {/*<div className="pt-24 sm:pt-28 md:pt-32 lg:pt-36 bg-emerald-50 dark:bg-[#0e2a1a]/30">
+        <TrustBadges />
+      </div>*/}
+
       <TopSection />
 
       {/*<BehindTheScreen />*/}
-      <CollectionCarousel />
+      {/*<CollectionCarousel />*/}
       <NewestArrivals />
       <UGCSection />
       {/* <MidSection /> */}

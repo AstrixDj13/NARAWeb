@@ -26,24 +26,61 @@ export const campaigns = [
         endDate: "2026-02-07T17:29:59+05:30",
         targetDate: "2026-02-07T17:29:59+05:30",
         offerTag: "",
-        showOnExpiry: true,
+        showOnExpiry: false,
         collectionTitle: "LAYA: The Work Edit",
         marqueeMessage: "LAYA: The Work Edit, LIVE NOW!"
+    },
+    {
+        id: "shipping",
+        name: "", // Showing in the countdown bar area
+        offerTag: "", // The tag applied to products
+        showOnExpiry: true, // This MUST be true if you omit dates
+        collectionTitle: "",
+        marqueeMessage: "Shipping within 4-5 days!"
+    },
+    {
+        id: "exchange",
+        name: "", // Showing in the countdown bar area
+        offerTag: "", // The tag applied to products
+        showOnExpiry: true, // This MUST be true if you omit dates
+        collectionTitle: "",
+        marqueeMessage: "Easy Exchange!"
+    },
+    {
+        id: "pan-india",
+        name: "", // Showing in the countdown bar area
+        offerTag: "", // The tag applied to products
+        showOnExpiry: true, // This MUST be true if you omit dates
+        collectionTitle: "",
+        marqueeMessage: "Pan India Delivery!"
     }
+
 ];
 
 export const isActive = (campaign) => {
-    const now = new Date();
-    const start = new Date(campaign.startDate);
-    const end = new Date(campaign.endDate);
-
-    // Check if campaign is active based on dates OR if it's set to show on expiry
-    if (campaign.showOnExpiry) {
-        // If showOnExpiry is true, we only care that it has started
-        return now >= start;
+    // If the campaign has no dates and is set to show on expiry (always on)
+    if (!campaign.startDate && !campaign.endDate && campaign.showOnExpiry) {
+        return true;
     }
 
-    return now >= start && now <= end;
+    const now = new Date();
+
+    // Check if campaign is active based on dates OR if it's set to show on expiry
+    if (campaign.startDate) {
+        const start = new Date(campaign.startDate);
+
+        if (campaign.showOnExpiry) {
+            // If showOnExpiry is true, we only care that it has started
+            return now >= start;
+        }
+
+        if (campaign.endDate) {
+            const end = new Date(campaign.endDate);
+            return now >= start && now <= end;
+        }
+    }
+
+    return false;
 };
 
 export const getActiveCampaigns = () => {
@@ -51,6 +88,8 @@ export const getActiveCampaigns = () => {
 };
 
 export function calculateTimeLeft(targetDate) {
+    if (!targetDate) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+
     const difference = +new Date(targetDate) - +new Date();
     let timeLeft = {};
 

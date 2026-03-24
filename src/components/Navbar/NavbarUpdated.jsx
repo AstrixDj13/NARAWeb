@@ -5,6 +5,7 @@ import CartIcon from "../CartIcon";
 import { useDispatch } from "react-redux";
 import { setAppTheme } from "../../store";
 import { getCollections } from "../../apis/Collections";
+import { getActiveCampaigns } from "../../utils/campaignUtils";
 
 const AuthModal = lazy(() => import("../Auth/AuthModal"));
 import { useSelector } from "react-redux";
@@ -64,6 +65,31 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const isHomePage = location.pathname === "/";
+
+  const [topNavClass, setTopNavClass] = useState("top-0");
+
+  useEffect(() => {
+    const activeCampaigns = getActiveCampaigns();
+    const hasMarquee = activeCampaigns.some(c => c.marqueeMessage);
+    const hasCountdown = activeCampaigns.some(c => c.name || c.targetDate);
+
+    if (isHomePage) {
+      // Adding ~3rem (48px) to account for the fixed ProductTicker
+      if (hasMarquee && hasCountdown) {
+        setTopNavClass("top-[8.5rem]");
+      } else if (hasMarquee) {
+        setTopNavClass("top-[4.5rem]"); // Marquee (~24px) + Ticker (~48px)
+      } else if (hasCountdown) {
+        setTopNavClass("top-[7rem]");
+      } else {
+        setTopNavClass("top-[3rem]"); // Just Ticker
+      }
+    } else {
+      setTopNavClass("top-0");
+    }
+  }, [isHomePage]);
+
   // Toggle mobile menu
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
@@ -75,15 +101,13 @@ const Navbar = () => {
       ? "bg-white text-black"
       : "bg-black text-white";
 
-  const isHomePage = location.pathname === "/";
-
   return (
     <div className="relative">
       <nav
         className={
           !isScrolled
-            ? `${isHomePage ? "top-[5.5rem]" : "top-0"} fixed left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
-            : `fixed ${isHomePage ? "top-[5.5rem]" : "top-0"} left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-colors duration-300 ${bgClass}`
+            ? `${topNavClass} fixed left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-all duration-300 ${bgClass}`
+            : `fixed ${topNavClass} left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-all duration-300 ${bgClass}`
         }
       >
         {/* Left Section: Hamburger and Logo */}
@@ -157,9 +181,8 @@ const Navbar = () => {
               }}
             >
               <img
-                src="home/navbar/user.svg"
+                src="/home/navbar/user.svg"
                 alt="user icon"
-
                 className={
                   theme === "light" && !isScrolled
                     ? "black-icon"
@@ -171,6 +194,14 @@ const Navbar = () => {
                           ? "white-icon" : ""
                 }
               />
+            </button>
+
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('open-chatbot'))}
+              className="flex items-center justify-center transition-transform hover:scale-110"
+              aria-label="Open Chatbot"
+            >
+              <img src="/cat.gif" alt="Open Chat" className="w-8 h-8 md:w-10 md:h-10 object-contain drop-shadow-sm" />
             </button>
 
             <CartIcon theme={theme} />

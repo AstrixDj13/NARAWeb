@@ -1,183 +1,74 @@
-import React, { useEffect, useRef, useState } from "react";
-import topVideo from "../../assets/home/backgroundVideo.mp4";
-import topImage from "../../assets/home/backgroundImage.png";
-import CarouselImage from "../../assets/home/carouselImage.jpeg";
+import React, { useEffect, useState } from "react";
 import { getCollections } from "../../apis/Collections";
 import { Link } from "react-router-dom";
 import { getOptimizedImageUrl } from "../../utils/imageOptimizer";
 
 const TopSection = () => {
-  const [videoLoaded, setVideoLoaded] = useState(false);
   const [allCollections, setAllCollections] = useState([]);
-
-  const [currentCollection, setCurrentCollection] = useState({});
-
-  const carouselRef = useRef(null);
   const excludedTitles = [
     "C Grade Products",
     "UGC_Collection",
     "Men's Top",
-    "MEL collection"
+    "MEL collection",
+    "Bestsellers"
   ];
 
   const fetchCollections = async () => {
     try {
-      let allCollections = await getCollections();
-      allCollections = allCollections.filter(
+      let fetchedCollections = await getCollections();
+      fetchedCollections = fetchedCollections.filter(
         (collection) => !excludedTitles.includes(collection.title)
       );
-      console.log(allCollections);
-      setAllCollections(allCollections.reverse());
-      setCurrentCollection(allCollections[0]);
+      setAllCollections(fetchedCollections.reverse());
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    const carouselElement = carouselRef.current;
-    const handleSlideChange = (event) => {
-      const newIndex = event.to;
-      if (newIndex >= 0 && newIndex < allCollections.length) {
-        setCurrentCollection(allCollections[newIndex]);
-        console.log(
-          "current index: ",
-          event.to,
-          ", total length: ",
-          allCollections.length
-        );
-      }
-    };
-
-    carouselElement.addEventListener("slid.bs.carousel", handleSlideChange);
-
-    return () => {
-      carouselElement.removeEventListener(
-        "slid.bs.carousel",
-        handleSlideChange
-      );
-    };
-  }, [allCollections]);
-
-  useEffect(() => {
     fetchCollections();
   }, []);
 
-  useEffect(() => {
-    if (allCollections.length > 0) {
-      const firstCollection = allCollections[0];
-      const mobileUrl = getOptimizedImageUrl(firstCollection.imageSrc, 600);
-      const desktopUrl = getOptimizedImageUrl(firstCollection.imageSrc, 1600);
-
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.imageSrcset = `${mobileUrl} 600w, ${desktopUrl} 1600w`;
-      link.imageSizes = "(max-width: 600px) 600px, 1600px";
-      link.fetchPriority = "high";
-      document.head.appendChild(link);
-
-      return () => {
-        document.head.removeChild(link);
-      };
-    }
-  }, [allCollections]);
-
-  useEffect(() => {
-    const carouselElement = carouselRef.current;
-
-    if (carouselElement) {
-      const bsCarousel = new window.bootstrap.Carousel(carouselElement, {
-        interval: 5000, // Slide every 3 seconds
-        ride: "carousel",
-      });
-    }
-  }, []);
-
   return (
-    <div
-      id="carouselExampleSlidesOnly"
-      className="carousel slide relative mt-[8rem] sm:mt-[10rem] min-h-[97vh] w-full"
-      data-bs-ride="carousel"
-      data-bs-interval="5000"
-      ref={carouselRef}
-    >
-      <div className="carousel-inner h-[97vh] bg-black">
-        {/* third image */}
-
+    <div className="mt-[8rem] sm:mt-[10rem] w-full bg-white dark:bg-black">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-[2px]">
         {allCollections.map((collection, index) => {
           const mobileUrl = getOptimizedImageUrl(collection.imageSrc, 600);
-          const desktopUrl = getOptimizedImageUrl(collection.imageSrc, 1600);
+          const desktopUrl = getOptimizedImageUrl(collection.imageSrc, 800);
+
+          // Eagerly load the top 6 images which will be immediately visible
+          const isPriority = index < 6;
+
+          // Shorten specific titles if necessary for aesthetics
+          let displayName = collection.title;
+          //if (displayName === "Chaon: The Summer Edit 2025") {
+          //  displayName = "SUMMER EDIT '25";
+          //}
 
           return (
-            <div
+            <Link
               key={collection.id}
-              className={`carousel-item relative w-full h-full ${index === 0 ? "active" : ""
-                }`}
+              to={`/collection?id=${encodeURIComponent(collection.id)}`}
+              className="relative group w-full aspect-[4/5] md:aspect-square overflow-hidden bg-gray-100 dark:bg-gray-900 block"
             >
               <img
-                title="image"
+                title={collection.title}
                 src={desktopUrl}
-                srcSet={`${mobileUrl} 600w, ${desktopUrl} 1600w`}
-                sizes="(max-width: 600px) 600px, 1600px"
-                className="filter brightness-75 block w-full h-full object-cover"
+                srcSet={`${mobileUrl} 600w, ${desktopUrl} 800w`}
+                sizes="(max-width: 768px) 50vw, 33vw"
+                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 filter brightness-[0.80] group-hover:brightness-100"
                 alt={collection.title}
-                fetchpriority={index === 0 ? "high" : "auto"}
-                loading={index === 0 ? "eager" : "lazy"}
+                fetchpriority={isPriority ? "high" : "auto"}
+                loading={isPriority ? "eager" : "lazy"}
               />
-            </div>
-          )
+              <div className="absolute inset-0 flex items-center justify-center p-4 cursor-pointer">
+                <h2 className="text-white text-xl sm:text-2xl md:text-3xl font-serif text-center uppercase tracking-widest drop-shadow-md">
+                  {displayName}
+                </h2>
+              </div>
+            </Link>
+          );
         })}
-        {/* Text and buttons */}
-        <div className="absolute bottom-28 left-12 text-left text-white">
-          {/*<h5 className="text-sm">Summer collection, 2025</h5>*/}
-          {currentCollection.title === "Chaon: The Summer Edit 2025" && (
-            <h5 className="text-sm">Summer collection, 2025</h5>)}
-          {!["X'MAS Sale", "Buy1-Get1 Sale"].includes(currentCollection.title) && (
-            <h2 className="text-5xl font-bold py-4">
-              {currentCollection.title}
-            </h2>
-          )}
-
-          <Link
-            to={
-              allCollections.length === 0
-                ? "#"
-                : `/collection?id=${encodeURIComponent(currentCollection.id)}`
-            }
-            className="inline-block bg-transparent border border-white text-[#D8E3B1] py-2 px-4"
-          >
-            View collection
-          </Link>
-        </div>
-
-        {/* Fixed-position navigation buttons */}
-        <div className="absolute bottom-16 left-8 w-48 px-12 flex justify-between items-center -translate-y-1/2">
-          <button
-            className="carousel-control-prev bg-[#D8E3B121] bg-opacity-30 hover:bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center"
-            type="button"
-            data-bs-target="#carouselExampleSlidesOnly"
-            data-bs-slide="prev"
-          >
-            <span
-              className="carousel-control-prev-icon inline-block bg-no-repeat"
-              aria-hidden="true"
-            ></span>
-            <span className="visually-hidden">Previous</span>
-          </button>
-          <button
-            className="carousel-control-next bg-[#D8E3B121] bg-opacity-30 hover:bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center"
-            type="button"
-            data-bs-target="#carouselExampleSlidesOnly"
-            data-bs-slide="next"
-          >
-            <span
-              className="carousel-control-next-icon inline-block bg-no-repeat"
-              aria-hidden="true"
-            ></span>
-            <span className="visually-hidden">Next</span>
-          </button>
-        </div>
       </div>
     </div>
   );
