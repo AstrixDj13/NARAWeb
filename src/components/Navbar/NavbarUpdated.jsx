@@ -106,8 +106,8 @@ const Navbar = () => {
       <nav
         className={
           !isScrolled
-            ? `${topNavClass} fixed left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-all duration-300 ${bgClass}`
-            : `fixed ${topNavClass} left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-4 sm:py-2 transition-all duration-300 ${bgClass}`
+            ? `${topNavClass} fixed left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-2 sm:py-2 transition-all duration-300 ${bgClass}`
+            : `fixed ${topNavClass} left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-2 sm:py-2 transition-all duration-300 ${bgClass}`
         }
       >
         {/* Left Section: Hamburger and Logo */}
@@ -125,7 +125,7 @@ const Navbar = () => {
           >
             &#9776;
           </button>
-          <Link to="/" className="flex-shrink-0 w-48 sm:w-56 md:w-64 lg:w-[500px]">
+          <Link to="/" className="flex items-center">
             <img
               src={
                 isScrolled
@@ -137,12 +137,10 @@ const Navbar = () => {
                     : "/logo.svg"
               }
               alt="logo"
-              className={
-                isScrolled
-                  ? "h-[70px] -mt-4"
-                  : "xl:h-[130px] lg:h-[140px] md:h-[100px] h-[80px] sm:absolute md:-top-3 lg:-top-8"
-
-              }
+              className={`object-contain transition-all duration-500 origin-left ${isScrolled
+                  ? "h-8 sm:h-10 md:h-12 scale-100"
+                  : "h-8 sm:h-10 md:h-12 scale-[1.3] sm:scale-[1.5] md:scale-[1.8] lg:scale-[2]"
+                }`}
             />
           </Link>
         </div>
@@ -198,10 +196,10 @@ const Navbar = () => {
 
             <button
               onClick={() => window.dispatchEvent(new CustomEvent('open-chatbot'))}
-              className="flex items-center justify-center transition-transform hover:scale-110"
+              className="flex items-center justify-center p-1"
               aria-label="Open Chatbot"
             >
-              <img src="/cat.gif" alt="Open Chat" className="w-8 h-8 md:w-10 md:h-10 object-contain drop-shadow-sm" />
+              <img src="/cat.gif" alt="Open Chat" className="w-10 h-10 object-contain drop-shadow-sm scale-[1.6] md:scale-[1.8] transition-transform hover:scale-[1.8] md:hover:scale-[2]" />
             </button>
 
             <CartIcon theme={theme} />

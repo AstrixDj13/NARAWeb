@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getCollections } from "../../apis/Collections";
 import { Link } from "react-router-dom";
 import { getOptimizedImageUrl } from "../../utils/imageOptimizer";
+import { getActiveCampaigns } from "../../utils/campaignUtils";
 
 const TopSection = () => {
   const [allCollections, setAllCollections] = useState([]);
@@ -25,12 +26,37 @@ const TopSection = () => {
     }
   };
 
+  const [topMarginClass, setTopMarginClass] = useState("mt-[7.5rem] sm:mt-[8rem] md:mt-[8.5rem] lg:mt-[8.5rem]");
+
   useEffect(() => {
     fetchCollections();
   }, []);
 
+  useEffect(() => {
+    // Calculate exact header height padding dynamically based on active campaign components.
+    // The heights are derived from Marquee (1.5rem), Ticker (3rem), Countdown (2.5rem), and Navbar thickness.
+    // This permanently prevents any white gaps or crop overlapping across all device sizes.
+    try {
+      const activeCampaigns = getActiveCampaigns();
+      const hasMarquee = activeCampaigns.some((c) => c.marqueeMessage);
+      const hasCountdown = activeCampaigns.some((c) => c.name || c.targetDate);
+
+      if (hasMarquee && hasCountdown) {
+        setTopMarginClass("mt-[11.5rem] sm:mt-[12rem] md:mt-[12.5rem] lg:mt-[12.5rem]");
+      } else if (hasMarquee) {
+        setTopMarginClass("mt-[7.5rem] sm:mt-[8rem] md:mt-[8.5rem] lg:mt-[8.5rem]");
+      } else if (hasCountdown) {
+        setTopMarginClass("mt-[10rem] sm:mt-[10.5rem] md:mt-[11rem] lg:mt-[11rem]");
+      } else {
+        setTopMarginClass("mt-[6rem] sm:mt-[6.5rem] md:mt-[7rem] lg:mt-[7rem]");
+      }
+    } catch (err) {
+      console.warn("TopSection campaign check err:", err);
+    }
+  }, []);
+
   return (
-    <div className="mt-[8rem] sm:mt-[10rem] w-full bg-white dark:bg-black">
+    <div className={`${topMarginClass} w-full bg-white dark:bg-black transition-all duration-300`}>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-[2px]">
         {allCollections.map((collection, index) => {
           const mobileUrl = getOptimizedImageUrl(collection.imageSrc, 600);

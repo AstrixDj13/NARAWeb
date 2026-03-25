@@ -22,52 +22,54 @@ const ProductItem = ({
   console.log("Received stockLeft:", stockLeft);
   const numericProductId = productId ? decodeURIComponent(productId).split('/').pop() : '';
   return (
-    <Link to={handle ? `/products/${handle}?camefrompage=Products` : `/product/${numericProductId}?camefrompage=Products`} state={{ imageSrc: img }}>
-      <div className="flex flex-col justify-between h-full font-antikor tracking-tighter xl:w-[350px] md:w-[320px] w-full cursor-pointer hover:brightness-75">
-        <div className="w-full aspect-[3/4] relative">
-          <ImageWithSkeleton img={img} name={name} />
-          {offerTag && (
-            <div className="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 z-10">
-              {offerTag}
-            </div>
-          )}
-
-          <div className="absolute w-full bottom-0">
-            <div className="flex gap-2.5 p-3">
-              {discount && (
-                <div className="bg-white text-black font-medium px-2 cursor-default">
-                  {discount}% off
-                </div>
-              )}
-              {message && (
-                <div className="bg-white text-black font-medium px-2 cursor-default">
-                  {message}
-                </div>
-              )}
-            </div>
+    <Link
+      to={handle ? `/products/${handle}?camefrompage=Products` : `/product/${numericProductId}?camefrompage=Products`}
+      state={{ imageSrc: img }}
+      className="flex flex-col justify-between h-full font-antikor tracking-tighter w-full cursor-pointer hover:brightness-75"
+    >
+      <div className="w-full h-[320px] sm:h-[360px] md:h-[380px] xl:h-[420px] relative overflow-hidden">
+        <ImageWithSkeleton img={img} name={name} />
+        {offerTag && (
+          <div className="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 z-10">
+            {offerTag}
           </div>
-        </div>
-        <div className="py-2 text-center md:text-left flex flex-col flex-grow">
-          <h1 className="font-semibold py-2 line-clamp-2 md:line-clamp-none min-h-[3.5rem] md:min-h-0">{name}</h1>
-          <div className="flex flex-col items-center justify-center">
-            <div className="font-mono text-base">INR {formatToINR(price)}</div>
-            {stockLeft !== undefined && stockLeft !== null && stockLeft !== "" && (
-              <div className="text-xs text-red-600 mt-1">
-                {stockLeft}
+        )}
+
+        <div className="absolute w-full bottom-0">
+          <div className="flex gap-2.5 p-3">
+            {discount && (
+              <div className="bg-white text-black font-medium px-2 cursor-default">
+                {discount}% off
+              </div>
+            )}
+            {message && (
+              <div className="bg-white text-black font-medium px-2 cursor-default">
+                {message}
               </div>
             )}
           </div>
-          {colors && (
-            <div className="flex items-center justify-center gap-2 mt-2">
-              {colors?.map((color, index) => (
-                <ProductColor key={index} color={color} active={false} />
-              ))}
+        </div>
+      </div>
+      <div className="py-2 text-center md:text-left flex flex-col flex-grow">
+        <h1 className="font-semibold py-2 line-clamp-2 min-h-[3.5rem]">{name}</h1>
+        <div className="flex flex-col items-center justify-center">
+          <div className="font-mono text-base">INR {formatToINR(price)}</div>
+          {stockLeft !== undefined && stockLeft !== null && stockLeft !== "" && (
+            <div className="text-xs text-red-600 mt-1">
+              {stockLeft}
             </div>
           )}
         </div>
-        <div className="mt-auto">
-          <ViewButton link={handle ? `/products/${handle}?camefrompage=Products` : `/product/${numericProductId}?camefrompage=Products`} />
-        </div>
+        {colors && (
+          <div className="flex items-center justify-center gap-2 mt-2">
+            {colors?.map((color, index) => (
+              <ProductColor key={index} color={color} active={false} />
+            ))}
+          </div>
+        )}
+      </div>
+      <div className="mt-auto">
+        <ViewButton link={handle ? `/products/${handle}?camefrompage=Products` : `/product/${numericProductId}?camefrompage=Products`} />
       </div>
       {/* <div className="flex justify-between py-2">
           plus minus button
@@ -86,7 +88,7 @@ const ProductItem = ({
                 Wishlist
             </div>
         </div> */}
-    </Link >
+    </Link>
   );
 };
 
