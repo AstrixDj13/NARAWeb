@@ -1,54 +1,50 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ProductCard from "../common/ProductCard";
-import { fetchProducts } from "../../apis/getAllProducts";
+import { getCollections, getCollectionById } from "../../apis/Collections";
 
 const Spotlight = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // IDs of the products to show in Spotlight
-  const spotlightIds = [
-    "gid://shopify/Product/8756899709142", // Laidback Luxe Co-ord Set
-    "gid://shopify/Product/8756898365654", // The Out of the Office Co-ord set
-    "gid://shopify/Product/8756897644758", // The Red on the Run Co-ord set
-    "gid://shopify/Product/8756895383766", // The June Co-ord set
-  ];
-
   useEffect(() => {
-    const loadProducts = async () => {
+    const fetchBestsellers = async () => {
       try {
-        setIsLoading(true);
-        const allProducts = await fetchProducts();
+        // Step 1: Get all collections (id + title only)
+        const collections = await getCollections();
 
-        // Filter products that match the spotlight IDs
-        const spotlightProducts = allProducts.filter(product =>
-          spotlightIds.includes(product.id)
+        const bestsellersCollection = collections.find(
+          (col) => col.title.toLowerCase() === "bestsellers"
         );
 
-        // If we found the products, use them. 
-        // Note: The order might depend on the API response, so we might want to sort them to match the original order if important.
-        // For now, we'll just use the filtered list.
+        if (!bestsellersCollection) {
+          console.warn("Bestsellers collection not found");
+          setProducts([]);
+          setIsLoading(false);
+          return;
+        }
 
-        // Map to ensure they have the 'label' property which was hardcoded before
-        const mappedProducts = spotlightProducts.map(product => {
-          // Add custom labels based on ID if needed, or just use a generic one
-          // The original hardcoded data had "Best seller" for all.
-          return {
-            ...product,
-            label: "Best seller"
-          };
-        });
+        // Step 2: Fetch the actual products for that collection
+        const { products: collectionProducts } = await getCollectionById(
+          bestsellersCollection.id
+        );
 
-        setProducts(mappedProducts);
+        const topProducts = collectionProducts.slice(0, 4).map((product) => ({
+          ...product,
+          imgSrc: product.imageSrc,  // ProductCard uses imgSrc, not imageSrc
+          label: "Best seller",
+        }));
+
+        setProducts(topProducts);
       } catch (error) {
-        console.error("Failed to load spotlight products:", error);
+        console.error("Failed to fetch bestsellers:", error);
+        setProducts([]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadProducts();
+    fetchBestsellers();
   }, []);
 
   if (isLoading) {
@@ -65,8 +61,8 @@ const Spotlight = () => {
     <div className="bg-white pt-20 dark:!bg-black">
       <div className="max-w-full mx-auto">
         <div className="text-left px-4 md:px-16 text-black dark:!text-white">
-          <h2 className="text-xl md:text-3xl font-semibold  italic tracking-widest uppercase">
-            In the spotlight!
+          <h2 className="text-xl md:text-3xl font-semibold italic tracking-widest uppercase">
+            Our Bestsellers!
           </h2>
           <p className="mt-2 text-[11px] lg:text-sm leading-8 font-mono tracking-widest sm:text-xl">
             Look what people are loving the most this season
@@ -81,7 +77,7 @@ const Spotlight = () => {
           <div className="flex lg:grid lg:grid-cols-4 md:grid-cols-3 gap-3 md:gap-2 pl-4">
             {products.length > 0 ? (
               products.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.productId} product={product} />
               ))
             ) : (
               <div className="col-span-4 text-center py-10">

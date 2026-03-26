@@ -42,6 +42,21 @@ const Coupons = () => {
                             </p>
                         </div>
                     </Link>
+
+                    <Link to="/products" className="flex items-center gap-4 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <div className="w-32 h-32 flex-shrink-0">
+                            <img
+                                src="/offer/NARA_5_off.webp"
+                                alt="Signup Offer"
+                                className="w-full h-full object-contain"
+                            />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <p className="text-sm font-medium text-gray-600 dark:text-gray-600">
+                                Sign up and enjoy an instant 5% off — just use code <span className="font-bold">UP2DATE</span> at checkout.
+                            </p>
+                        </div>
+                    </Link>
                 </div>
 
             )}
