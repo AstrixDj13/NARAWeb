@@ -1,25 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ProductItem from "../products/product-item";
-import PageLoader from "../utils/PageLoader";
 import { fetchFourProductsfromCol } from "../../apis/Products";
 
 const RelatedProducts = ({ collectionId, productId }) => {
-  const colors = ["black", "brown", "beige", "gray"];
-  const [activeProductColor, setActiveProductColor] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState([]);
-  const [copiedProducts, setCopiedProducts] = useState([]);
+  const [hasIntersected, setHasIntersected] = useState(false);
+  const sectionRef = useRef(null);
+
+  // Lazy load the products when the section enters viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasIntersected(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
-    console.log("collectionId:", collectionId, "productId:", productId); // Log the props
-    if (!collectionId || !productId) return; // Ensure collectionId is provided
+    if (!hasIntersected || !collectionId || !productId) return;
 
     const loadProducts = async () => {
       try {
         setIsLoading(true);
         const productsData = await fetchFourProductsfromCol(collectionId, productId);
         setProducts(productsData);
-        setCopiedProducts(productsData); // Initialize copied products
       } catch (error) {
         console.error("Failed to load products:", error);
       } finally {
@@ -28,40 +43,49 @@ const RelatedProducts = ({ collectionId, productId }) => {
     };
 
     loadProducts();
-  }, [collectionId, productId]);
-
-
+  }, [hasIntersected, collectionId, productId]);
 
   return (
+    <div
+      ref={sectionRef}
+      className="bg-[#f7f7f7] dark:bg-black dark:text-[#ffff] py-12 overflow-hidden border-t dark:border-gray-800"
+    >
+      <div className="max-w-7xl mx-auto px-4">
+        <h2 className="font-bold text-2xl md:text-3xl mb-8 tracking-tight">Related Products</h2>
 
-    <div className="bg-[#f7f7f7] dark:bg-black dark:text-[#ffff] xl:pt-12 pb-24 xl:pb-6 overflow-hidden min-h-screen ">
-      <h1 className="p-4 font-bold text-3xl  ">Related Products </h1>
-      {isLoading ? (
-        <PageLoader />
-      ) : (
-
-        <div className="flex flex-wrap gap-4 justify-center  py-4">
-
-          {products.map((product, index) => (
-            <ProductItem
-              key={product.id}
-              img={product?.variants?.nodes[0]?.image?.src}
-              colors={colors}
-              setActiveProductColor={setActiveProductColor}
-              price={product?.variants?.nodes[0]?.price?.amount}
-              name={product.title}
-              discount={""}
-              message={""}
-              productId={product.id}
-              handle={product.handle}
-            />
-          ))}
-
+        <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-4 md:gap-x-6">
+          {isLoading || !hasIntersected ? (
+            // Skeleton Loading State
+            [1, 2, 3, 4].map((i) => (
+              <div key={i} className="flex flex-col gap-3 animate-pulse">
+                <div className="w-full h-[320px] sm:h-[360px] md:h-[380px] xl:h-[420px] bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/4"></div>
+                </div>
+              </div>
+            ))
+          ) : (
+            products.map((product) => (
+              <ProductItem
+                key={product.id}
+                img={product?.variants?.nodes[0]?.image?.src}
+                price={product?.variants?.nodes[0]?.price?.amount}
+                name={product.title}
+                productId={product.id}
+                handle={product.handle}
+              />
+            ))
+          )}
         </div>
-      )}
 
+        {!isLoading && hasIntersected && products.length === 0 && (
+          <div className="text-center py-12 text-gray-500">
+            No related products found.
+          </div>
+        )}
+      </div>
     </div>
-
   );
 };
 
