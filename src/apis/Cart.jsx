@@ -100,6 +100,15 @@ export async function updateBuyersIndentity(cartId, email, deliveryAddress, phon
 }
 
 export async function createAuthenticatedCart(variantId, customerAccessToken) {
+  const fbp = document.cookie.match(/_fbp=([^;]+)/)?.[1] || "";
+  const fbc = document.cookie.match(/_fbc=([^;]+)/)?.[1] || "";
+  const attrs = [
+    { key: "_analytics_session_id", value: sessionStorage.getItem('session_id') || "" },
+    { key: "_analytics_anonymous_id", value: localStorage.getItem('anonymous_id') || "" },
+    { key: "_analytics_fbp", value: fbp },
+    { key: "_analytics_fbc", value: fbc },
+  ].filter(a => a.value !== "");
+
   const query = `mutation createCart($cartInput: CartInput) {
   cartCreate(input: $cartInput) {
     cart {
@@ -177,6 +186,7 @@ export async function createAuthenticatedCart(variantId, customerAccessToken) {
           merchandiseId: variantId,
         },
       ],
+      attributes: attrs,
     },
   };
 
@@ -206,6 +216,15 @@ export async function createAuthenticatedCart(variantId, customerAccessToken) {
 }
 
 export default async function createCart(itemId) {
+  const fbp = document.cookie.match(/_fbp=([^;]+)/)?.[1] || "";
+  const fbc = document.cookie.match(/_fbc=([^;]+)/)?.[1] || "";
+  const attrs = [
+    { key: "_analytics_session_id", value: sessionStorage.getItem('session_id') || "" },
+    { key: "_analytics_anonymous_id", value: localStorage.getItem('anonymous_id') || "" },
+    { key: "_analytics_fbp", value: fbp },
+    { key: "_analytics_fbc", value: fbc },
+  ].filter(a => a.value !== "");
+
   const query = `mutation createCart($cartInput: CartInput) {
   cartCreate(input: $cartInput) {
     cart {
@@ -274,6 +293,7 @@ export default async function createCart(itemId) {
           merchandiseId: itemId,
         },
       ],
+      attributes: attrs,
     },
   };
 
