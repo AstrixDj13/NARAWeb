@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { blogs } from "../../constants/blogs";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import 'react-lazy-load-image-component/src/effects/opacity.css';
 
 const BlogCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -49,15 +51,16 @@ const BlogCarousel = () => {
                     {/* Image Grid */}
                     <div className="grid grid-cols-2 gap-2 mb-6">
                       {blog.images.slice(0, 4).map((src, i) => (
-                        <div key={i} className="relative overflow-hidden rounded-lg">
-                          <img
+                        <div key={i} className="relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+                          <LazyLoadImage
                             src={src}
                             srcSet={`${src.replace('.webp', '-400.webp')} 400w, ${src} 1200w`}
                             sizes="(max-width: 600px) 400px, 1200px"
                             alt={`${blog.title} - Image ${i + 1}`}
-                            loading="lazy"
                             width="400"
                             height="300"
+                            wrapperClassName="block w-full h-full"
+                            effect="opacity"
                             className="w-full h-48 md:h-56 object-cover hover:scale-105 transition-transform duration-300"
                           />
                         </div>
