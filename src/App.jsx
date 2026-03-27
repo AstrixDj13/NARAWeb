@@ -82,8 +82,16 @@ function App() {
               phone: customer.phone,
             })
           );
+          // Extract the numeric ID from the GID if present, or just store the ID if not GID
+          const numericId = customer.id ? customer.id.split('/').pop().split('?')[0] : null;
+          if (numericId) {
+            localStorage.setItem("user_id", numericId);
+          }
         })
-        .catch((err) => console.error("Failed to fetch user details", err));
+        .catch((err) => {
+          console.error("Failed to fetch user details", err);
+          localStorage.removeItem("user_id");
+        });
     }
 
     const cartId = localStorage.getItem("cartId");
