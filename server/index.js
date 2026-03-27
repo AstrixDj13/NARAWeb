@@ -31,8 +31,8 @@ app.use(express.static(distPath, {
     if (path.match(/\.(js|css|woff2?|ttf|png|jpe?g|gif|svg|webp|avif|ico)$/i)) {
       res.set('Cache-Control', 'public, max-age=31536000, immutable');
     } else if (path.endsWith('.html')) {
-      // Don't cache index.html to ensure users always get the latest bundle pointers
-      res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+      // Allow CDN caching for index.html with stale-while-revalidate
+      res.set('Cache-Control', 'public, max-age=0, s-maxage=600, stale-while-revalidate=3600');
     }
   }
 }));
@@ -776,6 +776,8 @@ app.post('/api/anthropic/messages', async (req, res) => {
 
 // Catch-all handler for any request that doesn't match the above
 app.get('*', (req, res) => {
+  // Set Cache-Control for the SPA entry point
+  res.set('Cache-Control', 'public, max-age=0, s-maxage=600, stale-while-revalidate=3600');
   res.sendFile(path.join(distPath, 'index.html'));
 });
 

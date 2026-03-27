@@ -347,6 +347,8 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                   title="image"
                   src="/home/navbar/slideimg.jpg"
                   alt="Product"
+                  fetchpriority="high"
+                  loading="eager"
                   className="w-full max-h-[450px] object-cover"
                 />
                 <h2
