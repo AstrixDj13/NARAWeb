@@ -216,9 +216,14 @@ app.post('/api/newsletter', async (req, res) => {
 // Reviews Endpoints
 
 // GET Reviews for a product
-app.get('/api/reviews/:productId', (req, res) => {
+app.get('/api/reviews', (req, res) => {
   try {
-    const { productId } = req.params;
+    const { productId } = req.query;
+
+    if (!productId) {
+      return res.status(400).json({ error: 'Product ID is required' });
+    }
+
     // Filter reviews for this product
     const productReviews = reviewsData.filter(r => r.productId === productId);
     // Sort by date desc

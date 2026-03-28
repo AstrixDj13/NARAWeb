@@ -2,7 +2,7 @@ import api from "../utils/backendApi";
 
 export const fetchReviews = async (productId) => {
     try {
-        const response = await api.get(`/api/reviews/${encodeURIComponent(productId)}`);
+        const response = await api.get(`/api/reviews?productId=${encodeURIComponent(productId)}`);
         return response.data.reviews || [];
     } catch (error) {
         console.error("Error fetching reviews:", error);
