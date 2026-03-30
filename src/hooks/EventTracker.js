@@ -192,7 +192,7 @@ export const useEventTracker = () => {
             event_timestamp: new Date().toISOString(),
             session_id: getSessionId(),
             user_id: getUserId(),
-            anonymous_id: getUserId() ? null : getAnonymousId(),
+            anonymous_id: getAnonymousId(),
             is_logged_in: !!getUserId(),
 
             // 3.3 Device & Browser Fields
