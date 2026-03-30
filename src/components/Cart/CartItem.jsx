@@ -182,7 +182,7 @@ export default function CartItem({
                 <h1 className="font-bold w-full overflow-hidden text-ellipsis line-clamp-2">
                   {title}
                 </h1>
-                <p className="text-xs sm:text-base flex items-center gap-1">
+                <p className="text-xs sm:text-base flex flex-wrap items-center gap-1">
                   {pricePerItem?.currencyCode}{" "}
                   <span className="line-through text-gray-500 text-xs sm:text-xs mr-1">
                     {isMelCollection
