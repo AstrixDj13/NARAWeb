@@ -99,6 +99,14 @@ const Home = () => {
   const [index, setIndex] = useState(0);
   const [activeMarqueeMessages, setActiveMarqueeMessages] = useState([]);
   const [animationKey, setAnimationKey] = useState(0);
+  const [marqueeDuration, setMarqueeDuration] = useState(16);
+
+  useEffect(() => {
+    const checkMobile = () => setMarqueeDuration(window.innerWidth < 768 ? 8 : 16);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const campaigns = getActiveCampaigns();
@@ -119,9 +127,9 @@ const Home = () => {
     const interval = setInterval(() => {
       setIndex((i) => (i + 1) % activeMarqueeMessages.length);
       setAnimationKey(prev => prev + 1);
-    }, 16000); // total time per message
+    }, marqueeDuration * 1000); // dynamic time per message based on screen size
     return () => clearInterval(interval);
-  }, [activeMarqueeMessages]);
+  }, [activeMarqueeMessages, marqueeDuration]);
 
   return (
     <div className="dark:bg-black">
@@ -135,7 +143,7 @@ const Home = () => {
             initial={{ x: "-100%" }}
             animate={{ x: "100%" }}
             transition={{
-              duration: 16,
+              duration: marqueeDuration,
               ease: "linear",
             }}
             className="whitespace-nowrap text-center"

@@ -10,7 +10,7 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
 import { fetchReviews } from "../../apis/Reviews";
 
-export default function DetailSection({ title, descriptionHtml, cameFrom, productId }) {
+export default function DetailSection({ title, descriptionHtml, cameFrom, productId, isMelCollection }) {
   const theme = useSelector((state) => state.app.theme);
   const currentVariant = useSelector(
     (state) => state.activeProduct.currentVariant
@@ -111,15 +111,21 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
             <>
               <span className="line-through text-gray-500 text-base">
                 {currentVariant?.node.price.currencyCode}{" "}
-                {(parseFloat(currentVariant?.node.price.amount) + 200).toFixed(
-                  2
-                )}
+                {isMelCollection
+                  ? (parseFloat(currentVariant?.node.price.amount) / 0.7).toFixed(2)
+                  : (parseFloat(currentVariant?.node.price.amount) + 200).toFixed(2)
+                }
               </span>
               <span>
                 {currentVariant?.node.price.currencyCode +
                   " " +
                   parseFloat(currentVariant?.node.price.amount).toFixed(2)}
               </span>
+              {isMelCollection && (
+                <span className="text-red-500 bg-red-100 px-1 py-0.5 rounded text-xs ml-2 font-bold whitespace-nowrap">
+                  30% OFF
+                </span>
+              )}
             </>
           ) : (
             <Skeleton

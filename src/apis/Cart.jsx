@@ -145,6 +145,13 @@ export async function createAuthenticatedCart(variantId, customerAccessToken) {
                 }
                 product {
                   title
+                  collections(first: 10) {
+                    edges {
+                      node {
+                        title
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -255,6 +262,13 @@ export default async function createCart(itemId) {
                 }
                 product {
                   title
+                  collections(first: 10) {
+                    edges {
+                      node {
+                        title
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -354,6 +368,13 @@ export async function getItemsInCartAPI(cartId) {
                 title
                 metafield(namespace: "custom", key: "stock_quantity") {
                   value
+                }
+                collections(first: 10) {
+                  edges {
+                    node {
+                      title
+                    }
+                  }
                 }
               }
             }
@@ -467,6 +488,13 @@ export async function addItemToCart(cartId, variantId) {
                   title
                   metafield(namespace: "custom", key: "stock_quantity") {
                     value
+                  }
+                  collections(first: 10) {
+                    edges {
+                      node {
+                        title
+                      }
+                    }
                   }
                 }
               }
