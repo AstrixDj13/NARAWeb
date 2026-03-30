@@ -15,9 +15,11 @@ import {
   setCheckoutUrl,
   setProductsinCart,
   setTotalQuantityInCart,
+  setUser,
 } from "../../store";
 import { ToastContainer, toast as toastifyToast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import getAccountDetailsAPI from "../../apis/getAccoutDetailsAPI";
 import { SendRecoveryEmailAPI } from "../../apis/CustomerAPI";
 import { FaEyeSlash } from "react-icons/fa6";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa6";
@@ -36,6 +38,26 @@ function LoginSection() {
     try {
       const accessToken = await LoginApi(userData);
       toast.success("Login successful!");
+
+      // Fetch user details immediately so tracking script sees user_id before we navigate
+      try {
+        const customer = await getAccountDetailsAPI(accessToken);
+        dispatch(
+          setUser({
+            id: customer.id,
+            fullName: customer.firstName + " " + customer.lastName,
+            email: customer.email,
+            phone: customer.phone,
+          })
+        );
+        const numericId = customer.id ? customer.id.split('/').pop().split('?')[0] : null;
+        if (numericId) {
+          localStorage.setItem("user_id", numericId);
+        }
+      } catch (err) {
+        console.error("Failed to fetch user details during login", err);
+      }
+
       dispatch(setAuthStatus({ accessToken, isAuthenticated: true }));
       dispatch(deleteCart());
       localStorage.removeItem("cartId");
