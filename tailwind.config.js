@@ -9,11 +9,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        outfit: ["Archivo", "sans-serif"],
-        antikor: ["Archivo", "sans-serif"],
-        sans: ["Archivo", "sans-serif"],
-        serif: ["Archivo", "sans-serif"],
-        mono: ["Archivo", "monospace"],
+        outfit: ["Playfair_Display_SC", "serif"],
+        antikor: ["Playfair_Display_SC", "serif"],
+        sans: ["Playfair_Display_SC", "serif"],
+        serif: ["Playfair_Display_SC", "serif"],
+        mono: ["Playfair_Display_SC", "monospace"],
       },
       screens: {
         xs: "475px", // Custom extra small screen

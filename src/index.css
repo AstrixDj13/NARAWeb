@@ -35,8 +35,8 @@
 }
 
 @font-face {
-  font-family: "Archivo";
-  src: url("/fonts/Archivo/static/Archivo/Archivo-Regular.ttf") format("truetype");
+  font-family: "Playfair_Display_SC";
+  src: url("/fonts/Playfair_Display_SC/PlayfairDisplaySC-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -55,7 +55,7 @@ input[type="password"]::-ms-reveal {
 }
 
 body {
-  font-family: "Archivo", sans-serif;
+  font-family: "Playfair_Display_SC", serif;
 }
 
 .testimonial-container::-webkit-scrollbar {
