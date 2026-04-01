@@ -35,8 +35,8 @@
 }
 
 @font-face {
-  font-family: "Playfair_Display_SC";
-  src: url("/fonts/Playfair_Display_SC/PlayfairDisplaySC-Regular.ttf") format("truetype");
+  font-family: "Balgin";
+  src: url("/fonts/Balgin/Demo_Fonts/Fontspring-DEMO-balgin-regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -55,7 +55,7 @@ input[type="password"]::-ms-reveal {
 }
 
 body {
-  font-family: "Playfair_Display_SC", serif;
+  font-family: "Balgin", sans-serif;
 }
 
 .testimonial-container::-webkit-scrollbar {

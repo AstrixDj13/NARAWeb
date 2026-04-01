@@ -9,11 +9,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        outfit: ["Playfair_Display_SC", "serif"],
-        antikor: ["Playfair_Display_SC", "serif"],
-        sans: ["Playfair_Display_SC", "serif"],
-        serif: ["Playfair_Display_SC", "serif"],
-        mono: ["Playfair_Display_SC", "monospace"],
+        outfit: ["Balgin", "sans-serif"],
+        antikor: ["Balgin", "sans-serif"],
+        sans: ["Balgin", "sans-serif"],
+        serif: ["Balgin", "sans-serif"],
+        mono: ["Balgin", "monospace"],
       },
       screens: {
         xs: "475px", // Custom extra small screen
