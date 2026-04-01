@@ -9,11 +9,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        outfit: ["Balgin", "sans-serif"],
-        antikor: ["Balgin", "sans-serif"],
-        sans: ["Balgin", "sans-serif"],
-        serif: ["Balgin", "sans-serif"],
-        mono: ["Balgin", "monospace"],
+        outfit: ["Nephilm", "serif"],
+        antikor: ["Nephilm", "serif"],
+        sans: ["Nephilm", "sans-serif"],
+        serif: ["Nephilm", "serif"],
+        mono: ["Nephilm", "monospace"],
       },
       screens: {
         xs: "475px", // Custom extra small screen

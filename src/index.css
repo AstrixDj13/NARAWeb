@@ -35,8 +35,8 @@
 }
 
 @font-face {
-  font-family: "Balgin";
-  src: url("/fonts/Balgin/Demo_Fonts/Fontspring-DEMO-balgin-regular.otf") format("opentype");
+  font-family: "Nephilm";
+  src: url("/fonts/nelphim-font/Nephilm.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -55,7 +55,7 @@ input[type="password"]::-ms-reveal {
 }
 
 body {
-  font-family: "Balgin", sans-serif;
+  font-family: "Nephilm", serif;
 }
 
 .testimonial-container::-webkit-scrollbar {
