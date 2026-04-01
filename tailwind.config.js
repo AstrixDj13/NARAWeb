@@ -9,11 +9,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        outfit: ["Nephilm", "serif"],
-        antikor: ["Nephilm", "serif"],
-        sans: ["Nephilm", "sans-serif"],
-        serif: ["Nephilm", "serif"],
-        mono: ["Nephilm", "monospace"],
+        outfit: ["Archivo", "sans-serif"],
+        antikor: ["Archivo", "sans-serif"],
+        sans: ["Archivo", "sans-serif"],
+        serif: ["Archivo", "sans-serif"],
+        mono: ["Archivo", "monospace"],
       },
       screens: {
         xs: "475px", // Custom extra small screen

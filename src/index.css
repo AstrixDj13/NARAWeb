@@ -35,8 +35,8 @@
 }
 
 @font-face {
-  font-family: "Nephilm";
-  src: url("/fonts/nelphim-font/Nephilm.otf") format("opentype");
+  font-family: "Archivo";
+  src: url("/fonts/Archivo/static/Archivo/Archivo-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -55,7 +55,7 @@ input[type="password"]::-ms-reveal {
 }
 
 body {
-  font-family: "Nephilm", serif;
+  font-family: "Archivo", sans-serif;
 }
 
 .testimonial-container::-webkit-scrollbar {
