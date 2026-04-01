@@ -9,8 +9,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        outfit: ["outfit", "monospace"],
-        antikor: ["Antikor Mono", "monospace"],
+        outfit: ["Allenoire", "serif"],
+        antikor: ["Allenoire", "serif"],
+        sans: ["Allenoire", "sans-serif"],
+        serif: ["Allenoire", "serif"],
+        mono: ["Allenoire", "monospace"],
       },
       screens: {
         xs: "475px", // Custom extra small screen

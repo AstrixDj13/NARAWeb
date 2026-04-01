@@ -53,6 +53,14 @@ export const campaigns = [
         showOnExpiry: true, // This MUST be true if you omit dates
         collectionTitle: "",
         marqueeMessage: "Pan India Delivery!"
+    },
+    {
+        id: "mel-collection",
+        name: "", // Showing in the countdown bar area
+        offerTag: "", // The tag applied to products
+        showOnExpiry: true, // This MUST be true if you omit dates
+        collectionTitle: "",
+        marqueeMessage: "30% off on MEL Collection"
     }
 
 ];

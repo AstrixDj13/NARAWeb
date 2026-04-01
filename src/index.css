@@ -34,6 +34,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Allenoire";
+  src: url("/fonts/allenoire/ttf/allenoire-allenoire-regular-400.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   /* cursor: url('../public/icons/cursor.svg'), auto;  client asked to comment it*/ 
@@ -44,12 +52,9 @@ input[type="password"]::-ms-reveal {
   display: none;
 }
 
-/* body {
-  font-family: "Antikor Text", sans-serif;
-} */
-/* body {
-  font-family: "Antikor Mono",  monospace;
-} */
+body {
+  font-family: "Allenoire", serif;
+}
 .testimonial-container::-webkit-scrollbar {
   display: none;
 }
