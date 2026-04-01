@@ -35,17 +35,19 @@
 }
 
 @font-face {
-  font-family: "Allenoire";
-  src: url("/fonts/allenoire/ttf/allenoire-allenoire-regular-400.ttf") format("truetype");
+  font-family: "Nephilm";
+  src: url("/fonts/nelphim-font/Nephilm.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  /* cursor: url('../public/icons/cursor.svg'), auto;  client asked to comment it*/ 
-  
+  /* cursor: url('../public/icons/cursor.svg'), auto;  client asked to comment it*/
+
 }
 
 input[type="password"]::-ms-reveal {
@@ -53,29 +55,37 @@ input[type="password"]::-ms-reveal {
 }
 
 body {
-  font-family: "Allenoire", serif;
+  font-family: "Nephilm", serif;
 }
+
 .testimonial-container::-webkit-scrollbar {
   display: none;
 }
+
 /* Hide scrollbar for IE, Edge, and Firefox */
 .testimonial-container {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
+
 .white-icon {
   filter: brightness(0) invert(1);
 }
+
 @keyframes appear {
   from {
     opacity: 0;
     transform: translateX(-100px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0px);
   }
 }
+
 .bloc {
   animation: appear linear;
   animation-timeline: view();
