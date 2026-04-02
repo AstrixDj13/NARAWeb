@@ -241,7 +241,7 @@ export default function ProductsDetailPage() {
                 descriptionHtml={product.descriptionHtml}
                 cameFrom={cameFrom}
                 productId={product.id}
-                isMelCollection={product?.collections?.edges?.some(e => e?.node?.title === "MEL collection" || e?.node?.title === "MEL Collection")}
+                isMelCollection={product?.collections?.edges?.some(e => e?.node?.title?.trim().toUpperCase() === "MEL")}
               />
 
               {/* Variants / Color Section */}

@@ -60,7 +60,7 @@ export const campaigns = [
         offerTag: "", // The tag applied to products
         showOnExpiry: true, // This MUST be true if you omit dates
         collectionTitle: "",
-        marqueeMessage: "30% off on MEL Collection"
+        marqueeMessage: "30% off on MEL"
     }
 
 ];

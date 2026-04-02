@@ -76,7 +76,7 @@ export default function CartPage() {
         return productsInCart.reduce((savings, item) => {
             const price = parseFloat(item?.node?.merchandise?.price?.amount || 0);
             const quantity = item?.node?.quantity || 0;
-            const isMel = item?.node?.merchandise?.product?.collections?.edges?.some(e => e?.node?.title === "MEL collection" || e?.node?.title === "MEL Collection");
+            const isMel = item?.node?.merchandise?.product?.collections?.edges?.some(e => e?.node?.title?.trim().toUpperCase() === "MEL");
             const savingPerItem = isMel ? (price / 0.70) - price : 200;
             return savings + savingPerItem * quantity;
         }, 0);
@@ -116,7 +116,7 @@ export default function CartPage() {
                                                     (el) => el?.name === "Size"
                                                 )?.value
                                             }
-                                            isMelCollection={el?.node?.merchandise?.product?.collections?.edges?.some(e => e?.node?.title === "MEL collection" || e?.node?.title === "MEL Collection")}
+                                            isMelCollection={el?.node?.merchandise?.product?.collections?.edges?.some(e => e?.node?.title?.trim().toUpperCase() === "MEL")}
                                             stockLeft={el?.node?.merchandise?.product?.metafield?.value}
                                             className="min-h-[160px] flex-1"
                                         />

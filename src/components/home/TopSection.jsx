@@ -10,7 +10,6 @@ const TopSection = () => {
     "C Grade Products",
     "UGC_Collection",
     "Men's Top",
-    "MEL collection",
     "Bestsellers"
   ];
 
@@ -18,9 +17,25 @@ const TopSection = () => {
     try {
       let fetchedCollections = await getCollections();
       fetchedCollections = fetchedCollections.filter(
-        (collection) => !excludedTitles.includes(collection.title)
+        (collection) => !excludedTitles.some(title => title.trim().toUpperCase() === collection.title.trim().toUpperCase())
       );
-      setAllCollections(fetchedCollections.reverse());
+
+      let reversedCollections = fetchedCollections.reverse();
+
+      const tops = reversedCollections.find(c => c.title.trim().toUpperCase() === "TOPS");
+      const bottoms = reversedCollections.find(c => c.title.trim().toUpperCase() === "BOTTOMS");
+
+      const otherCollections = reversedCollections.filter(c =>
+        c.title.trim().toUpperCase() !== "TOPS" &&
+        c.title.trim().toUpperCase() !== "BOTTOMS"
+      );
+
+      const orderedCollections = [];
+      if (tops) orderedCollections.push(tops);
+      if (bottoms) orderedCollections.push(bottoms);
+      orderedCollections.push(...otherCollections);
+
+      setAllCollections(orderedCollections);
     } catch (error) {
       console.error(error);
     }
