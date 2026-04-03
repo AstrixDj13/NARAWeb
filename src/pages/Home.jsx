@@ -179,7 +179,7 @@ const Home = () => {
       <NewestArrivals />
       <UGCSection />
       {/* <MidSection /> */}
-      <Spotlight />
+      {/* <Spotlight /> */}
       {/* <MidSection /> */}
       {/*<SubscribeSection /> */}
       <BlogCarousel />

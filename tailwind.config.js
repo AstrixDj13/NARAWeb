@@ -9,11 +9,13 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        outfit: ["Nephilm", "serif"],
-        antikor: ["Nephilm", "serif"],
-        sans: ["Nephilm", "sans-serif"],
-        serif: ["Nephilm", "serif"],
-        mono: ["Nephilm", "monospace"],
+        outfit: ["Karla", "sans-serif"],
+        antikor: ["Slussen", "sans-serif"],
+        sans: ["Slussen", "sans-serif"],
+        serif: ["Karla", "sans-serif"],
+        mono: ["Slussen", "monospace"],
+        karla: ["Karla", "sans-serif"],
+        slussen: ["Slussen", "sans-serif"],
       },
       screens: {
         xs: "475px", // Custom extra small screen
