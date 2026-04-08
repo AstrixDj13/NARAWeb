@@ -53,7 +53,16 @@ const ProductItem = ({
       <div className="py-2 text-center md:text-left flex flex-col flex-grow">
         <h1 className="font-semibold py-2 line-clamp-2 min-h-[3.5rem]">{name}</h1>
         <div className="flex flex-col items-center justify-center">
-          <div className="font-mono text-base">INR {formatToINR(price)}</div>
+          <div className="font-mono text-base flex justify-center items-center gap-1.5">
+            {offerTag === "30% Off" ? (
+              <>
+                <span className="line-through text-gray-400 text-sm">INR {formatToINR(price)}</span>
+                <span className="font-bold">INR {formatToINR(price * 0.70)}</span>
+              </>
+            ) : (
+              <span>INR {formatToINR(price)}</span>
+            )}
+          </div>
           {stockLeft !== undefined && stockLeft !== null && stockLeft !== "" && (
             <div className="text-xs text-red-600 mt-1">
               {stockLeft}

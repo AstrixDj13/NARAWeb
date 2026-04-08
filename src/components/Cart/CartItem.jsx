@@ -186,12 +186,15 @@ export default function CartItem({
                   {pricePerItem?.currencyCode}{" "}
                   <span className="line-through text-gray-500 text-xs sm:text-xs mr-1">
                     {isMelCollection
-                      ? (((pricePerItem?.amount * 1.0 * productQuantity) / 0.70)).toFixed(2)
+                      ? (pricePerItem?.amount * 1.0 * productQuantity).toFixed(2)
                       : ((pricePerItem?.amount * 1.0 * productQuantity) + 200).toFixed(2)
                     }
                   </span>
                   <strong className="font-black">
-                    {(pricePerItem?.amount * 1.0 * productQuantity).toFixed(2)}
+                    {isMelCollection
+                      ? (pricePerItem?.amount * 1.0 * productQuantity * 0.70).toFixed(2)
+                      : (pricePerItem?.amount * 1.0 * productQuantity).toFixed(2)
+                    }
                   </strong>{" "}
                   {isMelCollection && (
                     <span className="text-red-500 bg-red-100 px-1 py-0.5 rounded text-[10px] ml-1 font-bold whitespace-nowrap">

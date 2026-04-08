@@ -66,7 +66,9 @@ export default function CartPage() {
         return productsInCart.reduce((total, item) => {
             const price = parseFloat(item?.node?.merchandise?.price?.amount || 0);
             const quantity = item?.node?.quantity || 0;
-            return total + (price * quantity);
+            const isMel = item?.node?.merchandise?.product?.collections?.edges?.some(e => e?.node?.title?.trim().toUpperCase() === "MEL");
+            const actualPrice = isMel ? price * 0.70 : price;
+            return total + (actualPrice * quantity);
         }, 0);
     };
 
@@ -77,7 +79,7 @@ export default function CartPage() {
             const price = parseFloat(item?.node?.merchandise?.price?.amount || 0);
             const quantity = item?.node?.quantity || 0;
             const isMel = item?.node?.merchandise?.product?.collections?.edges?.some(e => e?.node?.title?.trim().toUpperCase() === "MEL");
-            const savingPerItem = isMel ? (price / 0.70) - price : 200;
+            const savingPerItem = isMel ? (price * 0.30) : 200;
             return savings + savingPerItem * quantity;
         }, 0);
     };

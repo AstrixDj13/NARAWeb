@@ -34,10 +34,19 @@ const ProductCard = ({ product, className }) => {
         return imgs;
     }, [product]);
 
-    const price = React.useMemo(() => {
+    const activePriceStr = React.useMemo(() => {
         if (product.price) return product.price; // Hardcoded
         if (product.variants?.nodes?.[0]?.price?.amount) {
-            return `INR ${product.variants.nodes[0].price.amount}0`;
+            let p = parseFloat(product.variants.nodes[0].price.amount);
+            if (offerTag === "30% Off") p = p * 0.70;
+            return `INR ${p.toFixed(2)}`;
+        }
+        return '';
+    }, [product, offerTag]);
+
+    const originalPriceStr = React.useMemo(() => {
+        if (product.variants?.nodes?.[0]?.price?.amount) {
+            return `INR ${parseFloat(product.variants.nodes[0].price.amount).toFixed(2)}`;
         }
         return '';
     }, [product]);
@@ -129,7 +138,14 @@ const ProductCard = ({ product, className }) => {
                         {title}
                     </h3>
                     <p className="mt-1 text-sm font-light font-mono text-gray-800 dark:text-gray-200">
-                        {price}
+                        {offerTag === "30% Off" && originalPriceStr ? (
+                            <span className="flex items-center justify-center gap-1">
+                                <span className="line-through text-gray-400 text-xs">{originalPriceStr}</span>
+                                <span className="font-bold">{activePriceStr}</span>
+                            </span>
+                        ) : (
+                            activePriceStr
+                        )}
                     </p>
                 </div>
             </Link>

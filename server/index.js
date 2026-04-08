@@ -779,6 +779,81 @@ app.post('/api/anthropic/messages', async (req, res) => {
   }
 });
 
+// Proxy endpoint for Delhivery API
+app.get('/api/delhivery/pincode', async (req, res) => {
+  try {
+    const { pincode } = req.query;
+
+    if (!pincode) {
+      return res.status(400).json({ error: 'Missing pincode query parameter' });
+    }
+
+    const token = process.env.DELHIVERY_API_TOKEN;
+
+    if (!token) {
+      // Mock successful response when token is unavailable (for dev/demo)
+      return res.json({
+        success: true,
+        is_serviceable: true,
+        expected_delivery: 4
+      });
+    }
+
+    const response = await fetch(`https://track.delhivery.com/c/api/pin-codes/json/?filter_codes=${pincode}`, {
+      headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: 'Delhivery API error' });
+    }
+
+    const data = await response.json();
+    if (data.delivery_codes && data.delivery_codes.length > 0) {
+      const codeData = data.delivery_codes[0].postal_code;
+
+      // Calculate exact shipping days from Origin: 400706 (MH)
+      let baseDays = 4;
+      const destState = codeData.state_code;
+
+      const westZone = ["MH", "GJ", "GA", "DD", "DN"];
+      const northZone = ["DL", "HR", "UP", "PB", "RJ", "UK", "HP", "JK", "CH"];
+      const southEastZone = ["KA", "TN", "KL", "AP", "TS", "WB", "OR", "BR", "JH"];
+      const northEastZone = ["AS", "ML", "MZ", "NL", "TR", "AR", "MN", "SK"];
+
+      if (westZone.includes(destState)) {
+        baseDays = destState === "MH" ? 2 : 3;
+      } else if (northZone.includes(destState)) {
+        baseDays = 5;
+      } else if (northEastZone.includes(destState)) {
+        baseDays = 7;
+      } else {
+        baseDays = 4; // Standard national metro / south
+      }
+
+      // If destination is an Out of Delivery Area, it requires an extra 2 days
+      if (codeData.is_oda === "Y") {
+        baseDays += 2;
+      }
+
+      res.json({
+        success: true,
+        is_serviceable: true,
+        expected_delivery: baseDays,
+        city: codeData.city,
+        state: codeData.state_code
+      });
+    } else {
+      res.json({ success: true, is_serviceable: false });
+    }
+  } catch (error) {
+    console.error('Delhivery proxy error:', error);
+    res.status(500).json({ error: 'Failed to check pincode' });
+  }
+});
+
 // Catch-all handler for any request that doesn't match the above
 app.get('*', (req, res) => {
   // Set Cache-Control for the SPA entry point

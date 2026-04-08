@@ -90,7 +90,16 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
         <h2 className="font-black xl:text-2xl text-xl"> {title}</h2>{" "}
         {/*{product?.title}*/}
 
-        <div className="flex items-center gap-3 my-1">
+        <div
+          className="flex items-center gap-3 my-1 cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => {
+            const el = document.getElementById('reviews');
+            if (el) {
+              const y = el.getBoundingClientRect().top + window.scrollY - 100; // Offset for navbar
+              window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+          }}
+        >
           <div className="text-2xl font-bold">{averageRating}</div>
           <div>
             <div className="flex text-yellow-400 text-sm">
@@ -112,20 +121,18 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
               <span className="line-through text-gray-500 text-base">
                 {currentVariant?.node.price.currencyCode}{" "}
                 {isMelCollection
-                  ? (parseFloat(currentVariant?.node.price.amount) / 0.7).toFixed(2)
+                  ? parseFloat(currentVariant?.node.price.amount).toFixed(2)
                   : (parseFloat(currentVariant?.node.price.amount) + 200).toFixed(2)
                 }
               </span>
               <span>
                 {currentVariant?.node.price.currencyCode +
                   " " +
-                  parseFloat(currentVariant?.node.price.amount).toFixed(2)}
+                  (isMelCollection
+                    ? (parseFloat(currentVariant?.node.price.amount) * 0.70).toFixed(2)
+                    : parseFloat(currentVariant?.node.price.amount).toFixed(2))}
               </span>
-              {isMelCollection && (
-                <span className="text-red-500 bg-red-100 px-1 py-0.5 rounded text-xs ml-2 font-bold whitespace-nowrap">
-                  30% OFF
-                </span>
-              )}
+              {/* 30% OFF tag removed as requested */}
             </>
           ) : (
             <Skeleton
@@ -143,7 +150,7 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
               {offerTag}
             </div>
             <span className="text-red-600 text-xs font-bold">
-              Hurry Up! Offer valid only for {formatTimeLeft()}
+              {formatTimeLeft() ? `Hurry Up! Offer valid only for ${formatTimeLeft()}` : "Hurry Up!"}
             </span>
           </div>
         )}

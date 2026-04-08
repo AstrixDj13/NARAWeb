@@ -57,9 +57,9 @@ export const campaigns = [
     {
         id: "mel-collection",
         name: "", // Showing in the countdown bar area
-        offerTag: "", // The tag applied to products
+        offerTag: "30% Off", // The tag applied to products
         showOnExpiry: true, // This MUST be true if you omit dates
-        collectionTitle: "",
+        collectionTitle: "MEL",
         marqueeMessage: "30% off on MEL"
     }
 

@@ -11,7 +11,7 @@ const fetchOfferCollections = async () => {
         const productOfferMap = new Map(); // productId -> offerTag
 
         for (const campaign of activeCampaigns) {
-            const collection = collections.find(c => c.title === campaign.collectionTitle);
+            const collection = collections.find(c => c.title?.trim().toUpperCase() === campaign.collectionTitle?.trim().toUpperCase());
             if (collection) {
                 const { products } = await getCollectionById(collection.id);
                 products.forEach(p => {

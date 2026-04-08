@@ -27,7 +27,7 @@ export default function ImageGallery({
   const [touchEnd, setTouchEnd] = useState(null);
 
   // Minimum swipe distance (in px) to trigger slide
-  const minSwipeDistance = 50;
+  const minSwipeDistance = 20;
 
   const onTouchStart = (e) => {
     setTouchEnd(null); // otherwise the swipe is fired even with usual touch events
