@@ -10,7 +10,7 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
 import { fetchReviews } from "../../apis/Reviews";
 
-export default function DetailSection({ title, descriptionHtml, cameFrom, productId, isMelCollection }) {
+export default function DetailSection({ title, descriptionHtml, cameFrom, productId, isMelCollection, children }) {
   const theme = useSelector((state) => state.app.theme);
   const currentVariant = useSelector(
     (state) => state.activeProduct.currentVariant
@@ -147,7 +147,15 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
             </span>
           </div>
         )}
+        {!productOutOfStock && (
+          <div className="flex items-center gap-2 mt-2 mb-2 text-sm font-semibold text-gray-800 dark:text-gray-200">
+            <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
+            <span>In Stock, Ready to Ship</span>
+          </div>
+        )}
       </div>
+
+      {children}
 
       <div className="mt-6 flex flex-col border-t border-gray-200 dark:border-gray-800">
         {/* Description HTML section */}
@@ -217,13 +225,6 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
           )}
         </div>
       </div>
-
-      {!productOutOfStock && (
-        <div className="flex items-center gap-2 mt-4 mb-2 text-sm font-semibold text-gray-800 dark:text-gray-200">
-          <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
-          <span>In Stock, Ready to Ship</span>
-        </div>
-      )}
     </>
   );
 }

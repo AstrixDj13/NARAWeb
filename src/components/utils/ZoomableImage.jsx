@@ -122,7 +122,7 @@ export default function ZoomableImage({ img, active, isPriority }) {
                 style={{
                     width: "100%",
                     height: "100%",
-                    objectFit: "cover",
+                    objectFit: "contain",
                     transform: `scale(${scale}) translate(${position.x}%, ${position.y}%)`,
                     transformOrigin: "center center",
                     transition: scale === 1 ? "transform 0.2s ease-out" : "none",

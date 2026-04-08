@@ -11,6 +11,7 @@ import ColorSection from "../components/productsDetail/ColorSection";
 import { HiOutlineArrowRight } from "react-icons/hi";
 import { FaPlus } from "react-icons/fa6";
 import VariantsController from "../components/productsDetail/VariantsController";
+import DeliveryDetails from "../components/productsDetail/DeliveryDetails";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PageLoader from "../components/utils/PageLoader";
@@ -199,7 +200,7 @@ export default function ProductsDetailPage() {
       {isLoading ? (
         <PageLoader />
       ) : (
-        <div className="flex flex-col bg-[#F7F7F7] dark:bg-black dark:text-[#ffff] font-antikor xl:max-h-screen overflow-x-hidden w-full lg:overflow-hidden">
+        <div className="flex flex-col bg-[#F7F7F7] dark:bg-black dark:text-[#ffff] font-antikor overflow-x-hidden w-full">
           <NavbarRelative />
           {/*Ticker appears only on product page*/}
           <ProductTicker />
@@ -232,7 +233,7 @@ export default function ProductsDetailPage() {
               imageRefs={imageRefs}
             />
 
-            <div className="xl:w-2/5 md:w-3/4 w-full flex flex-col gap-8 p-4 !pb-12 !px-8 xl:overflow-auto xl:h-screen xl:!pb-36 scrollbar-hide">
+            <div className="xl:w-2/5 md:w-3/4 w-full flex flex-col gap-8 p-4 !pb-12 !px-8 xl:!pb-12 h-max">
               <div className="sticky top-[-1px] z-20 bg-[#F7F7F7] dark:bg-black py-2 xl:py-4 -mt-2 xl:-mt-4">
                 <ActionButtons />
               </div>
@@ -242,16 +243,17 @@ export default function ProductsDetailPage() {
                 cameFrom={cameFrom}
                 productId={product.id}
                 isMelCollection={product?.collections?.edges?.some(e => e?.node?.title?.trim().toUpperCase() === "MEL")}
-              />
-
-              {/* Variants / Color Section */}
-              <VariantsController
-                scrollToImageBySrc={scrollToImageBySrc}
-                colorsArray={product.colorsArray}
-                options={product.options}
-                variants={product.variants}
-                productId={product.id}
-              />
+              >
+                {/* Variants / Color Section */}
+                <VariantsController
+                  scrollToImageBySrc={scrollToImageBySrc}
+                  colorsArray={product.colorsArray}
+                  options={product.options}
+                  variants={product.variants}
+                  productId={product.id}
+                />
+                <DeliveryDetails />
+              </DetailSection>
 
               <img
                 className="w-full h-auto object-cover overflow-hidden"
@@ -260,13 +262,14 @@ export default function ProductsDetailPage() {
                 alt=""
               />
 
-              <ReviewSection productId={product.id} />
+
               <TrustBadges />
+
             </div>
           </div>
         </div>
       )}
-
+      <ReviewSection productId={product.id} />
       {/* Related Products */}
       <RelatedProducts collectionId={concernedCollectionId} productId={product.id} />
     </>
