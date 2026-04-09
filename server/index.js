@@ -43,37 +43,32 @@ const __dirname = path.dirname(__filename);
 // Trust proxy required for Azure App Service load balancers to correctly identify client IPs for Rate Limiting
 app.set('trust proxy', 1);
 
+// Azure App Service appends ports to IPv4 addresses in X-Forwarded-For, which breaks req.ip and express-rate-limit.
+// This middleware sanitizes the header before Express touches it, ensuring req.ip is globally clean and free of ports.
+app.use((req, res, next) => {
+  if (req.headers['x-forwarded-for']) {
+    req.headers['x-forwarded-for'] = req.headers['x-forwarded-for']
+      .split(',')
+      .map(ip => {
+        ip = ip.trim();
+        // If it's IPv4 with a port, strip the port. (IPv6 has colons but no dots).
+        if (ip.includes('.') && ip.includes(':')) {
+          return ip.split(':')[0];
+        }
+        return ip;
+      })
+      .join(', ');
+  }
+  next();
+});
+
 // Rate Limiter configuration
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per windowMs
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  message: { error: 'Too many requests, please try again later.' },
-  // Disable express-rate-limit strict validation errors for Azure
-  validate: { trustProxy: false, xForwardedForHeader: false, ip: false },
-  keyGenerator: (req) => {
-    // Read directly from the header to bypass express-rate-limit's proxy tracking on req.ip
-    let clientIp = req.headers['x-forwarded-for'] || (req.socket ? req.socket.remoteAddress : null) || 'unknown';
-
-    // X-Forwarded-For can contain multiple IPs separated by commas
-    if (clientIp.includes(',')) {
-      clientIp = clientIp.split(',')[0].trim();
-    }
-
-    // Azure App Service appends the port to IPv4 addresses (e.g. 89.100.249.75:61095)
-    // Strip it for IPv4:
-    if (clientIp.includes('.') && clientIp.includes(':')) {
-      return clientIp.split(':')[0];
-    }
-
-    // For IPv6, strip zone index if present
-    if (clientIp.includes(':')) {
-      return clientIp.split('%')[0];
-    }
-
-    return clientIp;
-  }
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' }
 });
 
 // Apply rate limiter to all API routes
