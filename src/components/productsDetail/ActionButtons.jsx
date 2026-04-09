@@ -238,24 +238,8 @@ export default function ActionButtons() {
       />
 
       <button
-        onClick={addToCartHandler}
-        disabled={productOutOfStock || addingToThecart}
-        className={` disabled:bg-gray-400 mr-2  px-4 py-2  ${addingToThecart ? "bg-gray-800" : " bg-[#1F4A40]"
-          }   text-white border-2 shadow-lg xl:!shadow-none flex items-center justify-center gap-2`}
-      >
-        {addingToThecart ? (
-          "Adding Item..."
-        ) : (
-          <>
-            {" "}
-            <FaPlus /> <pan>Add Item</pan>{" "}
-          </>
-        )}
-      </button>
-
-      <button
         disabled={!currentVariant}
-        className="relative mr-2 disabled:text-gray-200 px-4 py-1 border-2 shadow-lg xl:!shadow-none flex flex-col items-center justify-center gap-1 min-w-[120px]"
+        className={`relative mr-2 disabled:bg-gray-400 disabled:text-gray-200 px-4 py-1 border-2 shadow-lg xl:!shadow-none flex flex-col items-center justify-center gap-1 min-w-[120px] text-white ${buyNowBtnClicked ? "bg-gray-800" : "bg-[#1F4A40]"}`}
         onClick={buyNowHandler}
       >
         {buyNowBtnClicked && (
@@ -273,6 +257,24 @@ export default function ActionButtons() {
             <span className="text-[10px] bg-white text-black font-bold px-[3px] rounded">+18</span>
           </div>
         </span>
+      </button>
+
+      <button
+        onClick={addToCartHandler}
+        disabled={productOutOfStock || addingToThecart}
+        /*className="mr-2 disabled:text-gray-200 px-4 py-2 border-2 shadow-lg xl:!shadow-none flex items-center justify-center gap-2 bg-transparent text-black dark:text-white"*/
+        className="mr-2 px-4 py-2 border-2 shadow-lg flex items-center justify-center gap-2 text-black disabled:opacity-50"
+        style={{ backgroundColor: "#ECEBB6" }}
+      /*className="mr-2 disabled:text-gray-200 px-4 py-2 border-2 shadow-lg xl:!shadow-none flex items-center justify-center gap-2 bg-green-300 hover:bg-green-400 text-black disabled:bg-green-100 dark:text-black"*/
+      >
+        {addingToThecart ? (
+          "Adding Item..."
+        ) : (
+          <>
+            {" "}
+            <FaPlus /> <span>Add to Cart</span>{" "}
+          </>
+        )}
       </button>
 
       {/* <button className="px-2 py-2 border-2 shadow-lg flex items-center justify-center">

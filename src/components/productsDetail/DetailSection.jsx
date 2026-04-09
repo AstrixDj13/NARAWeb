@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Skeleton } from "@mui/material";
 import classes from "./DetailSection.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import useQuery from "../../hooks/useQuery";
 import { useOfferTag } from "../../hooks/useOfferTag";
 import { campaigns, calculateTimeLeft } from "../../utils/campaignUtils";
@@ -24,6 +24,16 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
   const [isReturnOpen, setIsReturnOpen] = useState(false);
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
   const [reviews, setReviews] = useState([]);
+
+  const randomCartCount = useMemo(() => {
+    if (!productId) return 7;
+    let hash = 0;
+    const str = String(productId);
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return (Math.abs(hash) % 9) + 1;
+  }, [productId]);
 
   useEffect(() => {
     if (productId) {
@@ -144,13 +154,18 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
         <span className="text-xs tracking-tighter capitalize">
           (Incl. of all taxes)
         </span>
+        <div className="overflow-hidden w-full mt-1">
+          <div className={`text-red-600 text-sm font-bold ${classes.slideInRight}`}>
+            {randomCartCount} people added this to cart today !!!
+          </div>
+        </div>
         {offerTag && (
           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
             <div className="bg-red-600 text-white text-xs font-bold px-2 py-1 w-fit whitespace-nowrap">
               {offerTag}
             </div>
             <span className="text-red-600 text-xs font-bold">
-              {formatTimeLeft() ? `Hurry Up! Offer valid only for ${formatTimeLeft()}` : "Hurry Up!"}
+              {formatTimeLeft() ? `Hurry Up! Offer valid only for ${formatTimeLeft()}` : "Selling Fast Today!"}
             </span>
           </div>
         )}
