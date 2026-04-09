@@ -40,6 +40,9 @@ import rateLimit from 'express-rate-limit';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Trust proxy required for Azure App Service load balancers to correctly identify client IPs for Rate Limiting
+app.set('trust proxy', 1);
+
 // Rate Limiter configuration
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -785,10 +788,23 @@ app.post('/api/anthropic/messages', async (req, res) => {
     console.log('🤖 Proxying to Anthropic API');
 
     // Get API key from header or env var
-    const apiKey = req.headers['x-api-key'] || process.env.VITE_ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY;
+    let apiKey = req.headers['x-api-key'] || process.env.VITE_ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY;
 
-    if (!apiKey) {
-      return res.status(401).json({ error: 'Missing Anthropic API Key' });
+    // Fallback if frontend accidentally sends the literal string "undefined" (common Vite caching issue)
+    if (apiKey === 'undefined' || apiKey === 'null') {
+      apiKey = process.env.VITE_ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY;
+    }
+
+    // Sanitize the key: Azure environment variables sometimes include literal quotes or hidden whitespace
+    if (apiKey) {
+      apiKey = apiKey.replace(/^["']|["']$/g, '').trim();
+      // Debug log (masking the secret part)
+      console.log(`🔑 Extracted API Key (length ${apiKey.length}): ${apiKey.substring(0, 10)}...`);
+    }
+
+    if (!apiKey || apiKey === 'undefined') {
+      console.error('❌ Missing Anthropic API Key in environment variables');
+      return res.status(401).json({ error: 'Missing Anthropic API Key in Server Configuration' });
     }
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
