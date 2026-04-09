@@ -50,14 +50,29 @@ const apiLimiter = rateLimit({
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   message: { error: 'Too many requests, please try again later.' },
+  // Disable express-rate-limit strict validation errors for Azure
+  validate: { trustProxy: false, xForwardedForHeader: false, ip: false },
   keyGenerator: (req) => {
-    if (!req.ip) return 'unknown';
-    // Azure App Service appends the port to IPv4 addresses in X-Forwarded-For (e.g. 89.100.249.75:61095)
-    // express-rate-limit expects a pure IP without port. Strip it for IPv4:
-    if (req.ip.includes('.') && req.ip.includes(':')) {
-      return req.ip.split(':')[0];
+    // Read directly from the header to bypass express-rate-limit's proxy tracking on req.ip
+    let clientIp = req.headers['x-forwarded-for'] || (req.socket ? req.socket.remoteAddress : null) || 'unknown';
+
+    // X-Forwarded-For can contain multiple IPs separated by commas
+    if (clientIp.includes(',')) {
+      clientIp = clientIp.split(',')[0].trim();
     }
-    return req.ip;
+
+    // Azure App Service appends the port to IPv4 addresses (e.g. 89.100.249.75:61095)
+    // Strip it for IPv4:
+    if (clientIp.includes('.') && clientIp.includes(':')) {
+      return clientIp.split(':')[0];
+    }
+
+    // For IPv6, strip zone index if present
+    if (clientIp.includes(':')) {
+      return clientIp.split('%')[0];
+    }
+
+    return clientIp;
   }
 });
 
