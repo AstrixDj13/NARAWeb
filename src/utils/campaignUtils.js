@@ -40,7 +40,7 @@ export const campaigns = [
     },
     {
         id: "exchange",
-        name: "", // Showing in the countdown bar area
+        name: "", // Showing in the countdown bar 
         offerTag: "", // The tag applied to products
         showOnExpiry: true, // This MUST be true if you omit dates
         collectionTitle: "",
