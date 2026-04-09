@@ -49,7 +49,16 @@ const apiLimiter = rateLimit({
   max: 100, // Limit each IP to 100 requests per windowMs
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  message: { error: 'Too many requests, please try again later.' }
+  message: { error: 'Too many requests, please try again later.' },
+  keyGenerator: (req) => {
+    if (!req.ip) return 'unknown';
+    // Azure App Service appends the port to IPv4 addresses in X-Forwarded-For (e.g. 89.100.249.75:61095)
+    // express-rate-limit expects a pure IP without port. Strip it for IPv4:
+    if (req.ip.includes('.') && req.ip.includes(':')) {
+      return req.ip.split(':')[0];
+    }
+    return req.ip;
+  }
 });
 
 // Apply rate limiter to all API routes
