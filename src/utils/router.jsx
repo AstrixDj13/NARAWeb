@@ -7,7 +7,7 @@ import ScrollToTop from "../components/utils/ScrollToTop";
 import LazyComponent from "../components/utils/LazyComponent";
 
 
-// Lazy load the components
+// Lazyload the components
 const Home = React.lazy(() => import("../pages/Home"));
 const AboutUs = React.lazy(() => import("../pages/AboutUs"));
 const Login = React.lazy(() => import("../pages/Login"));
