@@ -7,7 +7,6 @@ const Chatbot = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [shopifyDomain] = useState(import.meta.env.VITE_STORE_URL || 'example.myshopify.com');
-  const [apiKey] = useState(import.meta.env.VITE_ANTHROPIC_API_KEY || '');
   const [cartId, setCartId] = useState(null);
   const messagesEndRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -342,7 +341,6 @@ const Chatbot = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
         },
         body: JSON.stringify({
           model: 'claude-sonnet-4-5',
@@ -358,6 +356,7 @@ CRITICAL: The tools you have access to are:
 Important guidelines:
 - When showing products, ALWAYS include the product image using Markdown format: ![Product Name](image_url)
 - Create Markdown links for products using [Product Name](url) format. YOU MUST USE THE product_id PROVIDED IN THE TOOL RESULT TO CONSTRUCT THE URL. The URL format is: https://narawear.com/product/{encoded_product_id}. IMPORTANT: You must URL-encode the product_id (replace ':' with '%3A', '/' with '%2F'). Example: gid://shopify/Product/123 -> https://narawear.com/product/gid%3A%2F%2Fshopify%2FProduct%2F123
+- WHEN PROVIDING A LINK TO CHECKOUT OR THE CART, YOU MUST EXACTLY USE THE \`checkoutUrl\` OR \`checkout_url\` PROPERTY RETURNED IN THE TOOL RESULT. DO NOT CONSTRUCT OR MODIFY CHECKOUT URLS MANUALLY.
 - Always provide meaningful context when searching to get better results
 - Use only the information returned by search_shop_policies_and_faqs tool for policy questions
 - When cart_id is available, use it for cart operations
@@ -386,14 +385,6 @@ Current cart_id: ${cartId || 'none (will create new cart on first add)'}`,
   // Handle the conversation flow with tool calls
   const handleSendMessage = async () => {
     if (!input.trim() || loading) return;
-
-    if (!apiKey) {
-      setMessages(prev => [...prev, {
-        role: 'error',
-        content: 'API Key not configured. Please check VITE_ANTHROPIC_API_KEY in .env file.'
-      }]);
-      return;
-    }
 
     const userMessage = input.trim();
     setInput('');

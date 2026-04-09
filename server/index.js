@@ -12,16 +12,55 @@ const PORT = process.env.PORT || 3001;
 // Enable Gzip compression (and brotli depending on Node version)
 app.use(compression());
 
-app.use(cors());
+//app.use(cors());
+// Restrict CORS to your frontend domains
+const allowedOrigins = ['http://localhost:5173', 'https://narawear.com', 'https://www.narawear.com'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
+
 app.use(express.json());
 
 import fs from 'fs';
+import { promises as fsPromises } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { BlobServiceClient } from '@azure/storage-blob';
+import rateLimit from 'express-rate-limit';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Rate Limiter configuration
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  message: { error: 'Too many requests, please try again later.' }
+});
+
+// Apply rate limiter to all API routes
+app.use('/api/', apiLimiter);
+
+// Safe concurrent file writer queue
+const writeQueue = {};
+const safeWriteFile = (filePath, content) => {
+  if (!writeQueue[filePath]) writeQueue[filePath] = Promise.resolve();
+  writeQueue[filePath] = writeQueue[filePath]
+    .then(() => fsPromises.writeFile(filePath, content, 'utf8'))
+    .catch(e => console.error(`Write error on ${filePath}:`, e));
+  return writeQueue[filePath];
+};
 
 // Serve static files from the React app
 const distPath = path.join(__dirname, '../dist');
@@ -203,7 +242,7 @@ app.post('/api/newsletter', async (req, res) => {
     // Sync to Local (Backup/Dev)
     try {
       const dataFile = path.join(__dirname, 'newsletter_data.json');
-      fs.writeFileSync(dataFile, JSON.stringify(newsletterData, null, 2));
+      safeWriteFile(dataFile, JSON.stringify(newsletterData, null, 2));
     } catch (e) { console.error("Error writing local newsletter file", e); }
 
     res.json({ success: true, message: 'Successfully subscribed!' });
@@ -263,7 +302,7 @@ app.post('/api/reviews', (req, res) => {
     // Sync to Local (Backup/Dev)
     try {
       const dataFile = path.join(__dirname, 'reviews_data.json');
-      fs.writeFileSync(dataFile, JSON.stringify(reviewsData, null, 2));
+      safeWriteFile(dataFile, JSON.stringify(reviewsData, null, 2));
     } catch (e) { console.error("Error writing local reviews file", e); }
 
     res.json({ success: true, review: newReview });
@@ -354,7 +393,7 @@ app.post('/api/ugc-votes', (req, res) => {
     // Sync to Local (Backup/Dev)
     try {
       const dataFile = path.join(__dirname, 'ugc_votes_data.json');
-      fs.writeFileSync(dataFile, JSON.stringify(ugcVotesData, null, 2));
+      safeWriteFile(dataFile, JSON.stringify(ugcVotesData, null, 2));
     } catch (e) { console.error("Error writing local votes file", e); }
 
     // Return updated simple votes
@@ -403,7 +442,7 @@ app.post('/api/ugc-collaboration', async (req, res) => {
     // Sync JSON to Local (Backup/Dev)
     try {
       const dataFile = path.join(__dirname, 'ugc_collaboration_data.json');
-      fs.writeFileSync(dataFile, JSON.stringify(ugcCollaborationData, null, 2));
+      safeWriteFile(dataFile, JSON.stringify(ugcCollaborationData, null, 2));
     } catch (e) { console.error("Error writing local collaboration file", e); }
 
     // Convert to CSV and Sync
@@ -439,7 +478,7 @@ app.post('/api/ugc-collaboration', async (req, res) => {
 
       // Sync CSV to Local
       const csvFile = path.join(__dirname, 'ugc_collaboration.csv');
-      fs.writeFileSync(csvFile, csvContent);
+      safeWriteFile(csvFile, csvContent);
 
     } catch (e) {
       console.error("Error generating/saving CSV", e);
