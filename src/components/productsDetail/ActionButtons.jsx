@@ -42,6 +42,14 @@ export default function ActionButtons() {
     try {
       setAddingToTheCart(true);
       const cart = await createCart(variantId);
+      if (window.fbq) {
+        window.fbq('track', 'AddToCart', {
+          content_ids: [variantId],
+          content_type: 'product',
+          value: 1, // or actual price
+          currency: 'INR'
+        });
+      }
       const cartId = cart.id;
       const checkoutUrl = cart.checkoutUrl;
       customToast(<CartToast />);
@@ -66,6 +74,14 @@ export default function ActionButtons() {
         variantId,
         customerAccessToken
       );
+      if (window.fbq) {
+        window.fbq('track', 'AddToCart', {
+          content_ids: [variantId],
+          content_type: 'product',
+          value: 1, // or actual price
+          currency: 'INR'
+        });
+      }
       const cartId = cart.id;
       const checkoutUrl = cart.checkoutUrl;
       customToast(<CartToast />);
@@ -87,6 +103,14 @@ export default function ActionButtons() {
     try {
       setAddingToTheCart(true);
       const response = await addItemToCart(cartId, variantId);
+      if (window.fbq) {
+        window.fbq('track', 'AddToCart', {
+          content_ids: [variantId],
+          content_type: 'product',
+          value: 1, // or actual price
+          currency: 'INR'
+        });
+      }
       console.log("logging from add to cart:", response);
       const itemsQuantity = response?.totalQuantity;
       dispatch(setTotalQuantityInCart(itemsQuantity));
