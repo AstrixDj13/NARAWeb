@@ -1,3 +1,4 @@
+import * as tf from '@tensorflow/tfjs';
 import * as poseDetection from '@tensorflow-models/pose-detection';
 import '@tensorflow/tfjs-backend-webgl';
 
@@ -5,6 +6,8 @@ let detector = null;
 
 export const initializeDetector = async () => {
     if (detector) return detector;
+
+    await tf.ready();
 
     const model = poseDetection.SupportedModels.MoveNet;
     const detectorConfig = {

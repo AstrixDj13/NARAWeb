@@ -86,16 +86,16 @@ const SpinningWheel = ({ onClose }) => {
 
     return (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 p-4 transition-opacity font-antikor">
-            <div className="bg-black text-white rounded-lg max-w-4xl w-full flex flex-col md:flex-row shadow-[0_0_50px_rgba(255,255,255,0.1)] relative overflow-hidden border border-gray-800">
+            <div className="bg-black text-white rounded-lg max-w-4xl w-full max-h-[95vh] overflow-y-auto flex flex-col md:flex-row shadow-[0_0_50px_rgba(255,255,255,0.1)] relative border border-gray-800">
                 <button onClick={onClose} className="absolute top-4 right-4 text-white/50 hover:text-white z-20 transition-colors">
                     <IoClose size={32} />
                 </button>
 
                 {/* Left Side - Wheel */}
-                <div className="md:w-1/2 p-4 md:p-8 flex items-center justify-center bg-[#050505] overflow-hidden relative min-h-[400px]">
-                    <div className="relative w-80 h-80 md:w-96 md:h-96 shadow-2xl mr-4 md:mr-8">
+                <div className="md:w-1/2 p-4 md:p-8 flex items-center justify-center bg-[#050505] overflow-hidden relative min-h-[350px] md:min-h-[450px]">
+                    <div className="relative w-64 h-64 md:w-96 md:h-96 shadow-2xl flex-shrink-0 aspect-square md:mr-8 my-4">
                         {/* Pointer */}
-                        <div className="absolute top-1/2 -right-6 md:-right-8 transform -translate-y-1/2 w-0 h-0 border-t-[15px] border-t-transparent border-b-[15px] border-b-transparent border-r-[30px] border-r-[#ffd1dc] z-20 drop-shadow-lg" />
+                        <div className="absolute top-1/2 -right-4 md:-right-8 transform -translate-y-1/2 w-0 h-0 border-t-[10px] md:border-t-[15px] border-t-transparent border-b-[10px] md:border-b-[15px] border-b-transparent border-r-[20px] md:border-r-[30px] border-r-[#ffd1dc] z-20 drop-shadow-lg" />
 
                         {/* Wheel Container */}
                         <div
@@ -118,12 +118,14 @@ const SpinningWheel = ({ onClose }) => {
                                 return (
                                     <div
                                         key={i}
-                                        className="absolute top-1/2 left-1/2 w-[50%] h-6 origin-left flex items-center pr-8"
+                                        className="absolute top-1/2 left-1/2 w-[48%] h-8 origin-left flex items-center justify-end pr-3 md:pr-6"
                                         style={{ transform: `translateY(-50%) rotate(${deg - 90}deg)` }}
                                     >
-                                        <span className="text-white font-bold text-[10px] md:text-xs origin-center tracking-wider text-center shadow-sm w-full block whitespace-pre-line rotate-90" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>
-                                            {seg.text}
-                                        </span>
+                                        <div className="transform rotate-[90deg]">
+                                            <span className="text-white font-bold text-[11px] md:text-sm whitespace-pre text-center block" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>
+                                                {seg.text}
+                                            </span>
+                                        </div>
                                     </div>
                                 );
                             })}
