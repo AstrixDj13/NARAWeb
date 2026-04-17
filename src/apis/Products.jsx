@@ -65,6 +65,9 @@ query getProductById($id: ID!) {
         currencyCode
       }
     }
+    worthMetafield: metafield(namespace: "custom", key: "worth") {
+      value
+    }
     collections(first: 10) {  # Fetch all the collection ID
         edges {
           node {
@@ -161,6 +164,8 @@ query getProductById($id: ID!) {
     // Set the concerned collection ID
     productData.concernedCollectionId = concernedCollection?.id;
 
+    productData.worth = productData.worthMetafield?.value || null;
+
     console.log("logging the complete product data, ", productData);
     return productData;
   } catch (error) {
@@ -232,6 +237,9 @@ query getProductByHandle($handle: String!) {
         amount
         currencyCode
       }
+    }
+    worthMetafield: metafield(namespace: "custom", key: "worth") {
+      value
     }
     collections(first: 10) {  # Fetch all the collection ID
         edges {
@@ -323,6 +331,8 @@ query getProductByHandle($handle: String!) {
 
     // Set the concerned collection ID
     productData.concernedCollectionId = concernedCollection?.id;
+
+    productData.worth = productData.worthMetafield?.value || null;
 
     console.log("logging the complete product data (by handle), ", productData);
     return productData;

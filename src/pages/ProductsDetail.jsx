@@ -242,6 +242,7 @@ export default function ProductsDetailPage() {
                 descriptionHtml={product.descriptionHtml}
                 cameFrom={cameFrom}
                 productId={product.id}
+                worth={product.worth}
                 isMelCollection={product?.collections?.edges?.some(e => e?.node?.title?.trim().toUpperCase() === "MEL")}
               >
                 {/* Variants / Color Section */}

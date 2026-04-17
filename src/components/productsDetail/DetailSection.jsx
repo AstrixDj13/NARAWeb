@@ -10,7 +10,7 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
 import { fetchReviews } from "../../apis/Reviews";
 
-export default function DetailSection({ title, descriptionHtml, cameFrom, productId, isMelCollection, children }) {
+export default function DetailSection({ title, descriptionHtml, cameFrom, productId, worth, isMelCollection, children }) {
   const theme = useSelector((state) => state.app.theme);
   const currentVariant = useSelector(
     (state) => state.activeProduct.currentVariant
@@ -21,7 +21,29 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
   const offerTag = useOfferTag(productId);
   const [timeLeft, setTimeLeft] = useState({});
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
+  const [isWorthOpen, setIsWorthOpen] = useState(false);
   const [isReturnOpen, setIsReturnOpen] = useState(false);
+
+  let worthTitle = "";
+  let worthContent = "";
+  if (worth) {
+    // Match everything up to the price (e.g., ₹899, ₹999) as the title, and the rest as content.
+    // Use [\s\S] to match across newlines which may be present in the Shopify metafield.
+    const match = worth.match(/^(.*?₹[\d.,]+)\s+([\s\S]*)$/);
+    if (match) {
+      worthTitle = match[1];
+      worthContent = match[2];
+    } else {
+      // Fallback: split on any whitespace (including newlines)
+      const worthWords = worth.split(/\s+/);
+      if (worthWords.length > 5) {
+        worthTitle = worthWords.slice(0, 5).join(" ");
+        worthContent = worthWords.slice(5).join(" ");
+      } else {
+        worthTitle = worth;
+      }
+    }
+  }
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
   const [reviews, setReviews] = useState([]);
 
@@ -198,6 +220,24 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
             ></div>
           )}
         </div>
+
+        {/* Worth Section */}
+        {worth && (
+          <div className="flex flex-col border-b border-gray-200 dark:border-gray-800">
+            <button
+              onClick={() => setIsWorthOpen(!isWorthOpen)}
+              className="flex justify-between items-center w-full focus:outline-none py-4"
+            >
+              <h2 className="font-bold">{worthTitle}</h2>
+              {isWorthOpen ? <FaChevronUp className="text-sm" /> : <FaChevronDown className="text-sm" />}
+            </button>
+            {isWorthOpen && (
+              <div className="dark:text-white text-sm pb-4">
+                {worthContent}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Return & Exchange Policy Section */}
         <div className="flex flex-col border-b border-gray-200 dark:border-gray-800">
