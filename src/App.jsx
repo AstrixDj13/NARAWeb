@@ -19,6 +19,7 @@ import createCart, {
 } from "./apis/Cart";
 import { getProductVariantDetail } from "./apis/Products";
 import useEventTracker from "./hooks/EventTracker";
+import SpinningWheel from "./components/SpinningWheel";
 const Chatbot = lazy(() => import("./components/Chatbot"));
 function App() {
   const dispatch = useDispatch();
@@ -103,6 +104,48 @@ function App() {
 
   }, []);
 
+  const [showSpinningWheel, setShowSpinningWheel] = useState(false);
+
+  useEffect(() => {
+    const checkWheel = async () => {
+      // 1. check local storage first
+      const hasSpunLocal = localStorage.getItem('hasSpunWheel');
+      if (hasSpunLocal === 'true') return;
+
+      // 2. check backend
+      try {
+        let customerId = localStorage.getItem('user_id');
+        let anonymousId = localStorage.getItem('anonymous_id');
+
+        if (!customerId && !anonymousId) {
+          setShowSpinningWheel(true);
+          return;
+        }
+
+        const params = new URLSearchParams();
+        if (customerId) params.append('customerId', customerId);
+        if (anonymousId) params.append('anonymousId', anonymousId);
+
+        const res = await fetch(`${import.meta.env.VITE_EVENT_API_URL || 'http://localhost:3001'}/api/spinning-wheel/check?${params.toString()}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (!data.hasSpun) {
+            setShowSpinningWheel(true);
+          } else {
+            localStorage.setItem('hasSpunWheel', 'true');
+          }
+        } else {
+          setShowSpinningWheel(true);
+        }
+      } catch (err) {
+        console.error("Failed to check spinning wheel status", err);
+        // Fail open: show it if checking fails
+        setShowSpinningWheel(true);
+      }
+    };
+    checkWheel();
+  }, []);
+
   return (
     <div className="cursor-custom dark:!bg-black font-antikor">
       <Toaster position="top-center" richColors />
@@ -112,6 +155,7 @@ function App() {
           <Chatbot />
         </Suspense>
       )} {/* ✅ Chatbot with Shopify MCP integration */}
+      {showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}
     </div>
   );
 }

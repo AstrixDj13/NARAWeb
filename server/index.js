@@ -36,6 +36,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { BlobServiceClient } from '@azure/storage-blob';
 import rateLimit from 'express-rate-limit';
+import pg from 'pg';
+const { Pool } = pg;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -239,6 +241,84 @@ async function initializeData() {
 }
 
 initializeData();
+
+// Initialize PostgreSQL connection
+const dbOptions = {
+  connectionString: process.env.DATABASE_URL,
+};
+
+// Add ssl option if not localhost
+if (dbOptions.connectionString && !dbOptions.connectionString.includes('localhost')) {
+  dbOptions.ssl = { rejectUnauthorized: false };
+}
+
+const pool = new Pool(dbOptions);
+
+async function initDB() {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS spinning_wheel_data (
+        id SERIAL PRIMARY KEY,
+        phone_number VARCHAR(50) NOT NULL,
+        name VARCHAR(255),
+        customer_id VARCHAR(255),
+        anonymous_id VARCHAR(255),
+        result VARCHAR(100) NOT NULL,
+        spun_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log("PostgreSQL: spinning_wheel_data table is ready.");
+  } catch (error) {
+    console.error("Error creating spinning_wheel_data table:", error);
+  }
+}
+initDB();
+
+// Spinning Wheel Endpoints
+app.get('/api/spinning-wheel/check', async (req, res) => {
+  try {
+    const { customerId, anonymousId } = req.query;
+    if (!customerId && !anonymousId) {
+      return res.status(400).json({ error: 'Missing customerId or anonymousId' });
+    }
+
+    let query = 'SELECT 1 FROM spinning_wheel_data WHERE ';
+    let values = [];
+    if (customerId) {
+      query += 'customer_id = $1';
+      values = [customerId];
+    } else {
+      query += 'anonymous_id = $1';
+      values = [anonymousId];
+    }
+    query += ' LIMIT 1';
+
+    const result = await pool.query(query, values);
+    res.json({ hasSpun: result.rowCount > 0 });
+  } catch (error) {
+    console.error('Error checking spinning wheel status:', error);
+    res.status(500).json({ error: 'Database check failed' });
+  }
+});
+
+app.post('/api/spinning-wheel/spin', async (req, res) => {
+  try {
+    const { phoneNumber, name, customerId, anonymousId, result } = req.body;
+    if (!phoneNumber || !result) {
+      return res.status(400).json({ error: 'Missing phone number or result' });
+    }
+
+    await pool.query(`
+      INSERT INTO spinning_wheel_data (phone_number, name, customer_id, anonymous_id, result)
+      VALUES ($1, $2, $3, $4, $5)
+    `, [phoneNumber, name || null, customerId || null, anonymousId || null, result]);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error saving spinning wheel data:', error);
+    res.status(500).json({ error: 'Database saving failed' });
+  }
+});
 
 // Newsletter endpoint
 app.post('/api/newsletter', async (req, res) => {

@@ -22,6 +22,21 @@ import Spinner from "../utils/Spinner";
 import CartToast from "../utils/CartToast";
 import { ToastContainer, toast as customToast } from "react-toastify";
 import { useEventTracker } from "../../hooks/EventTracker";
+import { TryOnProvider, useTryOn } from "../VirtualTryOn/TryOnProvider";
+import VirtualTryOnModal from "../VirtualTryOn/VirtualTryOnModal";
+
+const TryItOnButton = () => {
+  const { toggleTryOn } = useTryOn();
+  return (
+    <button
+      onClick={() => toggleTryOn(true)}
+      className="mr-2 px-4 py-2 border-2 shadow-lg flex items-center justify-center gap-2 text-white bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
+    >
+      <span className="flex items-center gap-2">Virtual Try-On</span>
+    </button>
+  );
+};
+
 export default function ActionButtons() {
   const [addingToThecart, setAddingToTheCart] = useState(false);
   const [buyNowBtnClicked, setBuyNowBtnClicked] = useState(false);
@@ -243,67 +258,72 @@ export default function ActionButtons() {
   };
 
   return (
-    <div className="md:static fixed z-[2] bottom-0 right-0 left-0 bg-[#ffff] md:bg-transparent flex sm:flex-row  justify-center md:justify-start border-2 md:border-none shadow-lg md:!shadow-none dark:bg-black !font-outfit text-sm md:text-base p-2 md:!p-0 ">
+    <TryOnProvider>
+      <div className="md:static fixed z-[2] bottom-0 right-0 left-0 bg-[#ffff] md:bg-transparent flex sm:flex-row  justify-center md:justify-start border-2 md:border-none shadow-lg md:!shadow-none dark:bg-black !font-outfit text-sm md:text-base p-2 md:!p-0 ">
 
-      <ToastContainer
-        hideProgressBar={true}
-        autoClose={800}
-        closeOnClick
-        closeButton={false}
-        position="bottom-center"
-        style={{
-          backgroundColor: 0,
-          width: "20em",
-          position: "fixed",
-          left: "50%",
-          transform: "translateX(-50%)",
-          bottom: "0",
-        }}
-      />
+        <ToastContainer
+          hideProgressBar={true}
+          autoClose={800}
+          closeOnClick
+          closeButton={false}
+          position="bottom-center"
+          style={{
+            backgroundColor: 0,
+            width: "20em",
+            position: "fixed",
+            left: "50%",
+            transform: "translateX(-50%)",
+            bottom: "0",
+          }}
+        />
 
-      <button
-        disabled={!currentVariant}
-        className={`relative mr-2 disabled:bg-gray-400 disabled:text-gray-200 px-4 py-1 border-2 shadow-lg xl:!shadow-none flex flex-col items-center justify-center gap-1 min-w-[120px] text-white ${buyNowBtnClicked ? "bg-gray-800" : "bg-[#1F4A40]"}`}
-        onClick={buyNowHandler}
-      >
-        {buyNowBtnClicked && (
-          <div className="absolute flex items-center justify-center top-0 right-0 left-0 bottom-0">
-            <Spinner />
-          </div>
-        )}
+        <button
+          disabled={!currentVariant}
+          className={`relative mr-2 disabled:bg-gray-400 disabled:text-gray-200 px-4 py-1 border-2 shadow-lg xl:!shadow-none flex flex-col items-center justify-center gap-1 min-w-[120px] text-white ${buyNowBtnClicked ? "bg-gray-800" : "bg-[#1F4A40]"}`}
+          onClick={buyNowHandler}
+        >
+          {buyNowBtnClicked && (
+            <div className="absolute flex items-center justify-center top-0 right-0 left-0 bottom-0">
+              <Spinner />
+            </div>
+          )}
 
-        <span className={buyNowBtnClicked ? "opacity-0" : "flex items-center gap-2"}>
-          Buy Now
-          <div className="flex items-center gap-[3px]">
-            <img src="/icons/upi.png" alt="UPI" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
-            <img src="/icons/phonepe.jpg" alt="PhonePe" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
-            <img src="/icons/gpay.webp" alt="GPay" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
-            <span className="text-[10px] bg-white text-black font-bold px-[3px] rounded">+18</span>
-          </div>
-        </span>
-      </button>
+          <span className={buyNowBtnClicked ? "opacity-0" : "flex items-center gap-2"}>
+            Buy Now
+            <div className="flex items-center gap-[3px]">
+              <img src="/icons/upi.png" alt="UPI" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
+              <img src="/icons/phonepe.jpg" alt="PhonePe" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
+              <img src="/icons/gpay.webp" alt="GPay" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
+              <span className="text-[10px] bg-white text-black font-bold px-[3px] rounded">+18</span>
+            </div>
+          </span>
+        </button>
 
-      <button
-        onClick={addToCartHandler}
-        disabled={productOutOfStock || addingToThecart}
-        /*className="mr-2 disabled:text-gray-200 px-4 py-2 border-2 shadow-lg xl:!shadow-none flex items-center justify-center gap-2 bg-transparent text-black dark:text-white"*/
-        className="mr-2 px-4 py-2 border-2 shadow-lg flex items-center justify-center gap-2 text-black disabled:opacity-50"
-        style={{ backgroundColor: "#ECEBB6" }}
-      /*className="mr-2 disabled:text-gray-200 px-4 py-2 border-2 shadow-lg xl:!shadow-none flex items-center justify-center gap-2 bg-green-300 hover:bg-green-400 text-black disabled:bg-green-100 dark:text-black"*/
-      >
-        {addingToThecart ? (
-          "Adding Item..."
-        ) : (
-          <>
-            {" "}
-            <FaPlus /> <span>Add to Cart</span>{" "}
-          </>
-        )}
-      </button>
+        <button
+          onClick={addToCartHandler}
+          disabled={productOutOfStock || addingToThecart}
+          /*className="mr-2 disabled:text-gray-200 px-4 py-2 border-2 shadow-lg xl:!shadow-none flex items-center justify-center gap-2 bg-transparent text-black dark:text-white"*/
+          className="mr-2 px-4 py-2 border-2 shadow-lg flex items-center justify-center gap-2 text-black disabled:opacity-50"
+          style={{ backgroundColor: "#ECEBB6" }}
+        /*className="mr-2 disabled:text-gray-200 px-4 py-2 border-2 shadow-lg xl:!shadow-none flex items-center justify-center gap-2 bg-green-300 hover:bg-green-400 text-black disabled:bg-green-100 dark:text-black"*/
+        >
+          {addingToThecart ? (
+            "Adding Item..."
+          ) : (
+            <>
+              {" "}
+              <FaPlus /> <span>Add to Cart</span>{" "}
+            </>
+          )}
+        </button>
 
-      {/* <button className="px-2 py-2 border-2 shadow-lg flex items-center justify-center">
+        <TryItOnButton />
+        <VirtualTryOnModal />
+
+        {/* <button className="px-2 py-2 border-2 shadow-lg flex items-center justify-center">
         <MdBookmarkBorder size={24} />
       </button> */}
-    </div>
+      </div>
+    </TryOnProvider>
   );
 }
