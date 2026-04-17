@@ -12,6 +12,7 @@ export const useTryOn = () => {
 
 export const TryOnProvider = ({ children }) => {
     const [isTryOnActive, setIsTryOnActive] = useState(false);
+    const [productImage, setProductImage] = useState(null);
     const [isCameraLoading, setIsCameraLoading] = useState(false);
     const [cameraError, setCameraError] = useState(null);
 
@@ -24,8 +25,13 @@ export const TryOnProvider = ({ children }) => {
     const videoRef = useRef(null);
 
     // Function to initialize or teardown the AR session
-    const toggleTryOn = (status) => {
+    const toggleTryOn = (status, imageStr = null) => {
         setIsTryOnActive(status);
+        if (status && imageStr) {
+            setProductImage(imageStr);
+        } else if (!status) {
+            setProductImage(null);
+        }
     };
 
     const value = {
@@ -37,6 +43,7 @@ export const TryOnProvider = ({ children }) => {
         setCameraError,
         keypointsRef,
         videoRef,
+        productImage,
     };
 
     return (

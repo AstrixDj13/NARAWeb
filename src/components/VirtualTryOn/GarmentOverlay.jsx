@@ -1,10 +1,25 @@
-import React, { useRef } from 'react';
+import * as THREE from 'three';
+import React, { useRef, Suspense } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
+import { useTexture } from '@react-three/drei';
 import { useTryOn } from './TryOnProvider';
+
+function TexturedMesh({ url, positionRef }) {
+    const texture = useTexture(url);
+    if (texture) {
+        texture.colorSpace = THREE.SRGBColorSpace;
+    }
+    return (
+        <mesh ref={positionRef} position={[0, 0, 0]}>
+            <planeGeometry args={[1, 1.5]} />
+            <meshBasicMaterial map={texture} transparent side={THREE.DoubleSide} depthWrite={false} color="#ffffff" />
+        </mesh>
+    );
+}
 
 export default function GarmentOverlay() {
     const meshRef = useRef();
-    const { keypointsRef, videoRef } = useTryOn();
+    const { keypointsRef, videoRef, productImage } = useTryOn();
     const { viewport } = useThree();
 
     useFrame(() => {
@@ -45,17 +60,28 @@ export default function GarmentOverlay() {
             // Lower garment slightly below shoulders
             meshRef.current.position.y = mappedY - (meshWidth * 0.4);
 
-            // Update scale (assuming base mesh is 1x1 unit)
-            // We scale it proportionally
-            meshRef.current.scale.set(meshWidth, meshWidth * 1.5, meshWidth * 0.5);
+            // Update scale - if we are rendering a plane, it scales the width & height
+            meshRef.current.scale.set(meshWidth * 1.25, meshWidth * 1.25 * 1.5, meshWidth * 0.5);
         }
     });
 
     return (
-        <mesh ref={meshRef} position={[0, 0, 0]}>
-            {/* Box as a placeholder garment. Replace with <primitive object={gltf.scene} /> later */}
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color="#ff0055" opacity={0.8} transparent />
-        </mesh>
+        <group>
+            {productImage ? (
+                <Suspense fallback={
+                    <mesh ref={meshRef} position={[0, 0, 0]}>
+                        <boxGeometry args={[1, 1, 1]} />
+                        <meshStandardMaterial color="#ff0055" opacity={0.8} transparent />
+                    </mesh>
+                }>
+                    <TexturedMesh url={productImage} positionRef={meshRef} />
+                </Suspense>
+            ) : (
+                <mesh ref={meshRef} position={[0, 0, 0]}>
+                    <boxGeometry args={[1, 1, 1]} />
+                    <meshStandardMaterial color="#ff0055" opacity={0.8} transparent />
+                </mesh>
+            )}
+        </group>
     );
 }

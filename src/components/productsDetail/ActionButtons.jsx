@@ -25,12 +25,12 @@ import { useEventTracker } from "../../hooks/EventTracker";
 import { TryOnProvider, useTryOn } from "../VirtualTryOn/TryOnProvider";
 import VirtualTryOnModal from "../VirtualTryOn/VirtualTryOnModal";
 
-const TryItOnButton = () => {
+const TryItOnButton = ({ productImage }) => {
   const { toggleTryOn } = useTryOn();
   return (
     <button
-      onClick={() => toggleTryOn(true)}
-      className="mr-2 px-4 py-2 border-2 shadow-lg flex items-center justify-center gap-2 text-white bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
+      onClick={() => toggleTryOn(true, productImage)}
+      className="px-4 py-2 flex-1 sm:flex-none border-2 shadow-lg flex items-center justify-center gap-2 text-white bg-purple-600 hover:bg-purple-700 disabled:opacity-50 whitespace-nowrap"
     >
       <span className="flex items-center gap-2">Virtual Try-On</span>
     </button>
@@ -259,7 +259,7 @@ export default function ActionButtons() {
 
   return (
     <TryOnProvider>
-      <div className="md:static fixed z-[2] bottom-0 right-0 left-0 bg-[#ffff] md:bg-transparent flex sm:flex-row  justify-center md:justify-start border-2 md:border-none shadow-lg md:!shadow-none dark:bg-black !font-outfit text-sm md:text-base p-2 md:!p-0 ">
+      <div className="md:static fixed z-[2] bottom-0 right-0 left-0 bg-[#ffff] md:bg-transparent flex flex-wrap sm:flex-nowrap justify-center md:justify-start gap-2 border-2 md:border-none shadow-lg md:!shadow-none dark:bg-black !font-outfit text-sm md:text-base p-2 md:!p-0 ">
 
         <ToastContainer
           hideProgressBar={true}
@@ -279,7 +279,7 @@ export default function ActionButtons() {
 
         <button
           disabled={!currentVariant}
-          className={`relative mr-2 disabled:bg-gray-400 disabled:text-gray-200 px-4 py-1 border-2 shadow-lg xl:!shadow-none flex flex-col items-center justify-center gap-1 min-w-[120px] text-white ${buyNowBtnClicked ? "bg-gray-800" : "bg-[#1F4A40]"}`}
+          className={`relative disabled:bg-gray-400 flex-1 sm:flex-none disabled:text-gray-200 px-4 py-1 border-2 shadow-lg xl:!shadow-none flex flex-col items-center justify-center gap-1 min-w-[120px] text-white ${buyNowBtnClicked ? "bg-gray-800" : "bg-[#1F4A40]"}`}
           onClick={buyNowHandler}
         >
           {buyNowBtnClicked && (
@@ -288,8 +288,8 @@ export default function ActionButtons() {
             </div>
           )}
 
-          <span className={buyNowBtnClicked ? "opacity-0" : "flex items-center gap-2"}>
-            Buy Now
+          <span className={buyNowBtnClicked ? "opacity-0" : "flex flex-col sm:flex-row items-center gap-1 sm:gap-2 whitespace-nowrap"}>
+            <span>Buy Now</span>
             <div className="flex items-center gap-[3px]">
               <img src="/icons/upi.png" alt="UPI" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
               <img src="/icons/phonepe.jpg" alt="PhonePe" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
@@ -302,10 +302,8 @@ export default function ActionButtons() {
         <button
           onClick={addToCartHandler}
           disabled={productOutOfStock || addingToThecart}
-          /*className="mr-2 disabled:text-gray-200 px-4 py-2 border-2 shadow-lg xl:!shadow-none flex items-center justify-center gap-2 bg-transparent text-black dark:text-white"*/
-          className="mr-2 px-4 py-2 border-2 shadow-lg flex items-center justify-center gap-2 text-black disabled:opacity-50"
+          className="px-4 py-2 flex-1 sm:flex-none border-2 shadow-lg flex items-center justify-center gap-2 text-black disabled:opacity-50 whitespace-nowrap"
           style={{ backgroundColor: "#ECEBB6" }}
-        /*className="mr-2 disabled:text-gray-200 px-4 py-2 border-2 shadow-lg xl:!shadow-none flex items-center justify-center gap-2 bg-green-300 hover:bg-green-400 text-black disabled:bg-green-100 dark:text-black"*/
         >
           {addingToThecart ? (
             "Adding Item..."
@@ -317,7 +315,7 @@ export default function ActionButtons() {
           )}
         </button>
 
-        <TryItOnButton />
+        <TryItOnButton productImage={currentVariant?.node?.image?.url} />
         <VirtualTryOnModal />
 
         {/* <button className="px-2 py-2 border-2 shadow-lg flex items-center justify-center">
