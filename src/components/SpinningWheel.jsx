@@ -10,10 +10,12 @@ const SpinningWheel = ({ onClose }) => {
     const [copied, setCopied] = useState(false);
 
     const segments = [
-        { text: '10% OFF', color: '#1F4A40', value: 'lose' },
+        { text: '10% OFF', color: '#1F4A40', value: 'win_10' },
         { text: '₹300 OFF', color: '#2a6357', value: 'win_300' },
+        { text: 'So Close', color: '#4a7c6f', value: 'lose' },
         { text: '₹200 OFF', color: '#1F4A40', value: 'win_200' },
         { text: '15% OFF', color: '#2a6357', value: 'win_15' },
+        { text: 'Not Your\nDay', color: '#4a7c6f', value: 'lose' },
         { text: '20% OFF', color: '#1F4A40', value: 'win_20' },
         { text: '30% OFF', color: '#2a6357', value: 'win_30' },
     ];
@@ -80,7 +82,9 @@ const SpinningWheel = ({ onClose }) => {
         '₹200 OFF': 'LUCKY200',
         '15% OFF': 'LUCKY15',
         '20% OFF': 'LUCKY20',
-        '30% OFF': 'LUCKY30'
+        '30% OFF': 'LUCKY30',
+        'So Close': 'LUCKY10',
+        'Not Your\nDay': 'LUCKY10',
     };
 
     const handleCopyCode = () => {
@@ -119,8 +123,8 @@ const SpinningWheel = ({ onClose }) => {
                             }}
                         >
                             {/* Center dot */}
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white rounded-full z-10 shadow-[0_0_15px_rgba(0,0,0,0.3)] flex items-center justify-center text-[#1F4A40] font-bold text-2xl tracking-tighter">
-                                AV
+                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full z-10 shadow-[0_0_15px_rgba(0,0,0,0.3)] flex items-center justify-center overflow-hidden p-1" style={{ backgroundColor: 'transparent' }}>
+                                <img src="/favicon.png" alt="logo" className="w-full h-full object-contain" style={{ mixBlendMode: 'multiply' }} />
                             </div>
 
                             {/* Text for segments */}
@@ -185,11 +189,11 @@ const SpinningWheel = ({ onClose }) => {
                             {result.value === 'lose' ? (
                                 <>
                                     <h2 className="text-2xl md:text-3xl font-bold mb-2 text-black">So close - here's something anyway ✷</h2>
-                                    <p className="text-gray-600 text-sm md:text-base mb-2">10% OFF fallback</p>
+                                    <p className="text-gray-600 text-sm md:text-base mb-2">Better luck next time! Here's 10% OFF on us.</p>
                                 </>
                             ) : (
                                 <>
-                                    <h2 className="text-2xl md:text-3xl font-bold text-[#1F4A40] mb-2">You unlocked a special offer ✷</h2>
+                                    <h2 className="text-2xl md:text-3xl font-bold text-[#1F4A40] mb-2">Congratulations, you get {result.text}! ✷</h2>
                                     <p className="text-gray-600 text-sm md:text-base mb-2">Use your code within the next 15 minutes.</p>
                                 </>
                             )}
@@ -221,7 +225,7 @@ const SpinningWheel = ({ onClose }) => {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

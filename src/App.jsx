@@ -153,7 +153,10 @@ function App() {
         setShowSpinningWheel(true);
       }
     };
-    checkWheel();
+    const timer = setTimeout(() => {
+      checkWheel();
+    }, 5000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (

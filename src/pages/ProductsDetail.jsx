@@ -21,6 +21,7 @@ import ReviewSection from "../components/productsDetail/ReviewSection";
 import TrustBadges from "../components/productsDetail/TrustBadges";
 import ProductTicker from "../components/productsDetail/ProductTicker";
 import { useProductScrollTracker, useEventTracker } from "../hooks/EventTracker";
+import Coupons from "../components/Cart/Coupons";
 
 export default function ProductsDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -255,6 +256,8 @@ export default function ProductsDetailPage() {
                 />
                 <DeliveryDetails />
               </DetailSection>
+
+              <Coupons />
 
               <img
                 className="w-full h-auto object-cover overflow-hidden"

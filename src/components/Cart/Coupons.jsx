@@ -57,6 +57,22 @@ const Coupons = () => {
                             </p>
                         </div>
                     </Link>
+
+                    <Link to="/products" className="flex items-center gap-4 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        <div className="w-32 h-32 flex-shrink-0">
+                            <img
+                                src="/offer/MEL_30_off.webp"
+                                alt="MEL Offer"
+                                className="w-full h-full object-contain"
+                            />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <p className="text-sm font-medium text-gray-600 dark:text-gray-600">
+                                Exclusive offer on MEL Collection.
+                                No code, no hassle—your discount is applied automatically at checkout.
+                            </p>
+                        </div>
+                    </Link>
                 </div>
 
             )}
