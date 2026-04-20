@@ -24,6 +24,7 @@ const Chatbot = lazy(() => import("./components/Chatbot"));
 function App() {
   const dispatch = useDispatch();
   const fetchedCartId = useSelector((state) => state.cart.id);
+  const productsInCart = useSelector((state) => state.cart.productsInCart);
   const { pathname } = useLocation();
   const [soundOn, setSound] = useState(true);
   const soundRef = useRef(null);
@@ -53,6 +54,15 @@ function App() {
       if (error?.message?.includes("GraphQL error(s)")) {
         toast.error("Something went wrong");
       } else if (error?.message === "Thank You for shopping with us!") {
+        const total = (productsInCart || []).reduce((sum, edge) => {
+          const price = parseFloat(edge?.node?.merchandise?.price?.amount || 0);
+          const qty = edge?.node?.quantity || 1;
+          return sum + price * qty;
+        }, 0);
+        fbq('track', 'Purchase', {
+          value: total,
+          currency: 'INR'
+        });
         localStorage.removeItem("cartId");
         dispatch(deleteCart());
         toast.info(error?.message);
