@@ -232,9 +232,16 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
               {isWorthOpen ? <FaChevronUp className="text-sm" /> : <FaChevronDown className="text-sm" />}
             </button>
             {isWorthOpen && (
-              <div className="dark:text-white text-sm pb-4">
-                {worthContent}
-              </div>
+              <ul className="dark:text-white text-sm pb-4 list-disc pl-5 space-y-1">
+                {worthContent
+                  .split(/[\.\n]+/)
+                  .map(item => item.trim())
+                  .filter(item => item.length > 0)
+                  .map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))
+                }
+              </ul>
             )}
           </div>
         )}
