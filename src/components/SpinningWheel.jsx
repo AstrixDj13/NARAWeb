@@ -26,7 +26,13 @@ const SpinningWheel = ({ onClose }) => {
             return;
         }
 
-        const randomIndex = Math.floor(Math.random() * segments.length);
+        let randomIndex = Math.floor(Math.random() * segments.length);
+
+        // Rig the wheel: Never land on '₹300 OFF'
+        while (segments[randomIndex].text === '₹300 OFF') {
+            randomIndex = Math.floor(Math.random() * segments.length);
+        }
+
         const selectedSegment = segments[randomIndex];
 
         const segmentDegree = 360 / segments.length;

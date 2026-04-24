@@ -47,14 +47,29 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
   const [reviews, setReviews] = useState([]);
 
-  const randomCartCount = useMemo(() => {
-    if (!productId) return 7;
-    let hash = 0;
-    const str = String(productId);
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return (Math.abs(hash) % 9) + 1;
+  const [randomCartCount, setRandomCartCount] = useState(7);
+
+  useEffect(() => {
+    if (!productId) return;
+
+    const updateCount = () => {
+      const now = new Date();
+      const dateString = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDate();
+      const currentHour = now.getHours();
+
+      let hash = 0;
+      const str = String(productId) + "-" + dateString;
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      }
+
+      const baseCount = (Math.abs(hash) % 9) + 1;
+      setRandomCartCount(baseCount + currentHour);
+    };
+
+    updateCount();
+    const interval = setInterval(updateCount, 60000);
+    return () => clearInterval(interval);
   }, [productId]);
 
   useEffect(() => {
