@@ -13,10 +13,10 @@ const Policies = () => {
             <Navbar />
             <div className="flex-grow pt-32 pb-16 px-6 md:px-12 lg:px-20 max-w-5xl mx-auto w-full">
                 <Breadcrumb items={[{ label: "Home", link: "/" }, { label: "Return Policy" }]} />
-                <h1 className="text-3xl md:text-5xl font-bold mb-4 text-center text-gray-900 dark:text-white uppercase tracking-widest">
+                <h1 className="text-3xl md:text-5xl font-bold mb-4 text-center text-gray-900 dark:text-gray-900 uppercase tracking-widest">
                     Returns & Exchanges
                 </h1>
-                <p className="text-center text-gray-600 dark:text-gray-400 mb-12 italic font-medium">
+                <p className="text-center text-gray-600 dark:text-gray-600 mb-12 italic font-medium">
                     We want you to love what you wear from NARA 🤍
                 </p>
 
@@ -77,7 +77,7 @@ const Policies = () => {
                         ].map((condition, idx) => (
                             <div key={idx} className="text-center">
                                 <div className="text-[#1E7B74] font-bold mb-1 uppercase text-sm tracking-tighter">{condition.title}</div>
-                                <div className="text-xs text-gray-600 dark:text-gray-400">{condition.desc}</div>
+                                <div className="text-xs text-gray-600 dark:text-gray-600">{condition.desc}</div>
                             </div>
                         ))}
                     </div>
@@ -91,8 +91,8 @@ const Policies = () => {
                     <p className="text-gray-400 mb-8">
                         To initiate a return or exchange, please contact us with your order number and details.
                     </p>
-                    <a 
-                        href="mailto:info@narawear.com" 
+                    <a
+                        href="mailto:info@narawear.com"
                         className="inline-block bg-[#1E7B74] hover:bg-[#155A55] text-white font-bold py-4 px-8 rounded-full transition-all transform hover:scale-105 shadow-lg mb-4"
                     >
                         info@narawear.com
