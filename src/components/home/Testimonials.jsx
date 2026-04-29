@@ -29,6 +29,13 @@ const testimonials = [
     location: "Delhi, India",
     rating: 5,
   },
+  {
+    id: 4,
+    quote: "Received my Nara order and I couldn’t be happier ✨ The fabric is soft, light, and so comfortable. Thank you for the lovely scrunchie & bow and to my friend for the recommendation ❤️",
+    name: "Sushmita Mohanty",
+    location: "Kolkata, India",
+    rating: 5,
+  },
 ];
 
 const TestimonialsSection = () => {
@@ -45,7 +52,7 @@ const TestimonialsSection = () => {
             className="bg-gray-50 dark:bg-[#1E1E1E] p-6 rounded-lg shadow-md flex flex-col items-center text-center transition-transform duration-300 hover:scale-[1.02]"
           >
             {/* Removed the image rendering block entirely */}
-            
+
             {/* Star Rating */}
             <div className="flex justify-center mb-3">
               {[...Array(testimonial.rating)].map((_, i) => (

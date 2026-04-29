@@ -88,7 +88,7 @@ export default function DeliveryDetails() {
                     <path d="M10 10h4v4h-4z" />
                 </svg>
                 <p className="text-sm text-gray-900 dark:text-gray-100 font-outfit">
-                    This product is eligible for exchange under our 14 days Exchange Policy. No questions asked.
+                    This product is eligible for exchange under our 10 days Exchange Policy. No questions asked.
                 </p>
             </div>
         </div>

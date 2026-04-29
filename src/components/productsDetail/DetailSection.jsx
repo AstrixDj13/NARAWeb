@@ -272,20 +272,26 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
           </button>
           {isReturnOpen && (
             <div className="dark:text-white text-sm pb-4 space-y-2">
-              <p>We currently do not offer returns.</p>
-              <p>However, we do offer exchanges within 14 days of purchase for:</p>
-              <ul className="list-disc pl-5">
-                <li>A different size, or</li>
-                <li>A different product of equal value.</li>
-              </ul>
-              <p className="font-semibold mt-2">Conditions for exchange:</p>
-              <ul className="list-disc pl-5">
+              <p>We accept returns and exchanges within <span className="font-bold text-[#1E7B74]">10 days</span> of delivery.</p>
+              
+              <div className="mt-2 space-y-1">
+                <p className="font-semibold text-[#1E7B74]">Returns:</p>
+                <p>A ₹99 return fee will be deducted from your refund to cover reverse logistics.</p>
+              </div>
+
+              <div className="mt-2 space-y-1">
+                <p className="font-semibold text-[#1E7B74]">Exchanges:</p>
+                <p>We offer exchanges for a different size or a different product of equal value.</p>
+              </div>
+
+              <p className="font-semibold mt-4">Conditions:</p>
+              <ul className="list-disc pl-5 text-xs text-gray-600 dark:text-gray-400">
                 <li>The product must be unused and in its original condition</li>
                 <li>All tags must be intact</li>
                 <li>The item must not be washed or damaged</li>
               </ul>
-              <p className="mt-2 text-gray-700 dark:text-gray-300">
-                To request an exchange, please contact us at <a href="mailto:info@narawear.com" className="underline font-semibold">info@narawear.com</a> with your order number and exchange request details.
+              <p className="mt-4 text-xs">
+                To request a return or exchange, please contact us at <a href="mailto:info@narawear.com" className="underline font-semibold text-[#1E7B74]">info@narawear.com</a>.
               </p>
             </div>
           )}
