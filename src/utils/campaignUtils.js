@@ -64,7 +64,7 @@ export const campaigns = [
     },
     {
         id: "first-order",
-        name: "", // Showing in the countdown bar area
+        name: "", // Showing in the countdown area
         offerTag: "", // The tag applied to products
         showOnExpiry: true, // This MUST be true if you omit dates
         collectionTitle: "",
