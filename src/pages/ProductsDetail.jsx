@@ -189,6 +189,33 @@ export default function ProductsDetailPage() {
 
   return (
     <>
+      {product && product.title && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org/",
+              "@type": "Product",
+              name: product.title,
+              image: product.images?.edges?.[0]?.node?.url,
+              description: product.description,
+              brand: {
+                "@type": "Brand",
+                name: "NARA",
+              },
+              offers: {
+                "@type": "Offer",
+                priceCurrency: product.priceRange?.minVariantPrice?.currencyCode || "INR",
+                price: product.priceRange?.minVariantPrice?.amount,
+                availability: product.variants?.edges?.[0]?.node?.availableForSale
+                  ? "https://schema.org/InStock"
+                  : "https://schema.org/OutOfStock",
+                url: `https://narawear.com${location.pathname}`,
+              },
+            }),
+          }}
+        />
+      )}
       {preloadImageSrc && (
         <img
           src={preloadImageSrc}
