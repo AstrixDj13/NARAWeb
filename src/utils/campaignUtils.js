@@ -44,7 +44,7 @@ export const campaigns = [
         offerTag: "", // The tag applied to products
         showOnExpiry: true, // This MUST be true if you omit dates
         collectionTitle: "",
-        marqueeMessage: "Easy Exchange!"
+        marqueeMessage: "Easy Exchange & Returns!"
     },
     {
         id: "pan-india",
@@ -61,6 +61,14 @@ export const campaigns = [
         showOnExpiry: true, // This MUST be true if you omit dates
         collectionTitle: "MEL",
         marqueeMessage: "30% off on MEL"
+    },
+    {
+        id: "first-order",
+        name: "", // Showing in the countdown bar area
+        offerTag: "", // The tag applied to products
+        showOnExpiry: true, // This MUST be true if you omit dates
+        collectionTitle: "",
+        marqueeMessage: "10% off on First Order. Use code - FIRSTORDER"
     }
 
 ];
