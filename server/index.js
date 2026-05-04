@@ -86,6 +86,19 @@ const safeWriteFile = (filePath, content) => {
   return writeQueue[filePath];
 };
 
+import prerender from 'prerender-node';
+
+// Prerender.io middleware for AI Bots (Claude, ChatGPT, Google)
+if (process.env.PRERENDER_TOKEN) {
+  prerender.set('prerenderToken', process.env.PRERENDER_TOKEN);
+  // Optional: add extra bot user agents if needed
+  // prerender.crawlerUserAgents.push('ClaudeBot'); 
+  app.use(prerender);
+  console.log('Prerender.io middleware enabled for AI SEO.');
+} else {
+  console.warn('PRERENDER_TOKEN not found. AI SEO Dynamic Rendering disabled.');
+}
+
 // Serve static files from the React app
 const distPath = path.join(__dirname, '../dist');
 app.use(express.static(distPath, {
