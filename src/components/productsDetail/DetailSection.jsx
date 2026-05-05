@@ -9,6 +9,7 @@ import { campaigns, calculateTimeLeft } from "../../utils/campaignUtils";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
 import { fetchReviews } from "../../apis/Reviews";
+import CommunityPrompt from "./CommunityPrompt";
 
 export default function DetailSection({ title, descriptionHtml, cameFrom, productId, worth, isMelCollection, children }) {
   const theme = useSelector((state) => state.app.theme);
@@ -134,6 +135,11 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
           </Link>
           <Link className="text-[#656565]">{title?.slice(0, 20)}...</Link>
         </div>
+        
+        <div className="mt-1 xl:mt-0 w-full">
+          <CommunityPrompt />
+        </div>
+
         <h2 className="font-black xl:text-2xl text-xl"> {title}</h2>{" "}
         {/*{product?.title}*/}
 

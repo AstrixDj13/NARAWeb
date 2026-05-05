@@ -26,7 +26,7 @@ const ProductTicker = ({ isHomePage = false, hasMarquee = false }) => {
 
     const layoutClasses = isHomePage
         ? `fixed ${hasMarquee ? 'top-[26px] md:top-7' : 'top-0'} z-[90] bg-[#0e2a1a] text-white`
-        : `mt-[90px] lg:mt-[105px] relative z-40 bg-white dark:!bg-black border-b border-gray-200 dark:!border-gray-800 text-gray-800 dark:!text-white`;
+        : `mt-[78px] lg:mt-[94px] sticky top-[78px] lg:top-[94px] z-40 bg-white dark:!bg-black border-b border-gray-200 dark:!border-gray-800 text-gray-800 dark:!text-white`;
 
     const iconColor = isHomePage ? "text-white" : "text-black dark:!text-white";
 

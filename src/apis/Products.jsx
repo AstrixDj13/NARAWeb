@@ -498,7 +498,7 @@ export const fetchFourProducts = async () => {
   }
 };
 
-export const fetchFourProductsfromCol = async (collectionId, productId) => {
+export const fetchSixProductsfromCol = async (collectionId, productId) => {
   const GET_FOUR_PRODUCTS_QUERY = `
     query getProductsByCollection($collectionId: ID!) {
       collection(id: $collectionId) {
@@ -541,7 +541,7 @@ export const fetchFourProductsfromCol = async (collectionId, productId) => {
     const products = response.data.data.collection.products.edges
       .map((edge) => edge.node)
       .filter((product) => product.id !== productId) // Exclude the selected product
-      .slice(0, 4); // Limit to 4 products
+      .slice(0, 6); // Limit to 6 products
     console.log("Filtered Products:", products); // Log the filtered products
 
     return products;

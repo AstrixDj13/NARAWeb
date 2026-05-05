@@ -228,12 +228,12 @@ export default function ProductsDetailPage() {
       {isLoading ? (
         <PageLoader />
       ) : (
-        <div className="flex flex-col bg-[#F7F7F7] dark:bg-black dark:text-[#ffff] font-antikor overflow-x-hidden w-full">
+        <div className="flex flex-col bg-[#F7F7F7] dark:bg-black dark:text-[#ffff] font-antikor w-full">
           <NavbarRelative />
           {/*Ticker appears only on product page*/}
           <ProductTicker />
 
-          <div className="flex flex-col gap-1 md:gap-4 items-center justify-center xl:items-start xl:justify-center xl:flex-row dark:bg-black xl:!p-2 p-0 md:p-2 w-full overflow-x-hidden">
+          <div className="flex flex-col gap-1 md:gap-4 items-center justify-center xl:items-stretch xl:justify-center xl:flex-row dark:bg-black xl:!p-2 p-0 md:p-2 w-full">
             {/* breadcrumb */}
             <div className="md:w-3/4 flex xl:hidden text-sm gap-4 font-outfit w-full overflow-hidden p-2 md:p-0">
               <Link className="underline flex items-center gap-3 shrink-0" to="/">
@@ -261,8 +261,8 @@ export default function ProductsDetailPage() {
               imageRefs={imageRefs}
             />
 
-            <div className="xl:w-2/5 md:w-3/4 w-full flex flex-col gap-4 md:gap-8 pt-2 px-4 md:p-4 !pb-12 md:!px-8 xl:!pb-12 h-max">
-              <div className="sticky top-[-1px] z-20 bg-[#F7F7F7] dark:bg-black py-2 xl:py-4 -mt-2 xl:-mt-4">
+            <div className="xl:w-2/5 md:w-3/4 w-full flex flex-col gap-4 md:gap-8 pt-2 px-4 md:p-4 !pb-12 md:!px-8 xl:!pb-12">
+              <div className="sticky top-[134px] xl:top-[142px] z-20 bg-[#F7F7F7] dark:bg-black py-2 xl:py-4 -mt-2 xl:-mt-4 transition-all duration-300">
                 <ActionButtons />
               </div>
               <DetailSection
