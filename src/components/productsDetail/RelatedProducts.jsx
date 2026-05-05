@@ -48,7 +48,7 @@ const RelatedProducts = ({ collectionId, productId }) => {
   return (
     <div
       ref={sectionRef}
-      className="bg-[#f7f7f7] dark:bg-black dark:text-[#ffff] py-12 overflow-hidden border-t dark:border-gray-800"
+      className="bg-[#f7f7f7] dark:bg-black dark:text-[#ffff] pt-12 pb-28 md:pb-12 overflow-hidden border-t dark:border-gray-800"
     >
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="font-bold text-2xl md:text-3xl mb-8 tracking-tight">Related Products</h2>
