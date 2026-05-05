@@ -182,7 +182,7 @@ const FooterSection = () => {
                 <FaLinkedin className="text-2xl" />
               </a>
               <a
-                href="https://wa.me/919930835594"
+                href="https://wa.me/919326472754"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors duration-200"
