@@ -17,7 +17,7 @@ const RelatedProducts = ({ collectionId, productId }) => {
           observer.disconnect();
         }
       },
-      { rootMargin: "200px" }
+      { rootMargin: "1200px" } // Triggers the load much earlier before scrolling into view
     );
 
     if (sectionRef.current) {
