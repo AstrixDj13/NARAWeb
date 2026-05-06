@@ -9,7 +9,6 @@ import { campaigns, calculateTimeLeft } from "../../utils/campaignUtils";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
 import { fetchReviews } from "../../apis/Reviews";
-import CommunityPrompt from "./CommunityPrompt";
 
 export default function DetailSection({ title, descriptionHtml, cameFrom, productId, worth, isMelCollection, children }) {
   const theme = useSelector((state) => state.app.theme);
@@ -134,10 +133,6 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
             <img title="image" src="/icons/leftTriangleIcon.svg" alt="" />
           </Link>
           <Link className="text-[#656565]">{title?.slice(0, 20)}...</Link>
-        </div>
-        
-        <div className="mt-1 xl:mt-0 w-full">
-          <CommunityPrompt />
         </div>
 
         <h2 className="font-black xl:text-2xl text-xl"> {title}</h2>{" "}
@@ -279,7 +274,7 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
           {isReturnOpen && (
             <div className="dark:text-white text-sm pb-4 space-y-2">
               <p>We accept returns and exchanges within <span className="font-bold text-[#1E7B74]">10 days</span> of delivery.</p>
-              
+
               <div className="mt-2 space-y-1">
                 <p className="font-semibold text-[#1E7B74]">Returns:</p>
                 <p>A ₹99 return fee will be deducted from your refund to cover reverse logistics.</p>

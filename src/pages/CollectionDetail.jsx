@@ -4,6 +4,7 @@ import ProductItem from "../components/products/product-item";
 import CollectionProductItem from "../components/Collection/CollectionProduct-Item";
 import { useEffect, useState } from "react";
 import { getCollectionById } from "../apis/Collections";
+import FooterSection from "../components/home/FooterSectionUpdated";
 
 import { useLocation } from "react-router-dom";
 
@@ -35,14 +36,14 @@ export default function CollectionDetail() {
     fetchCollectionProducts(collectionId);
   }, [collectionId]);
   return (
-    <div className="lg:h-[100vh] lg:!overflow-hidden overflow-auto ">
+    <div className="">
       <header className="h-[4em]">
         <NavbarRelative />
       </header>
-      <main className="bg-[#F7F7F7] dark:bg-black dark:text-[#ffff] lg:h-[calc(100vh-4em)] flex lg:flex-row flex-col justify-center lg:justify-start items-center lg:items-start lg:!pt-16 pt-4 lg:gap-0 gap-12 font-antikor">
+      <main className="bg-[#F7F7F7] dark:bg-black dark:text-[#ffff] flex lg:flex-row flex-col justify-center lg:justify-start items-center lg:items-start lg:!pt-16 pt-4 lg:gap-0 gap-12 font-antikor">
         {/* sidebar */}
 
-        <div className="h-full  lg:w-1/3 w-full sm:w-3/4 md:w-1/2 xl:px-12 px-6 flex flex-col gap-8 overflow-auto scrollbar-hide">
+        <div className="lg:w-1/3 w-full sm:w-3/4 md:w-1/2 xl:px-12 px-6 flex flex-col gap-8">
           <div className="flex gap-2 items-center text-[#656565]">
             <Link to={"/"} className="underline ">
               Home
@@ -70,7 +71,7 @@ export default function CollectionDetail() {
           ></div>
         </div>
         {/* Products */}
-        <div className="lg:w-3/4 lg:h-[calc(100vh-4em)] lg:pb-36 w-full sm:w-3/4 md:w-1/2 grid lg:grid-cols-2 grid-cols-2 gap-x-4 gap-y-6 lg:gap-x-12 lg:gap-y-12 lg:!overflow-auto px-2 sm:px-6 justify-items-center">
+        <div className="lg:w-3/4 w-full sm:w-3/4 md:w-1/2 grid lg:grid-cols-2 grid-cols-2 gap-x-4 gap-y-6 lg:gap-x-12 lg:gap-y-12 px-2 sm:px-6 justify-items-center">
           {collectionProducts.map((product, index) => {
             return (
               <div
@@ -93,6 +94,7 @@ export default function CollectionDetail() {
           })}
         </div>
       </main>
+      <FooterSection />
     </div>
   );
 }

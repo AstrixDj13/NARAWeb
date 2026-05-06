@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Orders/Sidebar";
 import ContentArea from "../components/Orders/ContentArea";
+import FooterSection from "../components/home/FooterSectionUpdated";
 
 export default function Orders() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,12 +16,13 @@ export default function Orders() {
   };
 
   return (
-    <div className={` h-[100vh] dark:bg-black dark:text-white`}>
+    <div className={` min-h-screen flex flex-col dark:bg-black dark:text-white`}>
       <Header
         onBack={handleBack}
         onMenuToggle={handleMenuToggle}
       />
       <MainContent isMenuOpen={isMenuOpen} />
+      <FooterSection />
     </div>
   );
 }
@@ -49,7 +51,7 @@ function Header({ onBack, onMenuToggle }) {
 
 function MainContent({ isMenuOpen }) {
   return (
-    <main className="flex flex-grow relative dark:bg-black h-[calc(100vh-4em)]">
+    <main className="flex flex-grow relative dark:bg-black min-h-[calc(100vh-4em)]">
       <Sidebar isMenuOpen={isMenuOpen} />
       <ContentArea />
     </main>

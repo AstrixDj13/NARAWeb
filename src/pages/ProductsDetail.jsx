@@ -22,6 +22,8 @@ import TrustBadges from "../components/productsDetail/TrustBadges";
 import ProductTicker from "../components/productsDetail/ProductTicker";
 import { useProductScrollTracker, useEventTracker } from "../hooks/EventTracker";
 import Coupons from "../components/Cart/Coupons";
+import CommunityPrompt from "../components/productsDetail/CommunityPrompt";
+import FooterSection from "../components/home/FooterSectionUpdated";
 
 export default function ProductsDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -284,6 +286,10 @@ export default function ProductsDetailPage() {
                 <DeliveryDetails />
               </DetailSection>
 
+              <div className="mt-1 xl:mt-0 w-full">
+                <CommunityPrompt />
+              </div>
+
               <Coupons />
 
               <img
@@ -305,6 +311,7 @@ export default function ProductsDetailPage() {
       </div>
       {/* Related Products */}
       <RelatedProducts collectionId={concernedCollectionId} productId={product.id} />
+      <FooterSection />
     </>
   );
 }

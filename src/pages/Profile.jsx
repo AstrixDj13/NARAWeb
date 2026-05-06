@@ -14,6 +14,7 @@ import {
   setTotalQuantityInCart,
 } from "../store";
 import { LiaPowerOffSolid } from "react-icons/lia";
+import FooterSection from "../components/home/FooterSectionUpdated";
 
 export default function Profile() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,13 +29,14 @@ export default function Profile() {
   };
 
   return (
-    <div className={` h-[100vh] dark:bg-black dark:text-white`}>
+    <div className={` min-h-screen flex flex-col dark:bg-black dark:text-white`}>
       <Header
         onBack={handleBack}
         onMenuToggle={handleMenuToggle}
         isMenuOpen={isMenuOpen}
       />
       <MainContent isMenuOpen={isMenuOpen} />
+      <FooterSection />
     </div>
   );
 }
@@ -63,7 +65,7 @@ function Header({ onBack, onMenuToggle, isMenuOpen }) {
 
 function MainContent({ isMenuOpen }) {
   return (
-    <main className="flex flex-grow relative dark:bg-black h-[calc(100vh-4em)]">
+    <main className="flex flex-grow relative dark:bg-black min-h-[calc(100vh-4em)]">
       <Sidebar isMenuOpen={isMenuOpen} />
       <ContentArea />
     </main>

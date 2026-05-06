@@ -1,5 +1,6 @@
 import NavbarRelative from "../components/Navbar/NavbarRelative";
 import Breadcrumb from "../components/common/Breadcrumb";
+import FooterSection from "../components/home/FooterSectionUpdated";
 
 export default function BehindTheScreen() {
   return (
@@ -14,6 +15,7 @@ export default function BehindTheScreen() {
         className="mt-[78px] w-full "
         alt=""
       />
+      <FooterSection />
     </div>
   );
 }

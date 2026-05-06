@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { blogs } from "../constants/blogs";
+import FooterSection from "../components/home/FooterSectionUpdated";
 
 const BlogPost = () => {
     const { slug } = useParams();
@@ -129,6 +130,7 @@ const BlogPost = () => {
                     </div>
                 </article>
             </div>
+            <FooterSection />
         </div>
     );
 };

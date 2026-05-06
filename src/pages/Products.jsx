@@ -4,6 +4,7 @@ import NavbarRelative from "../components/Navbar/NavbarRelative";
 import ProductHeader from "../components/products/header";
 import ProductItem from "../components/products/product-item";
 import PageLoader from "../components/utils/PageLoader";
+import FooterSection from "../components/home/FooterSectionUpdated";
 
 const Products = () => {
   const colors = ["black", "brown", "beige", "gray"];
@@ -65,7 +66,7 @@ const Products = () => {
   };
 
   return (
-    <div className="dark:!bg-black p-[0.2px] overflow-x-hidden xl:h-screen">
+    <div className="dark:!bg-black p-[0.2px] overflow-x-hidden">
       <NavbarRelative />
       <div className="dark:!bg-black bg-[#ffff] dark:text-[#ffff] mt-8">
         <div className="bg-[#F7F7F7] dark:bg-black dark:border-b-[#ffff] dark:border-b-2 pb-2 mt-20">
@@ -78,7 +79,7 @@ const Products = () => {
         </div>
         <div
           ref={containerRef}
-          className="overflow-y-auto min-h-screen scroll-smooth"
+          className="min-h-screen scroll-smooth"
         >
           {isLoading ? (
             <PageLoader />
@@ -131,6 +132,7 @@ const Products = () => {
             </div>
           )}
         </div>
+        <FooterSection />
       </div>
     </div>
   );
