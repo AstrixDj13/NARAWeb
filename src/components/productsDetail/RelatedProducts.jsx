@@ -74,6 +74,7 @@ const RelatedProducts = ({ collectionId, productId }) => {
                 name={product.title}
                 productId={product.id}
                 handle={product.handle}
+                stockLeft={product?.metafield?.value}
               />
             ))
           )}

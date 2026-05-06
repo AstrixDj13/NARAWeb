@@ -192,12 +192,14 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
         <span className="text-xs tracking-tighter capitalize">
           (Incl. of all taxes)
         </span>
-        <div className="overflow-hidden w-full mt-1">
-          <div className={`text-red-600 text-sm font-bold ${classes.slideInRight}`}>
-            {randomCartCount} people added this to cart today !!!
+        {!productOutOfStock && (
+          <div className="overflow-hidden w-full mt-1">
+            <div className={`text-red-600 text-sm font-bold ${classes.slideInRight}`}>
+              {randomCartCount} people added this to cart today !!!
+            </div>
           </div>
-        </div>
-        {offerTag && (
+        )}
+        {offerTag && !productOutOfStock && (
           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
             <div className="bg-red-600 text-white text-xs font-bold px-2 py-1 w-fit whitespace-nowrap">
               {offerTag}
