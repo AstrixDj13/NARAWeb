@@ -55,7 +55,7 @@ const RelatedProducts = ({ collectionId, productId }) => {
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-8 sm:gap-x-4 md:gap-x-6">
           {isLoading || !hasIntersected ? (
-            // Skeleton Loading State
+            // Skeleton Loading
             [1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="flex flex-col gap-3 animate-pulse">
                 <div className="w-full h-[320px] sm:h-[360px] md:h-[380px] xl:h-[420px] bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
