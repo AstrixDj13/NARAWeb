@@ -49,6 +49,18 @@ const NavbarRelative = () => {
           </Link>
         </div>
         <div className="flex items-center space-x-1 md:space-x-7">
+          <a 
+            href="https://ai.studio/apps/3a0b15aa-76c9-4448-91d8-8e16166c2c97?fullscreenApplet=true"
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={`text-xs md:text-sm font-semibold px-2 md:px-3 py-1 rounded-full border transition-colors flex items-center gap-1 ${
+              theme === "light" 
+                ? "border-black text-black hover:bg-black hover:text-white" 
+                : "border-white text-white hover:bg-white hover:text-black"
+            }`}
+          >
+            ✨ Try Out
+          </a>
           <button
             onClick={toggleTheme}
             className="w-8 h-8 leading-9 text-4xl rounded-full m-1 text-[#1F4A40] dark:!text-white"

@@ -151,6 +151,19 @@ const Navbar = () => {
 
           {/* Right-side Icons */}
           <div className="flex items-center md:space-x-5 space-x-2">
+            {/*<a 
+              href="https://ai.studio/apps/3a0b15aa-76c9-4448-91d8-8e16166c2c97?fullscreenApplet=true"
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={`text-xs md:text-sm font-semibold px-2 md:px-3 py-1 rounded-full border transition-colors flex items-center gap-1 ${
+                theme === "light" 
+                  ? "border-black text-black hover:bg-black hover:text-white" 
+                  : "border-white text-white hover:bg-white hover:text-black"
+              }`}
+            >
+              ✨ Try Out
+            </a>*/}
+
             <button onClick={toggleTheme} className="text-4xl rounded-full">
               <img
                 src="/home/navbar/light_icon1.svg"
