@@ -51,7 +51,7 @@ const Navbar2 = () => {
           </Link>
         </div>
         <div className="flex items-center space-x-1 md:space-x-7">
-          <a 
+          {/*<a 
             href="https://ai.studio/apps/3a0b15aa-76c9-4448-91d8-8e16166c2c97?fullscreenApplet=true"
             target="_blank" 
             rel="noopener noreferrer"
@@ -62,7 +62,7 @@ const Navbar2 = () => {
             }`}
           >
             ✨ Try Out
-          </a>
+          </a>*/}
           <button
             onClick={toggleTheme}
             className="w-8 h-8 leading-9 text-4xl rounded-full m-1 text-[#1F4A40] dark:!text-white"
