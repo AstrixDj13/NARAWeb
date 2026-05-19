@@ -53,7 +53,7 @@ const Coupons = () => {
                         </div>
                         <div className="flex flex-col gap-1">
                             <p className="text-sm font-medium text-gray-600 dark:text-gray-600">
-                                Sign up and enjoy an instant 5% off — just use code <span className="font-bold">UP2DATE</span> at checkout.
+                                Sign up and enjoy an instant 5% off just use code <span className="font-bold">UP2DATE</span> at checkout.
                             </p>
                         </div>
                     </Link>
@@ -69,7 +69,7 @@ const Coupons = () => {
                         <div className="flex flex-col gap-1">
                             <p className="text-sm font-medium text-gray-600 dark:text-gray-600">
                                 Exclusive offer on MEL Collection.
-                                No code, no hassle—your discount is applied automatically at checkout.
+                                No code, no hassle your discount is applied automatically at checkout.
                             </p>
                         </div>
                     </Link>
