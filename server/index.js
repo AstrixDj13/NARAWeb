@@ -9,6 +9,32 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Suppress Express stack fingerprint
+app.disable('x-powered-by');
+
+// Security headers middleware
+app.use((req, res, next) => {
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  
+  // CSP Report-Only for Shopify, Meta Pixel, Bootstrap, and unpkg
+  const csp = [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://connect.facebook.net",
+    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
+    "img-src 'self' data: https://www.facebook.com https://cdn.shopify.com",
+    "font-src 'self' data: https://cdn.jsdelivr.net",
+    "connect-src 'self' https://*.myshopify.com https://www.facebook.com",
+    "frame-src 'self' https://www.facebook.com",
+    "frame-ancestors 'self'"
+  ].join('; ');
+  
+  res.setHeader('Content-Security-Policy-Report-Only', csp);
+  next();
+});
+
 // Enable Gzip compression (and brotli depending on Node version)
 app.use(compression());
 

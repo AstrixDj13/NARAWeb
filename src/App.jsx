@@ -20,6 +20,7 @@ import createCart, {
 import { getProductVariantDetail } from "./apis/Products";
 import useEventTracker from "./hooks/EventTracker";
 import SpinningWheel from "./components/SpinningWheel";
+import CookieConsent from "./components/CookieConsent";
 const Chatbot = lazy(() => import("./components/Chatbot"));
 function App() {
   const dispatch = useDispatch();
@@ -169,6 +170,7 @@ function App() {
         </Suspense>
       )} {/* ✅ Chatbot with Shopify MCP integration */}
       {showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}
+      <CookieConsent />
     </div>
   );
 }
