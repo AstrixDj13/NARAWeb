@@ -26,75 +26,58 @@ const SpinningWheel = ({ onClose }) => {
             return;
         }
 
-        let randomIndex = Math.floor(Math.random() * segments.length);
-
-        // Rig the wheel: Never land on '₹300 OFF'
-        while (segments[randomIndex].text === '₹300 OFF') {
-            randomIndex = Math.floor(Math.random() * segments.length);
-        }
-
-        const selectedSegment = segments[randomIndex];
-
-        const segmentDegree = 360 / segments.length;
-        const spins = 5;
-
-        // We want the selected segment's center to end up at the pointer.
-        // Assuming 0deg is top, conic gradient goes clockwise.
-        // The pointer is at right, which is 90deg from top.
-        const segmentCenter = (randomIndex * segmentDegree) + (segmentDegree / 2);
-
-        // The amount to rotate so that the segmentCenter moves to 90deg.
-        // Final position = (segmentCenter + rotation) % 360 === 90
-        // => rotation = 90 - segmentCenter
-
-        const targetRotation = (spins * 360) + (90 - segmentCenter);
-
         setSpinning(true);
-        setRotation(targetRotation);
 
-        setTimeout(async () => {
-            setSpinning(false);
-            setResult(selectedSegment);
-
-            try {
-                let customerId = localStorage.getItem('user_id');
-                let anonymousId = localStorage.getItem('anonymous_id');
-                if (!anonymousId && !customerId) {
-                    anonymousId = uuidv4();
-                    localStorage.setItem('anonymous_id', anonymousId);
-                }
-
-                await fetch(`/api/spinning-wheel/spin`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        phoneNumber: formData.phone,
-                        name: formData.name,
-                        customerId,
-                        anonymousId,
-                        result: selectedSegment.text.replace('\n', ' ')
-                    })
-                });
-                localStorage.setItem('hasSpunWheel', 'true');
-            } catch (err) {
-                console.error(err);
+        try {
+            let customerId = localStorage.getItem('user_id');
+            let anonymousId = localStorage.getItem('anonymous_id');
+            if (!anonymousId && !customerId) {
+                anonymousId = uuidv4();
+                localStorage.setItem('anonymous_id', anonymousId);
             }
-        }, 5000);
-    };
 
-    const codeMap = {
-        '10% OFF': 'LUCKY10',
-        '₹300 OFF': 'LUCKY300',
-        '₹200 OFF': 'LUCKY200',
-        '15% OFF': 'LUCKY15',
-        '20% OFF': 'LUCKY20',
-        '30% OFF': 'LUCKY30',
-        'So Close': 'LUCKY10',
-        'Not Your\nDay': 'LUCKY10',
+            const response = await fetch(`/api/spinning-wheel/spin`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    phoneNumber: formData.phone,
+                    name: formData.name,
+                    customerId,
+                    anonymousId
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.error) {
+                alert(data.error);
+                setSpinning(false);
+                return;
+            }
+
+            const { segment, segmentIndex, couponCode } = data;
+
+            const segmentDegree = 360 / segments.length;
+            const spins = 5;
+            const segmentCenter = (segmentIndex * segmentDegree) + (segmentDegree / 2);
+            const targetRotation = (spins * 360) + (90 - segmentCenter);
+
+            setRotation(targetRotation);
+
+            setTimeout(() => {
+                setSpinning(false);
+                setResult({ ...segment, couponCode });
+                localStorage.setItem('hasSpunWheel', 'true');
+            }, 5000);
+            
+        } catch (err) {
+            console.error(err);
+            setSpinning(false);
+        }
     };
 
     const handleCopyCode = () => {
-        const code = codeMap[result.text];
+        const code = result.couponCode;
         if (code) {
             navigator.clipboard.writeText(code).then(() => {
                 setCopied(true);
@@ -206,7 +189,7 @@ const SpinningWheel = ({ onClose }) => {
 
                             {/* Coupon Code Box */}
                             <div className="bg-gray-100 border-2 border-dashed border-[#1F4A40] p-4 rounded-lg text-2xl tracking-widest font-mono text-[#1F4A40] font-bold shadow-inner">
-                                {codeMap[result.text]}
+                                {result.couponCode}
                             </div>
 
                             {/* Copy Code Button */}

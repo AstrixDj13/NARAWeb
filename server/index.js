@@ -342,17 +342,49 @@ app.get('/api/spinning-wheel/check', async (req, res) => {
 
 app.post('/api/spinning-wheel/spin', async (req, res) => {
   try {
-    const { phoneNumber, name, customerId, anonymousId, result } = req.body;
-    if (!phoneNumber || !result) {
-      return res.status(400).json({ error: 'Missing phone number or result' });
+    const { phoneNumber, name, customerId, anonymousId } = req.body;
+    if (!phoneNumber) {
+      return res.status(400).json({ error: 'Missing phone number' });
     }
+
+    const segments = [
+        { text: '10% OFF', color: '#1F4A40', value: 'win_10' },
+        { text: '₹300 OFF', color: '#2a6357', value: 'win_300' },
+        { text: 'So Close', color: '#4a7c6f', value: 'lose' },
+        { text: '₹200 OFF', color: '#1F4A40', value: 'win_200' },
+        { text: '15% OFF', color: '#2a6357', value: 'win_15' },
+        { text: 'Not Your\\nDay', color: '#4a7c6f', value: 'lose' },
+        { text: '20% OFF', color: '#1F4A40', value: 'win_20' },
+        { text: '30% OFF', color: '#2a6357', value: 'win_30' },
+    ];
+
+    const codeMap = {
+        '10% OFF': 'LUCKY10',
+        '₹300 OFF': 'LUCKY300',
+        '₹200 OFF': 'LUCKY200',
+        '15% OFF': 'LUCKY15',
+        '20% OFF': 'LUCKY20',
+        '30% OFF': 'LUCKY30',
+        'So Close': 'LUCKY10',
+        'Not Your\\nDay': 'LUCKY10',
+    };
+
+    let randomIndex = Math.floor(Math.random() * segments.length);
+
+    // Rig the wheel: Never land on '₹300 OFF'
+    while (segments[randomIndex].text === '₹300 OFF') {
+        randomIndex = Math.floor(Math.random() * segments.length);
+    }
+
+    const selectedSegment = segments[randomIndex];
+    const couponCode = codeMap[selectedSegment.text];
 
     await pool.query(`
       INSERT INTO spinning_wheel_data (phone_number, name, customer_id, anonymous_id, result)
       VALUES ($1, $2, $3, $4, $5)
-    `, [phoneNumber, name || null, customerId || null, anonymousId || null, result]);
+    `, [phoneNumber, name || null, customerId || null, anonymousId || null, selectedSegment.text.replace('\\n', ' ')]);
 
-    res.json({ success: true });
+    res.json({ success: true, segment: selectedSegment, segmentIndex: randomIndex, couponCode });
   } catch (error) {
     console.error('Error saving spinning wheel data:', error);
     res.status(500).json({ error: 'Database saving failed' });
