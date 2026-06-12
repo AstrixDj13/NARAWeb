@@ -195,7 +195,9 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
         {!productOutOfStock && (
           <div className="overflow-hidden w-full mt-1">
             <div className={`text-red-600 text-sm font-bold ${classes.slideInRight}`}>
-              {randomCartCount} people added this to cart today !!!
+              <span className="animate-pulse inline-block">
+                {randomCartCount} people added this to cart today !!!
+              </span>
             </div>
           </div>
         )}

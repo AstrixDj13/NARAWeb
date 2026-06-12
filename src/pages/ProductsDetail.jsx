@@ -24,6 +24,8 @@ import { useProductScrollTracker, useEventTracker } from "../hooks/EventTracker"
 import Coupons from "../components/Cart/Coupons";
 import CommunityPrompt from "../components/productsDetail/CommunityPrompt";
 import FooterSection from "../components/home/FooterSectionUpdated";
+import ScrollGiftNote from "../components/productsDetail/ScrollGiftNote";
+import ProductVideoPopup from "../components/productsDetail/ProductVideoPopup";
 
 export default function ProductsDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -284,13 +286,12 @@ export default function ProductsDetailPage() {
                   productId={product.id}
                 />
                 <DeliveryDetails />
+                <Coupons />
               </DetailSection>
 
               <div className="mt-1 xl:mt-0 w-full">
                 <CommunityPrompt />
               </div>
-
-              <Coupons />
 
               <img
                 className="w-full h-auto object-cover overflow-hidden"
@@ -312,6 +313,8 @@ export default function ProductsDetailPage() {
       {/* Related Products */}
       <RelatedProducts collectionId={concernedCollectionId} productId={product.id} />
       <FooterSection />
+      <ScrollGiftNote />
+      <ProductVideoPopup productTitle={product.title} />
     </>
   );
 }
