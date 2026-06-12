@@ -169,7 +169,8 @@ function App() {
           <Chatbot />
         </Suspense>
       )} {/* ✅ Chatbot with Shopify MCP integration */}
-      {showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}
+      {/*{showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}*/}
+      {pathname === "/" && showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}
       <CookieConsent />
     </div>
   );
