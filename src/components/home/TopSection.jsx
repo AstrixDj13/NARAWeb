@@ -75,16 +75,16 @@ const TopSection = () => {
     <div className={`${topMarginClass} w-full bg-white dark:bg-black transition-all duration-300`}>
       {/* Mystery Banner */}
       <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] lg:aspect-[3/1] overflow-hidden mb-[2px]">
-        <img 
-          src="/mystery.jpeg" 
-          alt="Mystery Banner" 
+        <img
+          src="/mystery.jpeg"
+          alt="Mystery Banner"
           className="w-full h-full object-cover"
         />
-        <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 md:bottom-8 md:left-8">
+        {/* <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 md:bottom-8 md:left-8">
           <h2 className="text-white text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif font-bold tracking-widest drop-shadow-md">
             MYSTERY BANNER
           </h2>
-        </div>
+        </div> */}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-[2px]">
