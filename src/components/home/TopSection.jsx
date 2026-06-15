@@ -126,8 +126,9 @@ const TopSection = () => {
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-[2px]">
         {allCollections.map((collection, index) => {
-          const mobileUrl = getOptimizedImageUrl(collection.imageSrc, 600);
-          const desktopUrl = getOptimizedImageUrl(collection.imageSrc, 800);
+          const targetImageSrc = collection.mobileImageSrc || collection.imageSrc;
+          const mobileUrl = getOptimizedImageUrl(targetImageSrc, 600);
+          const desktopUrl = getOptimizedImageUrl(targetImageSrc, 800);
 
           // Eagerly load the top 6 images which will be immediately visible
           const isPriority = index < 6;
