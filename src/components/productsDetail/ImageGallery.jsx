@@ -15,11 +15,13 @@ export default function ImageGallery({
 }) {
   const containerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
+    setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -80,7 +82,7 @@ export default function ImageGallery({
             }`}
         >
           {(index === currentIndex || index === currentIndex + 1 || index === currentIndex - 1) && (
-            isMobile && !isDesktopPopup ? (
+            (isMobile || isTouchDevice) ? (
               <MobileZoomImage img={el?.node?.src} isPriority={index === 0} />
             ) : (
               <ZoomableImage img={el?.node?.src} active={index === currentIndex} isPriority={index === 0} />
