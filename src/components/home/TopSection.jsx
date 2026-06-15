@@ -11,7 +11,8 @@ const TopSection = () => {
     "UGC_Collection",
     "Men's Top",
     "Bestsellers",
-    "Co-ord sets"
+    "Co-ord sets",
+    "Saaz"
   ];
 
   const fetchCollections = async () => {
