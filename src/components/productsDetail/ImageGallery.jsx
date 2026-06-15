@@ -101,10 +101,11 @@ export default function ImageGallery({
       {/* For mobile, use the original blocking div pattern if it was there */}
       {isMobile && !isDesktopPopup && (
         <div
-          className="absolute inset-0 z-[15]"
+          className="absolute inset-0 z-[15] cursor-zoom-in"
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
+          onClick={() => openPopup(currentIndex)}
         />
       )}
 
@@ -171,8 +172,8 @@ export default function ImageGallery({
         )}
       </div>
 
-      {/* Desktop Popup Slider */}
-      {!isMobile && isPopupOpen && (
+      {/* Popup Slider */}
+      {isPopupOpen && (
         <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center overflow-hidden h-screen w-screen text-white">
           <button
             onClick={closePopup}
