@@ -92,14 +92,14 @@ const TopSection = () => {
             <img
               src={getOptimizedImageUrl(bannerCollection.imageSrc, 1200)}
               alt={bannerCollection.title}
-              className={`w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 ${bannerCollection.mobileImageSrc ? 'hidden xl:block' : ''}`}
+              className={`w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 ${bannerCollection.mobileImageSrc ? 'hidden lg:block' : ''}`}
             />
             {/* Mobile Banner Image (if available) */}
             {bannerCollection.mobileImageSrc && (
               <img
                 src={getOptimizedImageUrl(bannerCollection.mobileImageSrc, 800)}
                 alt={`${bannerCollection.title} Mobile`}
-                className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 xl:hidden block"
+                className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 lg:hidden block"
               />
             )}
             {/* Dark overlay for better text readability */}

@@ -27,7 +27,7 @@ const ProductItem = ({
       state={{ imageSrc: img }}
       className="flex flex-col justify-between h-full font-antikor tracking-tighter w-full cursor-pointer hover:brightness-75"
     >
-      <div className="w-full h-[320px] sm:h-[360px] md:h-[380px] xl:h-[420px] relative overflow-hidden">
+      <div className="w-full aspect-[4/5] relative overflow-hidden">
         <ImageWithSkeleton img={img} name={name} />
         {offerTag && (
           <div className="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 z-10">

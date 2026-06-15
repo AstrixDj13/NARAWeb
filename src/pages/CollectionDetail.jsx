@@ -43,7 +43,7 @@ export default function CollectionDetail() {
       <main className="bg-[#F7F7F7] dark:bg-black dark:text-[#ffff] flex lg:flex-row flex-col justify-center lg:justify-start items-center lg:items-start lg:!pt-16 pt-4 lg:gap-0 gap-12 font-antikor">
         {/* sidebar */}
 
-        <div className="lg:w-1/3 w-full sm:w-3/4 md:w-1/2 xl:px-12 px-6 flex flex-col gap-8">
+        <div className="lg:w-1/3 w-full xl:px-12 px-6 flex flex-col gap-8">
           <div className="flex gap-2 items-center text-[#656565]">
             <Link to={"/"} className="underline ">
               Home
@@ -71,7 +71,7 @@ export default function CollectionDetail() {
           ></div>
         </div>
         {/* Products */}
-        <div className="lg:w-3/4 w-full sm:w-3/4 md:w-1/2 grid lg:grid-cols-2 grid-cols-2 gap-x-4 gap-y-6 lg:gap-x-12 lg:gap-y-12 px-2 sm:px-6 justify-items-center">
+        <div className="lg:w-2/3 w-full grid lg:grid-cols-3 md:grid-cols-3 grid-cols-2 gap-x-4 gap-y-6 lg:gap-x-10 lg:gap-y-12 px-4 sm:px-6 justify-items-center">
           {collectionProducts.map((product, index) => {
             return (
               <div

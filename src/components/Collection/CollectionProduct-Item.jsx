@@ -71,10 +71,10 @@ const CollectionProductItem = ({
       state={{ imageSrc: img }}
     >
       <div
-        className="flex flex-col h-full font-sans tracking-tighter xl:w-[23vw] lg:w-[30vw] md:w-[40vw] w-full cursor-pointer hover:brightness-75"
+        className="flex flex-col h-full font-sans tracking-tighter w-full cursor-pointer hover:brightness-75"
         onClick={productClickHandler}
       >
-        <div className="w-full 2xl:h[700px] md:h-[445px] h-[300px] relative">
+        <div className="w-full aspect-[4/5] relative">
           <ImageWithSkeleton img={img} name={name} />
           {offerTag && (
             <div className="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 z-10">
