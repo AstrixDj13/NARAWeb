@@ -88,11 +88,20 @@ const TopSection = () => {
       {bannerCollection ? (
         <div className={`relative w-full ${bannerHeightClass} overflow-hidden mb-[2px]`}>
           <Link to={`/collection?id=${encodeURIComponent(bannerCollection.id)}`} className="w-full h-full block group">
+            {/* Desktop Banner Image */}
             <img
               src={getOptimizedImageUrl(bannerCollection.imageSrc, 1200)}
               alt={bannerCollection.title}
-              className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+              className={`w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 ${bannerCollection.mobileImageSrc ? 'hidden xl:block' : ''}`}
             />
+            {/* Mobile Banner Image (if available) */}
+            {bannerCollection.mobileImageSrc && (
+              <img
+                src={getOptimizedImageUrl(bannerCollection.mobileImageSrc, 800)}
+                alt={`${bannerCollection.title} Mobile`}
+                className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 xl:hidden block"
+              />
+            )}
             {/* Dark overlay for better text readability */}
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
             <div className="absolute bottom-6 left-6 sm:bottom-10 sm:left-10 md:bottom-14 md:left-14 flex flex-col items-start z-10">
