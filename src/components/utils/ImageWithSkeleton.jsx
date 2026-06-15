@@ -9,7 +9,7 @@ export default function ImageWithSkeleton({ img, name }) {
   const desktopUrl = getOptimizedImageUrl(img, 600);
 
   return (
-    <Box sx={{ width: "100%", height: "100%" }}>
+    <div className="absolute inset-0 w-full h-full">
       {loadingImage && (
         <Skeleton variant="rectangular" width="100%" height="100%" />
       )}
@@ -24,6 +24,6 @@ export default function ImageWithSkeleton({ img, name }) {
           } w-full h-full object-cover `}
         onLoad={() => setLoadingImage(false)}
       />
-    </Box>
+    </div>
   );
 }
