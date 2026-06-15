@@ -6,6 +6,7 @@ import { getActiveCampaigns } from "../../utils/campaignUtils";
 
 const TopSection = () => {
   const [allCollections, setAllCollections] = useState([]);
+  const [bannerCollection, setBannerCollection] = useState(null);
   const excludedTitles = [
     "C Grade Products",
     "UGC_Collection",
@@ -18,6 +19,10 @@ const TopSection = () => {
   const fetchCollections = async () => {
     try {
       let fetchedCollections = await getCollections();
+      
+      const aaina = fetchedCollections.find(c => c.title.trim().toUpperCase().includes("AAINA"));
+      if (aaina) setBannerCollection(aaina);
+
       fetchedCollections = fetchedCollections.filter(
         (collection) => !excludedTitles.some(title => title.trim().toUpperCase() === collection.title.trim().toUpperCase())
       );
@@ -44,6 +49,7 @@ const TopSection = () => {
   };
 
   const [topMarginClass, setTopMarginClass] = useState("mt-[7.5rem] sm:mt-[8rem] md:mt-[8.5rem] lg:mt-[8.5rem]");
+  const [bannerHeightClass, setBannerHeightClass] = useState("h-[calc(100vh-7.5rem)] sm:h-[calc(100vh-8rem)] md:h-[calc(100vh-8.5rem)] lg:h-[calc(100vh-8.5rem)]");
 
   useEffect(() => {
     fetchCollections();
@@ -60,12 +66,16 @@ const TopSection = () => {
 
       if (hasMarquee && hasCountdown) {
         setTopMarginClass("mt-[11.5rem] sm:mt-[12rem] md:mt-[12.5rem] lg:mt-[12.5rem]");
+        setBannerHeightClass("h-[calc(100vh-11.5rem)] sm:h-[calc(100vh-12rem)] md:h-[calc(100vh-12.5rem)] lg:h-[calc(100vh-12.5rem)]");
       } else if (hasMarquee) {
         setTopMarginClass("mt-[7.5rem] sm:mt-[8rem] md:mt-[8.5rem] lg:mt-[8.5rem]");
+        setBannerHeightClass("h-[calc(100vh-7.5rem)] sm:h-[calc(100vh-8rem)] md:h-[calc(100vh-8.5rem)] lg:h-[calc(100vh-8.5rem)]");
       } else if (hasCountdown) {
         setTopMarginClass("mt-[10rem] sm:mt-[10.5rem] md:mt-[11rem] lg:mt-[11rem]");
+        setBannerHeightClass("h-[calc(100vh-10rem)] sm:h-[calc(100vh-10.5rem)] md:h-[calc(100vh-11rem)] lg:h-[calc(100vh-11rem)]");
       } else {
         setTopMarginClass("mt-[6rem] sm:mt-[6.5rem] md:mt-[7rem] lg:mt-[7rem]");
+        setBannerHeightClass("h-[calc(100vh-6rem)] sm:h-[calc(100vh-6.5rem)] md:h-[calc(100vh-7rem)] lg:h-[calc(100vh-7rem)]");
       }
     } catch (err) {
       console.warn("TopSection campaign check err:", err);
@@ -74,19 +84,36 @@ const TopSection = () => {
 
   return (
     <div className={`${topMarginClass} w-full bg-white dark:bg-black transition-all duration-300`}>
-      {/* Mystery Banner */}
-      <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] lg:aspect-[3/1] overflow-hidden mb-[2px]">
-        <img
-          src="/mystery.jpeg"
-          alt="Mystery Banner"
-          className="w-full h-full object-cover"
-        />
-        {/* <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 md:bottom-8 md:left-8">
-          <h2 className="text-white text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif font-bold tracking-widest drop-shadow-md">
-            MYSTERY BANNER
-          </h2>
-        </div> */}
-      </div>
+      {/* AAINA Banner */}
+      {bannerCollection ? (
+        <div className={`relative w-full ${bannerHeightClass} overflow-hidden mb-[2px]`}>
+          <Link to={`/collection?id=${encodeURIComponent(bannerCollection.id)}`} className="w-full h-full block group">
+            <img
+              src={getOptimizedImageUrl(bannerCollection.imageSrc, 1200)}
+              alt={bannerCollection.title}
+              className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+            />
+            {/* Dark overlay for better text readability */}
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
+            <div className="absolute bottom-6 left-6 sm:bottom-10 sm:left-10 md:bottom-14 md:left-14 flex flex-col items-start z-10">
+              <h2 className="text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif uppercase tracking-widest drop-shadow-lg mb-4 sm:mb-6">
+                {bannerCollection.title}
+              </h2>
+              <button className="bg-white/90 hover:bg-white text-black px-6 py-3 sm:px-8 sm:py-4 font-mono font-bold text-sm sm:text-base uppercase tracking-[0.2em] transition-all duration-300">
+                Shop Now
+              </button>
+            </div>
+          </Link>
+        </div>
+      ) : (
+        <div className={`relative w-full ${bannerHeightClass} overflow-hidden mb-[2px]`}>
+          <img
+            src="/mystery.jpeg"
+            alt="Mystery Banner"
+            className="w-full h-full object-cover object-top"
+          />
+        </div>
+      )}
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-[2px]">
         {allCollections.map((collection, index) => {
