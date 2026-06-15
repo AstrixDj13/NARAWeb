@@ -203,6 +203,7 @@ const SpinningWheel = ({ onClose }) => {
                             {/* Disclaimers */}
                             <p className="text-xs text-gray-500 text-center">Redeemable at checkout</p>
                             <p className="text-xs text-gray-500 text-center">Not applicable on sale items</p>
+                            <p className="text-xs text-gray-500 text-center">Not applicable for new drops</p>
 
                             <button
                                 onClick={onClose}

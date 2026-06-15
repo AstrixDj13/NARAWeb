@@ -69,6 +69,14 @@ export const campaigns = [
         showOnExpiry: true, // This MUST be true if you omit dates
         collectionTitle: "",
         marqueeMessage: "10% off on First Order. Use code - FIRSTORDER"
+    },
+    {
+        id: "aaina-collection",
+        name: "", // Showing in the countdown area
+        offerTag: "", // The tag applied to products
+        showOnExpiry: true, // This MUST be true if you omit dates
+        collectionTitle: "",
+        marqueeMessage: "AAINA, live now!"
     }
 
 ];

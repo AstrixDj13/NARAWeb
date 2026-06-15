@@ -21,6 +21,7 @@ import { getProductVariantDetail } from "./apis/Products";
 import useEventTracker from "./hooks/EventTracker";
 import SpinningWheel from "./components/SpinningWheel";
 import CookieConsent from "./components/CookieConsent";
+import AainaPopup from "./components/AainaPopup";
 const Chatbot = lazy(() => import("./components/Chatbot"));
 function App() {
   const dispatch = useDispatch();
@@ -116,8 +117,23 @@ function App() {
   }, []);
 
   const [showSpinningWheel, setShowSpinningWheel] = useState(false);
+  const [showAainaPopup, setShowAainaPopup] = useState(false);
 
   useEffect(() => {
+    const aainaTimer = setTimeout(() => {
+      const hasShownAaina = sessionStorage.getItem('aainaPopupShown');
+      if (!hasShownAaina) {
+        setShowAainaPopup(true);
+        sessionStorage.setItem('aainaPopupShown', 'true');
+      }
+    }, 5000);
+
+    return () => clearTimeout(aainaTimer);
+  }, []);
+
+  useEffect(() => {
+    if (pathname !== "/") return;
+
     const checkWheel = async () => {
       // 1. check local storage first
       const hasSpunLocal = localStorage.getItem('hasSpunWheel');
@@ -156,9 +172,9 @@ function App() {
     };
     const timer = setTimeout(() => {
       checkWheel();
-    }, 5000);
+    }, 35000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [pathname]);
 
   return (
     <div className="cursor-custom dark:!bg-black font-antikor">
@@ -171,6 +187,7 @@ function App() {
       )} {/* ✅ Chatbot with Shopify MCP integration */}
       {/*{showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}*/}
       {pathname === "/" && showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}
+      {showAainaPopup && <AainaPopup onClose={() => setShowAainaPopup(false)} />}
       <CookieConsent />
     </div>
   );
