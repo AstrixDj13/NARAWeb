@@ -21,7 +21,7 @@ import { getProductVariantDetail } from "./apis/Products";
 import useEventTracker from "./hooks/EventTracker";
 import SpinningWheel from "./components/SpinningWheel";
 import CookieConsent from "./components/CookieConsent";
-import AainaPopup from "./components/AainaPopup";
+//import AainaPopup from "./components/AainaPopup";
 const Chatbot = lazy(() => import("./components/Chatbot"));
 function App() {
   const dispatch = useDispatch();
@@ -117,7 +117,7 @@ function App() {
   }, []);
 
   const [showSpinningWheel, setShowSpinningWheel] = useState(false);
-  const [showAainaPopup, setShowAainaPopup] = useState(false);
+  {/*const [showAainaPopup, setShowAainaPopup] = useState(false);
 
   useEffect(() => {
     const aainaTimer = setTimeout(() => {
@@ -129,7 +129,7 @@ function App() {
     }, 5000);
 
     return () => clearTimeout(aainaTimer);
-  }, []);
+  }, []);*/}
 
   useEffect(() => {
     if (pathname !== "/") return;
@@ -172,7 +172,8 @@ function App() {
     };
     const timer = setTimeout(() => {
       checkWheel();
-    }, 35000);
+      //}, 35000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, [pathname]);
 
@@ -187,7 +188,7 @@ function App() {
       )} {/* ✅ Chatbot with Shopify MCP integration */}
       {/*{showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}*/}
       {pathname === "/" && showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}
-      {showAainaPopup && <AainaPopup onClose={() => setShowAainaPopup(false)} />}
+      {/*{showAainaPopup && <AainaPopup onClose={() => setShowAainaPopup(false)} />}*/}
       <CookieConsent />
     </div>
   );
