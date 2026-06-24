@@ -138,7 +138,7 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
         <h2 className="font-black xl:text-2xl text-xl"> {title}</h2>{" "}
         {/*{product?.title}*/}
 
-        <div
+        {/*<div
           className="flex items-center gap-3 my-1 cursor-pointer hover:opacity-80 transition-opacity"
           onClick={() => {
             const el = document.getElementById('reviews');
@@ -157,7 +157,7 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
             </div>
             <p className="text-xs text-gray-500 mt-0.5">{reviews?.length || 0} reviews</p>
           </div>
-        </div>
+        </div>*/}
 
         <h3 className="tracking-tight font-semibold text-xl flex items-center gap-2">
           {productOutOfStock ? (

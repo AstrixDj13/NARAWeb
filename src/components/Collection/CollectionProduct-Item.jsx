@@ -1,7 +1,7 @@
 import { formatToINR } from "../global/convert-to-inr";
 import { FaRegBookmark } from "react-icons/fa6";
 import { FaBookmark } from "react-icons/fa6";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { GoPlus, GoDash } from "react-icons/go";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,6 +11,8 @@ import Box from "@mui/material/Box";
 import ImageWithSkeleton from "../utils/ImageWithSkeleton";
 import ViewButton from "../ViewButton";
 import { useOfferTag } from "../../hooks/useOfferTag";
+import { IoEyeOutline } from "react-icons/io5";
+import QuickViewModal from "../productsDetail/QuickViewModal";
 
 const CollectionProductItem = ({
   colors,
@@ -34,6 +36,10 @@ const CollectionProductItem = ({
   const [addToCart, setAddToCart] = useState(false);
   const [productCount, setProductCount] = useState(0);
   const [loadingImage, setLoadingImage] = useState(true);
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+  const [anchorRect, setAnchorRect] = useState(null);
+  const [hoverTimeout, setHoverTimeout] = useState(null);
+  const iconRef = useRef(null);
 
   const handleBookmark = () => {
     setBookmark(!bookmark);
@@ -65,13 +71,28 @@ const CollectionProductItem = ({
     // navigate(`/product/${encodedProductId}`);
   };
 
+  const openQuickView = () => {
+    if (iconRef.current) {
+      setAnchorRect(iconRef.current.getBoundingClientRect());
+    }
+    if (hoverTimeout) clearTimeout(hoverTimeout);
+    setIsQuickViewOpen(true);
+  };
+
+  const closeQuickView = () => {
+    const timeout = setTimeout(() => {
+      setIsQuickViewOpen(false);
+    }, 200);
+    setHoverTimeout(timeout);
+  };
+
   return (
     <Link
       to={handle ? `/products/${handle}?camefrompage=collection&title=${encodeURIComponent(collectionTitle)}&id=${numericCollectionId}` : `/product/${numericProductId}?camefrompage=collection&title=${encodeURIComponent(collectionTitle)}&id=${numericCollectionId}`}
       state={{ imageSrc: img }}
     >
       <div
-        className="flex flex-col h-full font-sans tracking-tighter w-full cursor-pointer hover:brightness-75"
+        className="flex flex-col h-full font-sans tracking-tighter w-full cursor-pointer hover:brightness-75 group relative"
         onClick={productClickHandler}
       >
         <div className="w-full aspect-[4/5] relative">
@@ -96,6 +117,30 @@ const CollectionProductItem = ({
               )}
             </div>
           </div>
+
+          <div
+            ref={iconRef}
+            onMouseEnter={openQuickView}
+            onMouseLeave={closeQuickView}
+            className="absolute bottom-3 right-3 z-20"
+          >
+            <div
+              className="bg-white/90 text-black p-2 rounded-full shadow-lg opacity-30 md:group-hover:opacity-100 transition-all duration-200 hover:bg-white flex items-center justify-center cursor-default scale-90 group-hover:scale-100"
+              title="Quick View"
+            >
+              <IoEyeOutline size={18} />
+            </div>
+          </div>
+
+          <QuickViewModal
+            isOpen={isQuickViewOpen}
+            anchorRect={anchorRect}
+            productId={productId}
+            handle={handle}
+            onMouseEnter={openQuickView}
+            onMouseLeave={closeQuickView}
+          />
+
         </div>
         <div className="py-2 text-center md:text-left flex flex-col flex-grow">
           <h1 className="font-semibold py-2 line-clamp-2 md:line-clamp-none min-h-[3.5rem] md:min-h-0">{name}</h1>
@@ -134,7 +179,6 @@ const CollectionProductItem = ({
           <ViewButton
             link={handle ? `/products/${handle}?camefrompage=collection&title=${encodeURIComponent(collectionTitle)}&id=${numericCollectionId}` : `/product/${numericProductId}?camefrompage=collection&title=${encodeURIComponent(collectionTitle)}&id=${numericCollectionId}`}
           />
-          {/* Bookmark button */}
           {/* <div className="font-medium flex gap-1 items-center cursor-pointer" onClick={handleBookmark}>
                 {bookmark ? (
                     <FaBookmark />

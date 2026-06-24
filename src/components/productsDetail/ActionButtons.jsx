@@ -23,7 +23,7 @@ import CartToast from "../utils/CartToast";
 import { ToastContainer, toast as customToast } from "react-toastify";
 import { useEventTracker } from "../../hooks/EventTracker";
 
-export default function ActionButtons() {
+export default function ActionButtons({ inline = false }) {
   const [addingToThecart, setAddingToTheCart] = useState(false);
   const [buyNowBtnClicked, setBuyNowBtnClicked] = useState(false);
   const { trackEvent } = useEventTracker();
@@ -244,7 +244,10 @@ export default function ActionButtons() {
   };
 
   return (
-    <div className="md:static fixed z-[2] bottom-0 right-0 left-0 bg-[#ffff] md:bg-transparent flex flex-wrap sm:flex-nowrap justify-center md:justify-start gap-2 border-2 md:border-none shadow-lg md:!shadow-none dark:bg-black !font-outfit text-sm md:text-base p-2 md:!p-0 ">
+    <div className={inline
+      ? "flex flex-wrap gap-2 w-full bg-transparent !font-outfit text-sm"
+      : "md:static fixed z-[2] bottom-0 right-0 left-0 bg-[#ffff] md:bg-transparent flex flex-wrap sm:flex-nowrap justify-center md:justify-start gap-2 border-2 md:border-none shadow-lg md:!shadow-none dark:bg-black !font-outfit text-sm md:text-base p-2 md:!p-0"
+    }>
 
       <ToastContainer
         hideProgressBar={true}
