@@ -24,7 +24,7 @@ export default function TrackOrder() {
     try {
       const url = `http://localhost:3001/api/tracking?${type}=${encodeURIComponent(id)}`;
       const apiUrl = process.env.NODE_ENV === "production" ? `/api/tracking?${type}=${encodeURIComponent(id)}` : url;
-      
+
       const response = await fetch(apiUrl);
       const data = await response.json();
 
@@ -66,7 +66,7 @@ export default function TrackOrder() {
   return (
     <div className="flex flex-col min-h-screen font-antikor bg-[#F7F7F7] dark:bg-black dark:text-white">
       <NavbarRelative />
-      
+
       <div className="flex-grow py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10">
@@ -76,31 +76,31 @@ export default function TrackOrder() {
             </p>
           </div>
 
-          <div className="bg-white dark:bg-[#111] p-6 md:p-8 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+          <div className="bg-white dark:bg-black p-6 md:p-8 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
             <form onSubmit={handleTrack} className="flex flex-col gap-6">
-              
+
               <div className="flex flex-col sm:flex-row gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name="inputType" 
+                  <input
+                    type="radio"
+                    name="inputType"
                     value="waybill"
                     checked={inputType === "waybill"}
                     onChange={(e) => setInputType(e.target.value)}
                     className="w-4 h-4 text-[#1F4A40]"
                   />
-                  <span>Tracking ID (AWB)</span>
+                  <span className="text-black">Tracking ID (AWB)</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name="inputType" 
+                  <input
+                    type="radio"
+                    name="inputType"
                     value="ref_id"
                     checked={inputType === "ref_id"}
                     onChange={(e) => setInputType(e.target.value)}
                     className="w-4 h-4 text-[#1F4A40]"
                   />
-                  <span>Order ID</span>
+                  <span className="text-black">Order ID</span>
                 </label>
               </div>
 

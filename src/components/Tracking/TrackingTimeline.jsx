@@ -4,7 +4,7 @@ import { FaCheckCircle, FaTruck, FaBox, FaHome } from "react-icons/fa";
 const TrackingTimeline = ({ trackingData }) => {
   if (!trackingData || !trackingData.ShipmentData || trackingData.ShipmentData.length === 0) {
     return (
-      <div className="text-center p-8 bg-gray-50 dark:bg-[#111] rounded-xl border border-gray-200 dark:border-gray-800">
+      <div className="text-center p-8 bg-gray-50 dark:bg-black rounded-xl border border-gray-200 dark:border-gray-800">
         <p className="text-gray-500 dark:text-gray-400">No tracking information available for this shipment yet.</p>
       </div>
     );
@@ -27,12 +27,12 @@ const TrackingTimeline = ({ trackingData }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-[#111] rounded-xl border border-gray-200 dark:border-gray-800 p-6 md:p-8 w-full max-w-3xl mx-auto mt-8">
+    <div className="bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-gray-800 p-6 md:p-8 w-full max-w-3xl mx-auto mt-8">
       <div className="mb-6 pb-6 border-b border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-xl font-bold font-antikor uppercase tracking-wide dark:text-white">Shipment Status</h2>
+          <h2 className="text-xl font-bold font-antikor uppercase tracking-wide text-black">Shipment Status</h2>
           <p className="text-sm text-gray-500 mt-1">
-            AWB: <span className="font-mono font-medium text-black dark:text-white">{shipment.AWB}</span>
+            AWB: <span className="font-mono font-medium text-black">{shipment.AWB}</span>
           </p>
         </div>
         <div className="bg-[#F7F7F7] dark:bg-black px-4 py-2 rounded-full border border-gray-200 dark:border-gray-800">
@@ -55,7 +55,7 @@ const TrackingTimeline = ({ trackingData }) => {
             return (
               <div key={index} className="relative flex items-start gap-4 md:gap-6 z-10">
                 <div className="flex flex-col items-center justify-center shrink-0">
-                  <div className="w-10 h-10 rounded-full bg-white dark:bg-[#111] border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-sm">
+                  <div className="w-10 h-10 rounded-full bg-white dark:bg-black border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-sm">
                     {getIconForStatus(scan.Scan || scan.Instructions)}
                   </div>
                 </div>
