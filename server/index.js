@@ -664,6 +664,78 @@ app.post('/api/ugc-collaboration', async (req, res) => {
   }
 });
 
+// OTP Authentication Endpoints
+const otpStore = new Map();
+
+const generateOTP = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+app.post('/api/auth/send-otp', async (req, res) => {
+  try {
+    const { phone } = req.body;
+    if (!phone) {
+      return res.status(400).json({ error: 'Phone number is required' });
+    }
+
+    const otp = generateOTP();
+    const expiry = Date.now() + 5 * 60 * 1000; // 5 minutes
+
+    otpStore.set(phone, { otp, expiry });
+
+    // In a real application, you would integrate with an SMS gateway (Twilio, AWS SNS, etc.) here.
+    console.log(`[OTP SERVICE] Sent OTP ${otp} to phone ${phone}`);
+
+    res.json({ success: true, message: 'OTP sent successfully' });
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+    res.status(500).json({ error: 'Failed to send OTP' });
+  }
+});
+
+app.post('/api/auth/verify-otp', async (req, res) => {
+  try {
+    const { phone, otp } = req.body;
+    if (!phone || !otp) {
+      return res.status(400).json({ error: 'Phone and OTP are required' });
+    }
+
+    const record = otpStore.get(phone);
+
+    if (!record) {
+      return res.status(400).json({ error: 'No OTP requested for this number' });
+    }
+
+    if (Date.now() > record.expiry) {
+      otpStore.delete(phone);
+      return res.status(400).json({ error: 'OTP has expired' });
+    }
+
+    if (record.otp !== otp) {
+      return res.status(400).json({ error: 'Invalid OTP' });
+    }
+
+    // OTP is valid
+    otpStore.delete(phone);
+
+    // Provide a mock token or session object for the frontend
+    const token = `mock_otp_token_${Date.now()}`;
+
+    // Mock user response. Ideally, map the phone number to an actual customer in Shopify/Postgres.
+    const mockUser = {
+      id: `gid://shopify/Customer/otp_${Date.now()}`,
+      phone,
+      fullName: "OTP User",
+      email: ""
+    };
+
+    res.json({ success: true, token, user: mockUser });
+  } catch (error) {
+    console.error('Error verifying OTP:', error);
+    res.status(500).json({ error: 'Failed to verify OTP' });
+  }
+});
+
 // Shopify MCP API endpoints
 // Note: These endpoints will proxy requests to Shopify MCP tools
 // In production, you would configure MCP server connection here

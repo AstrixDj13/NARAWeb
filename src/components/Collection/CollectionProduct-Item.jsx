@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import ImageWithSkeleton from "../utils/ImageWithSkeleton";
 import ViewButton from "../ViewButton";
 import { useOfferTag } from "../../hooks/useOfferTag";
-import { IoEyeOutline } from "react-icons/io5";
+import { IoCartOutline } from "react-icons/io5";
 import QuickViewModal from "../productsDetail/QuickViewModal";
 
 const CollectionProductItem = ({
@@ -102,6 +102,21 @@ const CollectionProductItem = ({
               {offerTag}
             </div>
           )}
+          {name && name.toLowerCase().includes("axis jacket") && (
+            <div className="absolute -top-1 right-6 z-10 animate-tag-swing flex flex-col items-center pointer-events-none">
+              {/* String */}
+              <div className="w-[1.5px] h-5 bg-amber-800/80"></div>
+              {/* Tag body */}
+              <div className="bg-black text-[#f2f2f2] px-1.5 py-2.5 rounded-sm relative shadow-xl border border-gray-800 mt-[-1px]">
+                {/* Hole */}
+                <div className="w-1.5 h-1.5 bg-white rounded-full absolute -top-1 left-1/2 -translate-x-1/2 shadow-inner"></div>
+                {/* Text */}
+                <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }} className="uppercase tracking-[0.25em] text-[9px] font-bold text-center mt-0.5">
+                  NARA's Pick
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="absolute w-full bottom-0">
             <div className="flex gap-2.5 p-3">
@@ -122,13 +137,18 @@ const CollectionProductItem = ({
             ref={iconRef}
             onMouseEnter={openQuickView}
             onMouseLeave={closeQuickView}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              openQuickView();
+            }}
             className="absolute bottom-3 right-3 z-20"
           >
             <div
               className="bg-white/90 text-black p-2 rounded-full shadow-lg opacity-30 md:group-hover:opacity-100 transition-all duration-200 hover:bg-white flex items-center justify-center cursor-default scale-90 group-hover:scale-100"
               title="Quick View"
             >
-              <IoEyeOutline size={18} />
+              <IoCartOutline size={18} />
             </div>
           </div>
 

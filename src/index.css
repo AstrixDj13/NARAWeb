@@ -108,3 +108,13 @@ h6 {
   animation-timeline: view();
   animation-range: entry 0% cover 40%;
 }
+
+@keyframes tag-swing {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+.animate-tag-swing {
+  animation: tag-swing 3s ease-in-out infinite;
+  transform-origin: top center;
+}

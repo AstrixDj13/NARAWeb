@@ -34,10 +34,23 @@ const AuthModal = ({ isOpen, onClose }) => {
     const [isSignupLoading, setIsSignupLoading] = useState(false);
     const [actualPhone, setActualPhone] = useState("");
 
+    // OTP State
+    const [loginMethod, setLoginMethod] = useState("email"); // "email" or "otp"
+    const [otpPhone, setOtpPhone] = useState("");
+    const [actualOtpPhone, setActualOtpPhone] = useState("");
+    const [isOtpSent, setIsOtpSent] = useState(false);
+    const [otpCode, setOtpCode] = useState("");
+    const [isOtpLoading, setIsOtpLoading] = useState(false);
+
     // Reset states when modal closes or view switches
     useEffect(() => {
         if (!isOpen) {
-            // Optional: reset forms on close
+            setLoginMethod("email");
+            setIsOtpSent(false);
+            setOtpPhone("");
+            setOtpCode("");
+            setLoginEmail("");
+            setLoginPassword("");
         }
     }, [isOpen]);
 
@@ -120,6 +133,70 @@ const AuthModal = ({ isOpen, onClose }) => {
         }
     };
 
+    const handleSendOtp = async (e) => {
+        e.preventDefault();
+        if (!validatePhone(actualOtpPhone)) {
+            toast.error("Please enter a valid 10-digit phone number.");
+            return;
+        }
+        setIsOtpLoading(true);
+        try {
+            const response = await fetch('/api/auth/send-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: actualOtpPhone })
+            });
+            const data = await response.json();
+            
+            if (!response.ok) throw new Error(data.error || "Failed to send OTP");
+
+            setIsOtpSent(true);
+            toast.success("OTP sent to your phone number!");
+        } catch (error) {
+            toast.error(error.message);
+        } finally {
+            setIsOtpLoading(false);
+        }
+    };
+
+    const handleVerifyOtp = async (e) => {
+        e.preventDefault();
+        if (otpCode.length !== 4 && otpCode.length !== 6) {
+            toast.error("Please enter a valid OTP.");
+            return;
+        }
+        setIsOtpLoading(true);
+        try {
+            const response = await fetch('/api/auth/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: actualOtpPhone, otp: otpCode })
+            });
+            const data = await response.json();
+            
+            if (!response.ok) throw new Error(data.error || "Failed to verify OTP");
+
+            toast.success("OTP Verified successfully!");
+            
+            // Dispatch mock user login
+            dispatch(
+                setUser({
+                    id: data.user.id,
+                    fullName: data.user.fullName,
+                    email: data.user.email,
+                    phone: data.user.phone,
+                })
+            );
+            dispatch(setAuthStatus({ accessToken: data.token, isAuthenticated: true }));
+            
+            onClose();
+        } catch (error) {
+            toast.error(error.message);
+        } finally {
+            setIsOtpLoading(false);
+        }
+    };
+
     // Validation Helpers
     const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());
     const validatePassword = (password) => password.length >= 5;
@@ -188,53 +265,121 @@ const AuthModal = ({ isOpen, onClose }) => {
 
                         {isLoginView ? (
                             // Login Form
-                            <form onSubmit={handleLogin} className="flex flex-col gap-4">
-                                <div>
-                                    <label className="block text-sm text-gray-600 dark:text-gray-600 mb-1">Email</label>
-                                    <input
-                                        type="email"
-                                        value={loginEmail}
-                                        onChange={(e) => setLoginEmail(e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded focus:outline-none focus:border-[#1F4A40]"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm text-gray-600 dark:text-gray-600 mb-1">Password</label>
-                                    <div className="relative">
-                                        <input
-                                            type={showLoginPassword ? "text" : "password"}
-                                            value={loginPassword}
-                                            onChange={(e) => setLoginPassword(e.target.value)}
-                                            className="w-full px-4 py-2 border border-gray-300 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded focus:outline-none focus:border-[#1F4A40]"
-                                            required
-                                        />
+                            <div>
+                                {loginMethod === "email" ? (
+                                    <form onSubmit={handleLogin} className="flex flex-col gap-4">
+                                        <div>
+                                            <label className="block text-sm text-gray-600 dark:text-gray-600 mb-1">Email</label>
+                                            <input
+                                                type="email"
+                                                value={loginEmail}
+                                                onChange={(e) => setLoginEmail(e.target.value)}
+                                                className="w-full px-4 py-2 border border-gray-300 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded focus:outline-none focus:border-[#1F4A40]"
+                                                required
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm text-gray-600 dark:text-gray-600 mb-1">Password</label>
+                                            <div className="relative">
+                                                <input
+                                                    type={showLoginPassword ? "text" : "password"}
+                                                    value={loginPassword}
+                                                    onChange={(e) => setLoginPassword(e.target.value)}
+                                                    className="w-full px-4 py-2 border border-gray-300 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded focus:outline-none focus:border-[#1F4A40]"
+                                                    required
+                                                />
+                                                <button
+                                                    type="button"
+                                                    className="absolute right-3 top-2.5 text-gray-500"
+                                                    onClick={() => setShowLoginPassword(!showLoginPassword)}
+                                                >
+                                                    {showLoginPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <button
+                                                type="button"
+                                                onClick={handleForgotPassword}
+                                                className="text-sm text-[#1F4A40] dark:text-[#1F4A40] hover:underline"
+                                            >
+                                                Forgot Password?
+                                            </button>
+                                        </div>
                                         <button
-                                            type="button"
-                                            className="absolute right-3 top-2.5 text-gray-500"
-                                            onClick={() => setShowLoginPassword(!showLoginPassword)}
+                                            type="submit"
+                                            disabled={isLoginLoading}
+                                            className="w-full bg-[#1F4A40] text-white py-2 rounded font-semibold hover:bg-[#16352e] transition-colors disabled:opacity-70"
                                         >
-                                            {showLoginPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+                                            {isLoginLoading ? "Signing In..." : "Sign In"}
                                         </button>
-                                    </div>
+                                    </form>
+                                ) : (
+                                    // OTP Form
+                                    <form onSubmit={isOtpSent ? handleVerifyOtp : handleSendOtp} className="flex flex-col gap-4">
+                                        {!isOtpSent ? (
+                                            <div>
+                                                <label className="block text-sm text-gray-600 dark:text-gray-600 mb-1">Phone Number</label>
+                                                <MuiTelInput
+                                                    value={otpPhone}
+                                                    onChange={(val, info) => {
+                                                        setOtpPhone(val);
+                                                        setActualOtpPhone(info.nationalNumber);
+                                                    }}
+                                                    defaultCountry="IN"
+                                                    className="w-full bg-gray-50 dark:bg-gray-800 border-gray-300"
+                                                    size="small"
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <label className="block text-sm text-gray-600 dark:text-gray-600 mb-1">Enter OTP</label>
+                                                <input
+                                                    type="text"
+                                                    value={otpCode}
+                                                    onChange={(e) => setOtpCode(e.target.value)}
+                                                    className="w-full px-4 py-2 border border-gray-300 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 rounded focus:outline-none focus:border-[#1F4A40] tracking-widest text-center text-lg"
+                                                    placeholder="----"
+                                                    maxLength={6}
+                                                    required
+                                                />
+                                            </div>
+                                        )}
+                                        <button
+                                            type="submit"
+                                            disabled={isOtpLoading || (!isOtpSent && !validatePhone(actualOtpPhone))}
+                                            className="w-full bg-[#1F4A40] text-white py-2 rounded font-semibold hover:bg-[#16352e] transition-colors disabled:opacity-70 disabled:bg-gray-400"
+                                        >
+                                            {isOtpLoading ? "Please wait..." : (isOtpSent ? "Verify OTP" : "Send OTP")}
+                                        </button>
+                                        {isOtpSent && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setIsOtpSent(false)}
+                                                className="text-sm text-[#1F4A40] dark:text-[#1F4A40] hover:underline"
+                                            >
+                                                Change Phone Number
+                                            </button>
+                                        )}
+                                    </form>
+                                )}
+
+                                <div className="mt-4 flex items-center">
+                                    <div className="flex-1 border-t border-gray-300"></div>
+                                    <span className="px-3 text-sm text-gray-500">OR</span>
+                                    <div className="flex-1 border-t border-gray-300"></div>
                                 </div>
-                                <div className="text-right">
-                                    <button
-                                        type="button"
-                                        onClick={handleForgotPassword}
-                                        className="text-sm text-[#1F4A40] dark:text-[#1F4A40] hover:underline"
-                                    >
-                                        Forgot Password?
-                                    </button>
-                                </div>
+                                
                                 <button
-                                    type="submit"
-                                    disabled={isLoginLoading}
-                                    className="w-full bg-[#1F4A40] text-white py-2 rounded font-semibold hover:bg-[#16352e] transition-colors disabled:opacity-70"
+                                    type="button"
+                                    onClick={() => {
+                                        setLoginMethod(loginMethod === "email" ? "otp" : "email");
+                                    }}
+                                    className="w-full mt-4 border border-[#1F4A40] text-[#1F4A40] dark:border-[#1F4A40] dark:text-[#1F4A40] py-2 rounded font-semibold hover:bg-gray-50 dark:hover:bg-gray-100 transition-colors"
                                 >
-                                    {isLoginLoading ? "Signing In..." : "Sign In"}
+                                    {loginMethod === "email" ? "Login with Phone OTP" : "Login with Email"}
                                 </button>
-                            </form>
+                            </div>
                         ) : (
                             // Signup Form
                             <form onSubmit={handleSignup} className="flex flex-col gap-4">
