@@ -18,7 +18,7 @@ app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-  
+
   // CSP Report-Only for Shopify, Meta Pixel, Bootstrap, and unpkg
   const csp = [
     "default-src 'self'",
@@ -30,7 +30,7 @@ app.use((req, res, next) => {
     "frame-src 'self' https://www.facebook.com",
     "frame-ancestors 'self'"
   ].join('; ');
-  
+
   res.setHeader('Content-Security-Policy-Report-Only', csp);
   next();
 });
@@ -307,11 +307,53 @@ async function initDB() {
       );
     `);
     console.log("PostgreSQL: spinning_wheel_data table is ready.");
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS cart_removals (
+        id SERIAL PRIMARY KEY,
+        product_id VARCHAR(255) NOT NULL,
+        product_name VARCHAR(255),
+        variant_size VARCHAR(100),
+        reason VARCHAR(255) NOT NULL,
+        removed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    
+    // Add columns if they don't exist
+    await pool.query(`
+      ALTER TABLE cart_removals
+      ADD COLUMN IF NOT EXISTS user_id VARCHAR(255),
+      ADD COLUMN IF NOT EXISTS anonymous_id VARCHAR(255);
+    `);
+    console.log("PostgreSQL: cart_removals table is ready.");
   } catch (error) {
-    console.error("Error creating spinning_wheel_data table:", error);
+    console.error("Error creating tables:", error);
   }
 }
 initDB();
+
+// Cart Removals Endpoint
+app.post('/api/removals', async (req, res) => {
+  try {
+    const { productId, productName, variantSize, reason, userId, anonymousId } = req.body;
+
+    if (!productId || !reason) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const query = `
+      INSERT INTO cart_removals (product_id, product_name, variant_size, reason, user_id, anonymous_id)
+      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
+    `;
+    const values = [productId, productName, variantSize, reason, userId, anonymousId];
+
+    const result = await pool.query(query, values);
+    res.status(201).json({ success: true, data: result.rows[0] });
+  } catch (error) {
+    console.error('Error logging removal reason:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // Spinning Wheel Endpoints
 app.get('/api/spinning-wheel/check', async (req, res) => {
@@ -348,32 +390,32 @@ app.post('/api/spinning-wheel/spin', async (req, res) => {
     }
 
     const segments = [
-        { text: '10% OFF', color: '#1F4A40', value: 'win_10' },
-        { text: '₹300 OFF', color: '#2a6357', value: 'win_300' },
-        { text: 'So Close', color: '#4a7c6f', value: 'lose' },
-        { text: '₹200 OFF', color: '#1F4A40', value: 'win_200' },
-        { text: '15% OFF', color: '#2a6357', value: 'win_15' },
-        { text: 'Not Your\\nDay', color: '#4a7c6f', value: 'lose' },
-        { text: '20% OFF', color: '#1F4A40', value: 'win_20' },
-        { text: '30% OFF', color: '#2a6357', value: 'win_30' },
+      { text: '10% OFF', color: '#1F4A40', value: 'win_10' },
+      { text: '₹300 OFF', color: '#2a6357', value: 'win_300' },
+      { text: 'So Close', color: '#4a7c6f', value: 'lose' },
+      { text: '₹200 OFF', color: '#1F4A40', value: 'win_200' },
+      { text: '15% OFF', color: '#2a6357', value: 'win_15' },
+      { text: 'Not Your\\nDay', color: '#4a7c6f', value: 'lose' },
+      { text: '20% OFF', color: '#1F4A40', value: 'win_20' },
+      { text: '30% OFF', color: '#2a6357', value: 'win_30' },
     ];
 
     const codeMap = {
-        '10% OFF': 'LUCKY10',
-        '₹300 OFF': 'LUCKY300',
-        '₹200 OFF': 'LUCKY200',
-        '15% OFF': 'LUCKY15',
-        '20% OFF': 'LUCKY20',
-        '30% OFF': 'LUCKY30',
-        'So Close': 'LUCKY10',
-        'Not Your\\nDay': 'LUCKY10',
+      '10% OFF': 'LUCKY10',
+      '₹300 OFF': 'LUCKY300',
+      '₹200 OFF': 'LUCKY200',
+      '15% OFF': 'LUCKY15',
+      '20% OFF': 'LUCKY20',
+      '30% OFF': 'LUCKY30',
+      'So Close': 'LUCKY10',
+      'Not Your\\nDay': 'LUCKY10',
     };
 
     let randomIndex = Math.floor(Math.random() * segments.length);
 
     // Rig the wheel: Never land on '₹300 OFF'
     while (segments[randomIndex].text === '₹300 OFF') {
-        randomIndex = Math.floor(Math.random() * segments.length);
+      randomIndex = Math.floor(Math.random() * segments.length);
     }
 
     const selectedSegment = segments[randomIndex];

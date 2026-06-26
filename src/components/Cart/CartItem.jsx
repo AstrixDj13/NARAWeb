@@ -5,6 +5,7 @@ import { updateLineItem, removeCartLine } from "../../apis/Cart";
 import { Skeleton } from "@mui/material";
 import { toast } from "sonner";
 import { useEventTracker } from "../../hooks/EventTracker";
+import RemoveSurveyModal from "./RemoveSurveyModal";
 
 export default function CartItem({
   src,
@@ -23,6 +24,7 @@ export default function CartItem({
   const [productQuantity, setProductQuantity] = useState();
   const [quantityUpdating, setQuantityUpdating] = useState(false);
   const [productIsUpdating, setProductIsUpdating] = useState(false);
+  const [isSurveyModalOpen, setIsSurveyModalOpen] = useState(false);
 
   // Redux state and dispatch
   const totalQuantityInCart = useSelector((state) => state.cart.totalQuantity);
@@ -127,7 +129,7 @@ export default function CartItem({
 
   const removeProductFromCartHandler = async () => {
     if (cartId && cartLineId) {
-      removeProductFromCart(cartId, cartLineId);
+      setIsSurveyModalOpen(true);
     }
   };
 
@@ -145,7 +147,7 @@ export default function CartItem({
   const decreaseQuantityHandler = () => {
     if (cartId && cartLineId) {
       if (productQuantity === 1) {
-        removeProductFromCart(cartId, cartLineId);
+        setIsSurveyModalOpen(true);
       } else {
         updateCartItem(
           cartId,
@@ -157,9 +159,44 @@ export default function CartItem({
     }
   };
 
+  const handleSurveyConfirm = async (reason) => {
+    try {
+      if (reason) {
+        const userId = localStorage.getItem("user_id") || undefined;
+        const anonymousId = localStorage.getItem("anonymous_id") || undefined;
+
+        const apiUrl = process.env.NODE_ENV === "production" ? "/api/removals" : "http://localhost:3001/api/removals";
+        await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            productId,
+            productName: title,
+            variantSize: size,
+            reason,
+            userId,
+            anonymousId
+          })
+        });
+      }
+    } catch (e) {
+      console.error("Failed to log removal reason:", e);
+    } finally {
+      setIsSurveyModalOpen(false);
+      removeProductFromCart(cartId, cartLineId);
+    }
+  };
+
   // Render
   return (
-    <div className={`flex gap-2 z-100 pb-2 border-b-2 dark:bg-black dark:text-white ${className || "sm:h-32 h-24"}`}>
+    <>
+      <RemoveSurveyModal
+        isOpen={isSurveyModalOpen}
+        onClose={() => setIsSurveyModalOpen(false)}
+        onConfirm={handleSurveyConfirm}
+        productTitle={title}
+      />
+      <div className={`flex gap-2 z-100 pb-2 border-b-2 dark:bg-black dark:text-white ${className || "sm:h-32 h-24"}`}>
       {productIsUpdating ? (
         <Skeleton
           variant="rectangular"
@@ -245,6 +282,7 @@ export default function CartItem({
           </div>
         </>
       )}
-    </div>
+      </div>
+    </>
   );
 }
