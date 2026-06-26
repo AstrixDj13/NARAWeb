@@ -736,6 +736,40 @@ app.post('/api/auth/verify-otp', async (req, res) => {
   }
 });
 
+// Delhivery Tracking API Proxy
+app.get('/api/tracking', async (req, res) => {
+  try {
+    const { waybill, ref_id } = req.query;
+    const token = process.env.DELHIVERY_API_TOKEN;
+
+    if (!token) {
+      return res.status(500).json({ error: 'Tracking API token is not configured' });
+    }
+
+    if (!waybill && !ref_id) {
+      return res.status(400).json({ error: 'Either waybill or ref_id is required' });
+    }
+
+    let url = 'https://track.delhivery.com/api/v1/packages/json/?';
+    if (waybill) url += `waybill=${encodeURIComponent(waybill)}`;
+    else if (ref_id) url += `ref_ids=${encodeURIComponent(ref_id)}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching tracking info:', error);
+    res.status(500).json({ error: 'Failed to fetch tracking info' });
+  }
+});
+
 // Shopify MCP API endpoints
 // Note: These endpoints will proxy requests to Shopify MCP tools
 // In production, you would configure MCP server connection here

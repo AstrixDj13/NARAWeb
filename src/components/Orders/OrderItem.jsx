@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Stepper from "./Stepper";
 
 export default function OrderItem({
@@ -65,13 +66,22 @@ export default function OrderItem({
 
         <div className="flex flex-col gap-2 justify-center items-end w-full xl:w-auto ">
           {fulfillmentStatus === "UNFULFILLED" ? null : (
-            <a
-              href={customerUrl}
-              target="_blank"
-              className="border-2 border-black dark:!border-[#ffff] px-4 py-2 font-black rounded-lg cursor-pointer font-outfit"
-            >
-              Track / Return
-            </a>
+            <div className="flex gap-2">
+              <a
+                href={customerUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="border-2 border-black dark:border-white px-4 py-2 font-black rounded-lg cursor-pointer font-outfit text-sm flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                Return
+              </a>
+              <Link
+                to={`/track?ref_id=${encodeURIComponent("#" + orderId)}`}
+                className="bg-[#1F4A40] text-white px-4 py-2 font-black rounded-lg cursor-pointer font-outfit text-sm flex items-center justify-center hover:bg-[#2a6357] transition-colors"
+              >
+                Track Order
+              </Link>
+            </div>
           )}
           <div className="flex xl:flex-col justify-between  w-full xl:w-auto xl:text-right text-xs tracking-tighter">
             <span>

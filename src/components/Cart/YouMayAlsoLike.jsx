@@ -89,7 +89,7 @@ const YouMayAlsoLike = () => {
                             <div className="flex flex-col gap-1">
                                 <p className="text-sm font-medium truncate">{product.title}</p>
                                 <p className="text-sm text-gray-600">
-                                    {product.price} INR
+                                    ₹{product.price}
                                 </p>
                             </div>
                         </Link>

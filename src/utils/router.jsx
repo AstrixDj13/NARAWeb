@@ -23,6 +23,7 @@ const Return_Policies = React.lazy(() => import("../pages/Return_Policies"));
 const Exchange_Policies = React.lazy(() => import("../pages/Exchange_Policies"));
 const UGCCollaboration = React.lazy(() => import("../pages/UGCCollaboration"));
 const CartPage = React.lazy(() => import("../pages/CartPage"));
+const TrackOrder = React.lazy(() => import("../pages/TrackOrder"));
 
 
 
@@ -78,6 +79,10 @@ export const router = createBrowserRouter([
       {
         path: "cart",
         element: <LazyComponent component={<CartPage />} />,
+      },
+      {
+        path: "track",
+        element: <LazyComponent component={<TrackOrder />} />,
       },
       {
         element: <RedirectWhenLoggedIn />,

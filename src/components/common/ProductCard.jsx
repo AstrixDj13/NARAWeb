@@ -39,14 +39,14 @@ const ProductCard = ({ product, className }) => {
         if (product.variants?.nodes?.[0]?.price?.amount) {
             let p = parseFloat(product.variants.nodes[0].price.amount);
             if (offerTag === "30% Off") p = p * 0.70;
-            return `INR ${p.toFixed(2)}`;
+            return `₹${p.toFixed(2)}`;
         }
         return '';
     }, [product, offerTag]);
 
     const originalPriceStr = React.useMemo(() => {
         if (product.variants?.nodes?.[0]?.price?.amount) {
-            return `INR ${parseFloat(product.variants.nodes[0].price.amount).toFixed(2)}`;
+            return `₹${parseFloat(product.variants.nodes[0].price.amount).toFixed(2)}`;
         }
         return '';
     }, [product]);
@@ -137,11 +137,11 @@ const ProductCard = ({ product, className }) => {
                     <h3 className="text-lg font-medium font-mono text-black dark:!text-white truncate px-2">
                         {title}
                     </h3>
-                    <p className="mt-1 text-sm font-light font-mono text-gray-800 dark:text-gray-200">
+                    <p className="mt-1 text-sm font-medium font-mono text-gray-800 dark:text-gray-200">
                         {offerTag === "30% Off" && originalPriceStr ? (
                             <span className="flex items-center justify-center gap-1">
-                                <span className="line-through text-gray-400 text-xs">{originalPriceStr}</span>
-                                <span className="font-bold">{activePriceStr}</span>
+                                <span className="line-through text-gray-400 text-xs font-normal">{originalPriceStr}</span>
+                                <span>{activePriceStr}</span>
                             </span>
                         ) : (
                             activePriceStr

@@ -90,6 +90,11 @@ const FooterSection = () => {
                   All Products
                 </Link>
               </li>
+              <li>
+                <Link to="/track" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                  Track Order
+                </Link>
+              </li>
             </ul>
           </div>
 

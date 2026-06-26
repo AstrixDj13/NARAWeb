@@ -425,7 +425,7 @@ const UGCSection = () => {
                                 <h3 className="text-sm font-bold truncate">
                                     {product.title}
                                 </h3>
-                                <p className="text-xs mb-2">INR {product.price}</p>
+                                <p className="text-xs mb-2">₹{product.price}</p>
 
                                 {/* VOTE BUTTON */}
                                 <button

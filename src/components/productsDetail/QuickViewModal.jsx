@@ -132,7 +132,7 @@ const QuickViewModal = ({ isOpen, anchorRect, productId, handle, onMouseEnter, o
                 {product.title}
               </h2>
               <p className="text-sm font-semibold mt-1 text-black dark:text-white">
-                {product?.priceRange?.minVariantPrice?.currencyCode || "INR"}{" "}
+                {product?.priceRange?.minVariantPrice?.currencyCode === 'INR' ? '₹' : (product?.priceRange?.minVariantPrice?.currencyCode || '₹')}
                 {parseFloat(product?.priceRange?.minVariantPrice?.amount || 0).toFixed(2)}
               </p>
             </div>

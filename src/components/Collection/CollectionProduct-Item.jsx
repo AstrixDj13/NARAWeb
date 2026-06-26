@@ -9,7 +9,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
 import ImageWithSkeleton from "../utils/ImageWithSkeleton";
-import ViewButton from "../ViewButton";
 import { useOfferTag } from "../../hooks/useOfferTag";
 import { IoCartOutline } from "react-icons/io5";
 import QuickViewModal from "../productsDetail/QuickViewModal";
@@ -165,14 +164,14 @@ const CollectionProductItem = ({
         <div className="py-2 text-center md:text-left flex flex-col flex-grow">
           <h1 className="font-semibold py-2 line-clamp-2 md:line-clamp-none min-h-[3.5rem] md:min-h-0">{name}</h1>
           <div className="flex flex-col items-center justify-center">
-            <div className="font-mono text-base flex justify-center items-center gap-1.5">
+            <div className="font-mono text-sm flex justify-center items-center gap-1.5 mt-1">
               {offerTag === "30% Off" ? (
                 <>
-                  <span className="line-through text-gray-400 text-sm">INR {formatToINR(price)}</span>
-                  <span className="font-bold">INR {formatToINR(price * 0.70)}</span>
+                  <span className="line-through text-gray-400 text-xs">₹{formatToINR(price)}</span>
+                  <span className="font-medium">₹{formatToINR(price * 0.70)}</span>
                 </>
               ) : (
-                <span>INR {formatToINR(price)}</span>
+                <span className="font-medium">₹{formatToINR(price)}</span>
               )}
             </div>
             {stockLeft !== undefined && stockLeft !== null && stockLeft !== "" && (
@@ -188,25 +187,6 @@ const CollectionProductItem = ({
               ))}
             </div>
           )}
-        </div>
-        <div className="flex justify-between py-2 mt-auto">
-          {/* plus minus button */}
-          {/* <div className="flex text-xl items-center cursor-pointer gap-2">
-              <div className="border w-8 h-8 grid place-items-center cursor-pointer" onClick={() => handleAddtocard("add")}><GoPlus /></div>
-              <div>{productCount}</div>
-              <div className="border w-8 h-8 grid place-items-center cursor-pointer" onClick={() => handleAddtocard("remove")}><GoDash /></div>
-            </div> */}
-          <ViewButton
-            link={handle ? `/products/${handle}?camefrompage=collection&title=${encodeURIComponent(collectionTitle)}&id=${numericCollectionId}` : `/product/${numericProductId}?camefrompage=collection&title=${encodeURIComponent(collectionTitle)}&id=${numericCollectionId}`}
-          />
-          {/* <div className="font-medium flex gap-1 items-center cursor-pointer" onClick={handleBookmark}>
-                {bookmark ? (
-                    <FaBookmark />
-                ) : (
-                    <FaRegBookmark />
-                )}
-                Wishlist
-            </div> */}
         </div>
       </div>
     </Link>
