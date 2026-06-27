@@ -334,10 +334,13 @@ initDB();
 
 // Cart Removals Endpoint
 app.post('/api/removals', async (req, res) => {
+  console.log('--- Received POST request at /api/removals ---');
   try {
     const { productId, productName, variantSize, reason, userId, anonymousId } = req.body;
+    console.log('Payload received:', { productId, productName, variantSize, reason, userId, anonymousId });
 
     if (!productId || !reason) {
+      console.log('Validation failed: Missing productId or reason');
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -346,13 +349,17 @@ app.post('/api/removals', async (req, res) => {
       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
     `;
     const values = [productId, productName, variantSize, reason, userId, anonymousId];
+    console.log('Executing DB query with values:', values);
 
     const result = await pool.query(query, values);
+    console.log('Successfully inserted into cart_removals DB:', result.rows[0]);
+    
     res.status(201).json({ success: true, data: result.rows[0] });
   } catch (error) {
-    console.error('Error logging removal reason:', error);
+    console.error('Error logging removal reason to DB:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
+  console.log('--- Finished processing /api/removals ---');
 });
 
 // Spinning Wheel Endpoints
