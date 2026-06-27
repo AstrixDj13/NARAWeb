@@ -21,7 +21,7 @@ export default function CartIcon({ theme, OnHomePageHeroSection }) {
         <img
           title="image"
           src="/home/navbar/shoppingCart.svg"
-          className={`${OnHomePageHeroSection
+          className={`scale-[0.85] md:scale-100 transform origin-center ${OnHomePageHeroSection
             ? "white-icon"
             : theme === "dark" && "white-icon"
             }`}

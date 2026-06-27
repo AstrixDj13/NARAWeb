@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { getCollections } from "../../apis/Collections";
 import backendApi from "../../utils/backendApi";
-import { FaChevronUp, FaMapMarkerAlt, FaEnvelope, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaChevronUp, FaMapMarkerAlt, FaEnvelope, FaInstagram, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { toast } from "sonner";
 import { useEventTracker } from "../../hooks/EventTracker";
 
@@ -161,6 +161,18 @@ const FooterSection = () => {
                   info@narawear.com
                 </a>
               </li>
+              <li className="flex items-center text-sm text-gray-400">
+                <FaWhatsapp className="mr-3 text-gray-500" />
+                <a
+                  href="https://wa.me/919326472754"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors duration-200"
+                  aria-label="WhatsApp"
+                >
+                  +91 93264 72754
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -186,21 +198,7 @@ const FooterSection = () => {
               >
                 <FaLinkedin className="text-2xl" />
               </a>
-              <a
-                href="https://wa.me/919326472754"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors duration-200"
-                aria-label="WhatsApp"
-              >
-                <img
-                  src="/home/navbar/WhatsApp.svg.webp"
-                  alt="WhatsApp"
-                  className="w-6 h-6 opacity-70 hover:opacity-100 transition-opacity duration-200"
-                  width="24"
-                  height="24"
-                />
-              </a>
+
             </div>
           </div>
 

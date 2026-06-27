@@ -21,6 +21,7 @@ import { getProductVariantDetail } from "./apis/Products";
 import useEventTracker from "./hooks/EventTracker";
 import SpinningWheel from "./components/SpinningWheel";
 import CookieConsent from "./components/CookieConsent";
+import WhatsAppButton from "./components/utils/WhatsAppButton";
 //import AainaPopup from "./components/AainaPopup";
 const Chatbot = lazy(() => import("./components/Chatbot"));
 function App() {
@@ -190,6 +191,7 @@ function App() {
       {pathname === "/" && showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}
       {/*{showAainaPopup && <AainaPopup onClose={() => setShowAainaPopup(false)} />}*/}
       <CookieConsent />
+      <WhatsAppButton />
     </div>
   );
 }

@@ -169,7 +169,7 @@ const Navbar = () => {
                 src="/home/navbar/light_icon1.svg"
                 alt={`${theme} mode icon`}
 
-                className={
+                className={`scale-[0.85] md:scale-100 transform origin-center ${
                   theme === "light" && !isScrolled
                     ? "black-icon"
                     : theme === "dark" && !isScrolled
@@ -178,7 +178,7 @@ const Navbar = () => {
                         ? "black-icon"
                         : theme === "dark" && isScrolled
                           ? "white-icon" : ""
-                }
+                }`}
               />
             </button>
 
@@ -194,7 +194,7 @@ const Navbar = () => {
               <img
                 src="/home/navbar/user.svg"
                 alt="user icon"
-                className={
+                className={`scale-[0.85] md:scale-100 transform origin-center ${
                   theme === "light" && !isScrolled
                     ? "black-icon"
                     : theme === "dark" && !isScrolled
@@ -203,19 +203,19 @@ const Navbar = () => {
                         ? "black-icon"
                         : theme === "dark" && isScrolled
                           ? "white-icon" : ""
-                }
+                }`}
               />
             </button>
+
+            <CartIcon theme={theme} />
 
             <button
               onClick={() => window.dispatchEvent(new CustomEvent('open-chatbot'))}
               className="flex items-center justify-center p-1"
               aria-label="Open Chatbot"
             >
-              <img src="/cat.gif" alt="Open Chat" className="w-10 h-10 object-contain drop-shadow-sm scale-[1.6] md:scale-[1.8] transition-transform hover:scale-[1.8] md:hover:scale-[2]" />
+              <img src="/cat.gif" alt="Open Chat" className="w-10 h-10 object-contain drop-shadow-sm scale-[1.3] md:scale-[1.8] transition-transform md:hover:scale-[2]" />
             </button>
-
-            <CartIcon theme={theme} />
           </div>
         </div>
       </nav>
