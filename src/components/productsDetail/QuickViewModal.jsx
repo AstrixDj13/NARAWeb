@@ -54,27 +54,52 @@ const QuickViewModal = ({ isOpen, anchorRect, productId, handle, onMouseEnter, o
 
   if (!isOpen || !anchorRect) return null;
 
-  // Compute fixed position: appear to the left of the icon, vertically centred on it
   const popupWidth = 300;
   const popupHeight = 440;
   const margin = 12;
+  const isMobile = window.innerWidth < 768;
 
-  let left = anchorRect.left - popupWidth - margin;
-  if (left < 8) left = anchorRect.right + margin; // flip to right if no room
+  let left, top, transform;
 
-  let top = anchorRect.bottom - popupHeight;
-  if (top < 8) top = 8;
-  if (top + popupHeight > window.innerHeight - 8) top = window.innerHeight - popupHeight - 8;
+  if (isMobile) {
+    left = '50%';
+    top = '50%';
+    transform = 'translate(-50%, -50%)';
+  } else {
+    left = anchorRect.left - popupWidth - margin;
+    if (left < 8) left = anchorRect.right + margin; 
+
+    top = anchorRect.bottom - popupHeight;
+    if (top < 8) top = 8;
+    if (top + popupHeight > window.innerHeight - 8) top = window.innerHeight - popupHeight - 8;
+    transform = 'none';
+  }
 
   return ReactDOM.createPortal(
-    <div
-      style={{ position: "fixed", top, left, width: popupWidth, zIndex: 99999 }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="bg-white dark:bg-[#111] rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.35)] border border-gray-200 dark:border-gray-700 flex flex-col"
-        style={{ width: popupWidth, maxHeight: popupHeight }}>
+    <>
+      {isMobile && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-[99998]" 
+          onClick={onMouseLeave}
+        />
+      )}
+      <div
+        style={{ position: "fixed", top, left, transform, width: popupWidth, zIndex: 99999 }}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="bg-white dark:bg-[#111] rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.35)] border border-gray-200 dark:border-gray-700 flex flex-col relative"
+          style={{ width: popupWidth, maxHeight: popupHeight }}>
+          
+          {isMobile && (
+            <button 
+              onClick={onMouseLeave}
+              className="absolute top-2 right-2 z-50 bg-black/50 text-white rounded-full p-1.5 shadow"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          )}
 
         {/* Image */}
         <div className="relative w-full bg-gray-100 dark:bg-black flex-shrink-0" style={{ height: 200 }}>
@@ -155,7 +180,8 @@ const QuickViewModal = ({ isOpen, anchorRect, productId, handle, onMouseEnter, o
           </div>
         )}
       </div>
-    </div>,
+    </div>
+    </>,
     document.body
   );
 };

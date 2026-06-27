@@ -144,7 +144,7 @@ const CollectionProductItem = ({
             className="absolute bottom-3 right-3 z-20"
           >
             <div
-              className="bg-white/90 text-black p-2 rounded-full shadow-lg opacity-30 md:group-hover:opacity-100 transition-all duration-200 hover:bg-white flex items-center justify-center cursor-default scale-90 group-hover:scale-100"
+              className="bg-white/90 text-black p-2 rounded-full shadow-lg opacity-100 md:opacity-30 md:group-hover:opacity-100 transition-all duration-200 hover:bg-white flex items-center justify-center cursor-pointer scale-90 group-hover:scale-100"
               title="Quick View"
             >
               <IoCartOutline size={18} />
