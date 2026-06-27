@@ -165,7 +165,9 @@ export default function CartItem({
         const userId = localStorage.getItem("user_id") || undefined;
         const anonymousId = localStorage.getItem("anonymous_id") || undefined;
 
-        const apiUrl = process.env.NODE_ENV === "production" ? "/api/removals" : "http://localhost:3001/api/removals";
+        const baseUrl = import.meta.env.VITE_EVENT_API_URL || "http://localhost:3001";
+        const apiUrl = `${baseUrl}/api/removals`;
+        
         await fetch(apiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
