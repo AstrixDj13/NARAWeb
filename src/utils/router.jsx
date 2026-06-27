@@ -24,6 +24,7 @@ const Exchange_Policies = React.lazy(() => import("../pages/Exchange_Policies"))
 const UGCCollaboration = React.lazy(() => import("../pages/UGCCollaboration"));
 const CartPage = React.lazy(() => import("../pages/CartPage"));
 const TrackOrder = React.lazy(() => import("../pages/TrackOrder"));
+const WishlistPage = React.lazy(() => import("../pages/WishlistPage"));
 
 
 
@@ -79,6 +80,10 @@ export const router = createBrowserRouter([
       {
         path: "cart",
         element: <LazyComponent component={<CartPage />} />,
+      },
+      {
+        path: "wishlist",
+        element: <LazyComponent component={<WishlistPage />} />,
       },
       {
         path: "track",

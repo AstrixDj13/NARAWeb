@@ -7,6 +7,9 @@ import Skeleton from "@mui/material/Skeleton";
 import { useOfferTag } from "../../hooks/useOfferTag";
 import { IoCartOutline } from "react-icons/io5";
 import QuickViewModal from "../productsDetail/QuickViewModal";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useWishlist } from "../../context/WishlistContext";
+import { useSelector } from "react-redux";
 
 const ProductItem = ({
   colors,
@@ -19,9 +22,14 @@ const ProductItem = ({
   handle,
   stockLeft,
 }) => {
+  const theme = useSelector((state) => state.app.theme);
   const offerTag = useOfferTag(productId);
   console.log("Received stockLeft:", stockLeft);
   const numericProductId = productId ? decodeURIComponent(productId).split('/').pop() : '';
+  const fullProductId = productId?.includes('gid://') ? productId : `gid://shopify/Product/${numericProductId}`;
+
+  const { wishlist, toggleWishlist } = useWishlist();
+  const isWishlisted = wishlist.includes(fullProductId);
 
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [anchorRect, setAnchorRect] = useState(null);
@@ -72,18 +80,28 @@ const ProductItem = ({
           </div>
         </div>
 
-        <div
-          ref={iconRef}
-          onMouseEnter={openQuickView}
-          onMouseLeave={closeQuickView}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            openQuickView();
-          }}
-          className="absolute bottom-3 right-3 z-20"
-        >
+        <div className="absolute bottom-3 right-3 z-20 flex flex-col gap-2">
           <div
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleWishlist(fullProductId);
+            }}
+            className="bg-white/90 text-black p-2 rounded-full shadow-lg opacity-100 md:opacity-30 md:group-hover:opacity-100 transition-all duration-200 hover:bg-white flex items-center justify-center cursor-pointer scale-90 group-hover:scale-100"
+            title="Wishlist"
+          >
+            {isWishlisted ? <FaHeart size={18} className="text-red-500" /> : <FaRegHeart size={18} />}
+          </div>
+
+          <div
+            ref={iconRef}
+            onMouseEnter={openQuickView}
+            onMouseLeave={closeQuickView}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              openQuickView();
+            }}
             className="bg-white/90 text-black p-2 rounded-full shadow-lg opacity-100 md:opacity-30 md:group-hover:opacity-100 transition-all duration-200 hover:bg-white flex items-center justify-center cursor-pointer scale-90 group-hover:scale-100"
             title="Quick View"
           >
@@ -100,7 +118,7 @@ const ProductItem = ({
           onMouseLeave={closeQuickView}
         />
       </div>
-      <div className="py-2 text-center md:text-left flex flex-col flex-grow">
+      <div className={`py-2 text-center md:text-left flex flex-col flex-grow ${theme === 'dark' ? 'text-white' : 'text-[#1F4A40]'}`}>
         <h1 className="font-semibold line-clamp-2 md:line-clamp-none">{name}</h1>
         <div className="flex flex-col items-center justify-center">
           <div className="font-mono text-sm flex justify-center items-center gap-1.5 mt-1">

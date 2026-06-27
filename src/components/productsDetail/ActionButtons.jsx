@@ -22,8 +22,10 @@ import Spinner from "../utils/Spinner";
 import CartToast from "../utils/CartToast";
 import { ToastContainer, toast as customToast } from "react-toastify";
 import { useEventTracker } from "../../hooks/EventTracker";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useWishlist } from "../../context/WishlistContext";
 
-export default function ActionButtons({ inline = false }) {
+export default function ActionButtons({ inline = false, productId }) {
   const [addingToThecart, setAddingToTheCart] = useState(false);
   const [buyNowBtnClicked, setBuyNowBtnClicked] = useState(false);
   const { trackEvent } = useEventTracker();
@@ -33,6 +35,12 @@ export default function ActionButtons({ inline = false }) {
   const currentVariant = useSelector(
     (state) => state.activeProduct.currentVariant
   );
+  
+  const fullProductId = productId || currentVariant?.node?.product?.id;
+
+  const { wishlist, toggleWishlist } = useWishlist();
+  const isWishlisted = fullProductId ? wishlist.includes(fullProductId) : false;
+
   const productOutOfStock = useSelector(
     (state) => state.activeProduct.outOfStock
   );
@@ -305,9 +313,15 @@ export default function ActionButtons({ inline = false }) {
         </button>
       )}
 
-      {/* <button className="px-2 py-2 border-2 shadow-lg flex items-center justify-center">
-        <MdBookmarkBorder size={24} />
-      </button> */}
+      {fullProductId && (
+        <button 
+          onClick={() => toggleWishlist(fullProductId)}
+          className="px-4 py-2 flex-1 sm:flex-none border-2 shadow-lg flex items-center justify-center gap-2 text-black whitespace-nowrap bg-white hover:bg-gray-50 transition-colors"
+        >
+          {isWishlisted ? <FaHeart className="text-red-500" size={20} /> : <FaRegHeart size={20} />}
+          <span>{isWishlisted ? "Wishlisted" : "Add to Wishlist"}</span>
+        </button>
+      )}
     </div>
   );
 }

@@ -4,11 +4,14 @@ import { RouterProvider } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store/index.js";
 import { router } from "./utils/router.jsx";
+import { WishlistProvider } from "./context/WishlistContext.jsx";
 import "./index.css";
 import ScrollToTop from "./components/utils/ScrollToTop.jsx";
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <RouterProvider router={router} />
+    <WishlistProvider>
+      <RouterProvider router={router} />
+    </WishlistProvider>
   </Provider>
 );

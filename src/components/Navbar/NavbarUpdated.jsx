@@ -6,6 +6,8 @@ import { useDispatch } from "react-redux";
 import { setAppTheme } from "../../store";
 import { getCollections } from "../../apis/Collections";
 import { getActiveCampaigns } from "../../utils/campaignUtils";
+import { FaRegHeart } from "react-icons/fa";
+import { useWishlist } from "../../context/WishlistContext";
 
 const AuthModal = lazy(() => import("../Auth/AuthModal"));
 import { useSelector } from "react-redux";
@@ -21,6 +23,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const element = document.documentElement;
+  const { wishlist } = useWishlist();
 
   // State to manage hover for the "CLOTHING" menu
   const [isClothingHovered, setIsClothingHovered] = useState(false);
@@ -206,6 +209,27 @@ const Navbar = () => {
                 }`}
               />
             </button>
+
+            <Link to="/wishlist" className="relative flex items-center justify-center p-1">
+              <FaRegHeart 
+                size={21}
+                className={`scale-[0.85] md:scale-100 transform origin-center ${
+                  theme === "light" && !isScrolled
+                    ? "text-black"
+                    : theme === "dark" && !isScrolled
+                      ? "text-white"
+                      : theme === "light" && isScrolled
+                        ? "text-black"
+                        : theme === "dark" && isScrolled
+                          ? "text-white" : ""
+                }`} 
+              />
+              {wishlist.length > 0 && (
+                <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-red-600 rounded-full flex items-center justify-center text-[9px] text-white font-bold border border-white dark:border-black">
+                  {wishlist.length}
+                </span>
+              )}
+            </Link>
 
             <CartIcon theme={theme} />
 

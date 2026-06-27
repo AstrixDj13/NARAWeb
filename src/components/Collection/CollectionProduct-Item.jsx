@@ -12,6 +12,8 @@ import ImageWithSkeleton from "../utils/ImageWithSkeleton";
 import { useOfferTag } from "../../hooks/useOfferTag";
 import { IoCartOutline } from "react-icons/io5";
 import QuickViewModal from "../productsDetail/QuickViewModal";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useWishlist } from "../../context/WishlistContext";
 
 const CollectionProductItem = ({
   colors,
@@ -30,6 +32,11 @@ const CollectionProductItem = ({
   const offerTag = useOfferTag(productId);
   const numericProductId = productId ? decodeURIComponent(productId).split('/').pop() : '';
   const numericCollectionId = collectionId ? decodeURIComponent(collectionId).split('/').pop() : '';
+  const fullProductId = productId?.includes('gid://') ? productId : `gid://shopify/Product/${numericProductId}`;
+
+  const { wishlist, toggleWishlist } = useWishlist();
+  const isWishlisted = wishlist.includes(fullProductId);
+
   const navigate = useNavigate();
   const [bookmark, setBookmark] = useState(false);
   const [addToCart, setAddToCart] = useState(false);
@@ -132,18 +139,28 @@ const CollectionProductItem = ({
             </div>
           </div>
 
-          <div
-            ref={iconRef}
-            onMouseEnter={openQuickView}
-            onMouseLeave={closeQuickView}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              openQuickView();
-            }}
-            className="absolute bottom-3 right-3 z-20"
-          >
+          <div className="absolute bottom-3 right-3 z-20 flex flex-col gap-2">
             <div
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleWishlist(fullProductId);
+              }}
+              className="bg-white/90 text-black p-2 rounded-full shadow-lg opacity-100 md:opacity-30 md:group-hover:opacity-100 transition-all duration-200 hover:bg-white flex items-center justify-center cursor-pointer scale-90 group-hover:scale-100"
+              title="Wishlist"
+            >
+              {isWishlisted ? <FaHeart size={18} className="text-red-500" /> : <FaRegHeart size={18} />}
+            </div>
+
+            <div
+              ref={iconRef}
+              onMouseEnter={openQuickView}
+              onMouseLeave={closeQuickView}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openQuickView();
+              }}
               className="bg-white/90 text-black p-2 rounded-full shadow-lg opacity-100 md:opacity-30 md:group-hover:opacity-100 transition-all duration-200 hover:bg-white flex items-center justify-center cursor-pointer scale-90 group-hover:scale-100"
               title="Quick View"
             >
@@ -161,7 +178,7 @@ const CollectionProductItem = ({
           />
 
         </div>
-        <div className="py-2 text-center md:text-left flex flex-col flex-grow">
+        <div className="py-2 text-center md:text-left flex flex-col flex-grow dark:text-white">
           <h1 className="font-semibold py-2 line-clamp-2 md:line-clamp-none min-h-[3.5rem] md:min-h-0">{name}</h1>
           <div className="flex flex-col items-center justify-center">
             <div className="font-mono text-sm flex justify-center items-center gap-1.5 mt-1">

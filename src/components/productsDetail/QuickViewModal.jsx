@@ -175,7 +175,7 @@ const QuickViewModal = ({ isOpen, anchorRect, productId, handle, onMouseEnter, o
 
             {/* Buttons */}
             <div className="w-full">
-              <ActionButtons inline />
+              <ActionButtons inline productId={product.id} />
             </div>
           </div>
         )}

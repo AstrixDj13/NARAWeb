@@ -1064,6 +1064,77 @@ app.post('/api/shopify/chat', async (req, res) => {
   }
 });
 
+// --- WISHLIST API ---
+app.post('/api/wishlist', async (req, res) => {
+  try {
+    const { userId, wishlist } = req.body;
+    if (!userId || !wishlist || !Array.isArray(wishlist)) {
+      return res.status(400).json({ error: "Missing or invalid userId or wishlist array" });
+    }
+
+    const shopifyStore = process.env.SHOPIFY_STORE_URL || process.env.VITE_STORE_URL?.replace('https://', '') || '72cbc9-6d.myshopify.com';
+    const adminToken = process.env.SHOPIFY_ACCESS_TOKEN;
+
+    if (!adminToken) {
+      return res.status(500).json({ error: "Missing Shopify Admin Access Token" });
+    }
+
+    // value must be a JSON string of array of gids
+    const stringifiedValue = JSON.stringify(wishlist);
+
+    const mutation = `
+      mutation metafieldsSet($metafields: [MetafieldsSetInput!]!) {
+        metafieldsSet(metafields: $metafields) {
+          metafields {
+            id
+            value
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }
+    `;
+
+    const variables = {
+      metafields: [
+        {
+          ownerId: userId,
+          namespace: "custom",
+          key: "wishlist",
+          type: "list.product_reference",
+          value: stringifiedValue
+        }
+      ]
+    };
+
+    const response = await fetch(`https://${shopifyStore}/admin/api/2024-07/graphql.json`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Access-Token': adminToken
+      },
+      body: JSON.stringify({ query: mutation, variables })
+    });
+
+    const data = await response.json();
+    if (data.errors) {
+      console.error("Shopify Admin API Errors:", data.errors);
+      return res.status(500).json({ error: "Failed to update wishlist", details: data.errors });
+    }
+    if (data.data?.metafieldsSet?.userErrors?.length > 0) {
+      console.error("Shopify Admin API User Errors:", data.data.metafieldsSet.userErrors);
+      return res.status(400).json({ error: "Failed to update wishlist metafield", details: data.data.metafieldsSet.userErrors });
+    }
+
+    return res.json({ success: true, metafields: data.data?.metafieldsSet?.metafields });
+  } catch (error) {
+    console.error("Error updating wishlist:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Proxy endpoint for Shopify MCP
 app.post('/api/mcp-proxy', async (req, res) => {
   try {
