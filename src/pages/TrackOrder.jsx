@@ -21,9 +21,14 @@ export default function TrackOrder() {
     setIsLoading(true);
     setTrackingData(null);
 
+    let finalId = id;
+    if (type === "ref_id" && !finalId.startsWith("#")) {
+      finalId = "#" + finalId;
+    }
+
     try {
-      const url = `http://localhost:3001/api/tracking?${type}=${encodeURIComponent(id)}`;
-      const apiUrl = process.env.NODE_ENV === "production" ? `/api/tracking?${type}=${encodeURIComponent(id)}` : url;
+      const url = `http://localhost:3001/api/tracking?${type}=${encodeURIComponent(finalId)}`;
+      const apiUrl = process.env.NODE_ENV === "production" ? `/api/tracking?${type}=${encodeURIComponent(finalId)}` : url;
 
       const response = await fetch(apiUrl);
       const data = await response.json();
@@ -113,7 +118,7 @@ export default function TrackOrder() {
                     type="text"
                     value={trackingId}
                     onChange={(e) => setTrackingId(e.target.value)}
-                    placeholder={inputType === "waybill" ? "e.g., 123456789012" : "e.g., ORDER_123"}
+                    placeholder={inputType === "waybill" ? "e.g., 123456789012" : "e.g., 1234"}
                     className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-black border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1F4A40] dark:text-white"
                   />
                 </div>

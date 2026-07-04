@@ -18,6 +18,21 @@ const TrackingTimeline = ({ trackingData }) => {
     return new Date(a.ScanDetail.ScanDateTime) - new Date(b.ScanDetail.ScanDateTime);
   });
 
+  const ignoredKeywords = [
+    "added to bag",
+    "connected to",
+    "vehicle",
+    "origin center",
+    "received at",
+    "recieved at",
+    "weight captured"
+  ];
+
+  const filteredScans = sortedScans.filter((scanItem) => {
+    const text = (scanItem.ScanDetail.Instructions || scanItem.ScanDetail.Scan || "").toLowerCase();
+    return !ignoredKeywords.some(keyword => text.includes(keyword));
+  });
+
   const getIconForStatus = (status) => {
     const s = status?.toLowerCase() || "";
     if (s.includes("delivered")) return <FaHome className="text-green-500" />;
@@ -47,9 +62,9 @@ const TrackingTimeline = ({ trackingData }) => {
         <div className="absolute left-[27px] md:left-[43px] top-6 bottom-6 w-0.5 bg-gray-200 dark:bg-gray-800"></div>
 
         <div className="flex flex-col gap-8">
-          {sortedScans.map((scanItem, index) => {
+          {filteredScans.map((scanItem, index) => {
             const scan = scanItem.ScanDetail;
-            const isLast = index === sortedScans.length - 1;
+            const isLast = index === filteredScans.length - 1;
             const date = scan.ScanDateTime ? new Date(scan.ScanDateTime) : new Date();
 
             return (
