@@ -133,8 +133,6 @@ function App() {
   }, []);*/}
 
   useEffect(() => {
-    if (pathname !== "/") return;
-
     const checkWheel = async () => {
       // 1. check local storage first
       const hasSpunLocal = localStorage.getItem('hasSpunWheel');
@@ -188,7 +186,7 @@ function App() {
         </Suspense>
       )} {/* ✅ Chatbot with Shopify MCP integration */}
       {/*{showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}*/}
-      {pathname === "/" && showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}
+      {showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}
       {/*{showAainaPopup && <AainaPopup onClose={() => setShowAainaPopup(false)} />}*/}
       <CookieConsent />
       <WhatsAppButton />

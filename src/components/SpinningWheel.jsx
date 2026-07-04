@@ -17,7 +17,7 @@ const SpinningWheel = ({ onClose }) => {
         { text: '15% OFF', color: '#2a6357', value: 'win_15' },
         { text: 'Not Your\nDay', color: '#4a7c6f', value: 'lose' },
         { text: '20% OFF', color: '#1F4A40', value: 'win_20' },
-        { text: '30% OFF', color: '#2a6357', value: 'win_30' },
+        { text: '₹100 OFF', color: '#2a6357', value: 'win_100' },
     ];
 
     const handleSpin = async () => {
@@ -48,7 +48,7 @@ const SpinningWheel = ({ onClose }) => {
             });
 
             const data = await response.json();
-            
+
             if (data.error) {
                 alert(data.error);
                 setSpinning(false);
@@ -69,7 +69,7 @@ const SpinningWheel = ({ onClose }) => {
                 setResult({ ...segment, couponCode });
                 localStorage.setItem('hasSpunWheel', 'true');
             }, 5000);
-            
+
         } catch (err) {
             console.error(err);
             setSpinning(false);
@@ -203,7 +203,7 @@ const SpinningWheel = ({ onClose }) => {
                             {/* Disclaimers */}
                             <p className="text-xs text-gray-500 text-center">Redeemable at checkout</p>
                             <p className="text-xs text-gray-500 text-center">Not applicable on sale items</p>
-                            <p className="text-xs text-gray-500 text-center">Not applicable for new drops</p>
+                            {/*<p className="text-xs text-gray-500 text-center">Not applicable for new drops</p>*/}
 
                             <button
                                 onClick={onClose}

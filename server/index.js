@@ -404,7 +404,7 @@ app.post('/api/spinning-wheel/spin', async (req, res) => {
       { text: '15% OFF', color: '#2a6357', value: 'win_15' },
       { text: 'Not Your\\nDay', color: '#4a7c6f', value: 'lose' },
       { text: '20% OFF', color: '#1F4A40', value: 'win_20' },
-      { text: '30% OFF', color: '#2a6357', value: 'win_30' },
+      { text: '₹100 OFF', color: '#2a6357', value: 'win_100' },
     ];
 
     const codeMap = {
@@ -413,7 +413,7 @@ app.post('/api/spinning-wheel/spin', async (req, res) => {
       '₹200 OFF': 'LUCKY200',
       '15% OFF': 'LUCKY15',
       '20% OFF': 'LUCKY20',
-      '30% OFF': 'LUCKY30',
+      '₹100 OFF': 'LUCKY100',
       'So Close': 'LUCKY10',
       'Not Your\\nDay': 'LUCKY10',
     };
