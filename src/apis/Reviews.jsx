@@ -19,3 +19,23 @@ export const submitReview = async (reviewData) => {
         throw error;
     }
 };
+
+export const uploadReviewPhotos = async (files) => {
+    try {
+        const formData = new FormData();
+        Array.from(files).forEach((file) => {
+            formData.append("photos", file);
+        });
+
+        // The endpoint uses multipart/form-data, our axios instance should handle it
+        const response = await api.post("/api/reviews/upload", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error uploading review photos:", error);
+        throw error;
+    }
+};

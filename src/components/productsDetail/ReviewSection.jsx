@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa6';
+import { FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { toast } from 'sonner';
-import { fetchReviews, submitReview } from '../../apis/Reviews';
+import { fetchReviews, submitReview, uploadReviewPhotos } from '../../apis/Reviews';
 
 const ReviewSection = ({ productId }) => {
     const [reviews, setReviews] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [newReview, setNewReview] = useState({ userName: '', rating: 5, comment: '' });
+    const [selectedPhotos, setSelectedPhotos] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    // Modal state for images
+    const [modalImages, setModalImages] = useState([]);
+    const [modalIndex, setModalIndex] = useState(0);
 
     useEffect(() => {
         if (productId) {
@@ -38,7 +44,17 @@ const ReviewSection = ({ productId }) => {
         setIsSubmitting(true);
 
         try {
-            await submitReview({ ...newReview, productId });
+            let uploadedImageUrls = [];
+            
+            // Upload photos if any are selected
+            if (selectedPhotos.length > 0) {
+                const uploadResponse = await uploadReviewPhotos(selectedPhotos);
+                if (uploadResponse.success && uploadResponse.urls) {
+                    uploadedImageUrls = uploadResponse.urls;
+                }
+            }
+
+            await submitReview({ ...newReview, productId, images: uploadedImageUrls });
 
             toast.success("Review submitted successfully!");
 
@@ -47,6 +63,10 @@ const ReviewSection = ({ productId }) => {
                 rating: 5,
                 comment: ''
             });
+            setSelectedPhotos([]);
+            // Reset the file input visually
+            const fileInput = document.getElementById("reviewPhotos");
+            if (fileInput) fileInput.value = "";
 
             loadReviews();
         } catch (error) {
@@ -54,6 +74,39 @@ const ReviewSection = ({ productId }) => {
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handlePhotoSelect = (e) => {
+        if (e.target.files) {
+            const filesArray = Array.from(e.target.files);
+            if (filesArray.length > 3) {
+                toast.error("You can only upload up to 3 photos.");
+                // Trim to 3 files
+                setSelectedPhotos(filesArray.slice(0, 3));
+            } else {
+                setSelectedPhotos(filesArray);
+            }
+        }
+    };
+
+    const openModal = (images, index) => {
+        setModalImages(images);
+        setModalIndex(index);
+    };
+
+    const closeModal = () => {
+        setModalImages([]);
+        setModalIndex(0);
+    };
+
+    const nextImage = (e) => {
+        e.stopPropagation();
+        setModalIndex((prev) => (prev + 1) % modalImages.length);
+    };
+
+    const prevImage = (e) => {
+        e.stopPropagation();
+        setModalIndex((prev) => (prev - 1 + modalImages.length) % modalImages.length);
     };
 
     const averageRating = reviews?.length
@@ -130,7 +183,27 @@ const ReviewSection = ({ productId }) => {
                                     ))}
                                 </div>
 
-                                <p>{review.comment}</p>
+                                <p className="mb-3">{review.comment}</p>
+                                
+                                {/* Display attached images if any */}
+                                {review.images && review.images.length > 0 && (
+                                    <div className="flex gap-2 flex-wrap">
+                                        {review.images.map((imgUrl, idx) => (
+                                            <button 
+                                                key={idx} 
+                                                type="button"
+                                                onClick={() => openModal(review.images, idx)}
+                                                className="focus:outline-none"
+                                            >
+                                                <img 
+                                                    src={imgUrl} 
+                                                    alt={`Review photo ${idx + 1}`} 
+                                                    className="w-20 h-20 object-cover rounded-md border border-gray-200 dark:border-gray-700 hover:opacity-80 transition-opacity cursor-zoom-in"
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         ))
                     ) : (
@@ -217,6 +290,41 @@ const ReviewSection = ({ productId }) => {
                             />
                         </div>
 
+                        {/* Photo Upload */}
+                        <div>
+                            <label className="block text-sm font-medium mb-1">
+                                Add Photos (up to 3)
+                            </label>
+                            <input
+                                type="file"
+                                id="reviewPhotos"
+                                multiple
+                                accept="image/*"
+                                onChange={handlePhotoSelect}
+                                className="block w-full text-sm text-gray-500
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-full file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-black file:text-white
+                                    hover:file:bg-gray-800
+                                    dark:file:bg-white dark:file:text-black dark:hover:file:bg-gray-200 cursor-pointer"
+                            />
+                            {/* Preview Selected Photos */}
+                            {selectedPhotos.length > 0 && (
+                                <div className="mt-3 flex gap-2 flex-wrap">
+                                    {selectedPhotos.map((file, idx) => (
+                                        <div key={idx} className="relative w-16 h-16">
+                                            <img
+                                                src={URL.createObjectURL(file)}
+                                                alt={`Preview ${idx}`}
+                                                className="w-full h-full object-cover rounded-md border border-gray-200 dark:border-gray-700"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
                         {/* Submit */}
                         <button
                             type="submit"
@@ -230,6 +338,50 @@ const ReviewSection = ({ productId }) => {
                     </form>
                 </div>
             </div>
+
+            {/* Image Modal */}
+            {modalImages.length > 0 && (
+                <div 
+                    className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-md flex items-center justify-center p-4"
+                    onClick={closeModal}
+                >
+                    <button 
+                        onClick={closeModal} 
+                        className="absolute top-4 right-4 text-white hover:text-gray-300 p-2 z-[110]"
+                        aria-label="Close modal"
+                    >
+                        <FaTimes size={24} />
+                    </button>
+                    
+                    <div className="relative max-w-4xl w-full flex items-center justify-center h-full">
+                        <img 
+                            src={modalImages[modalIndex]} 
+                            alt="Review preview full size" 
+                            className="max-w-full max-h-[85vh] object-contain"
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                        
+                        {modalImages.length > 1 && (
+                            <>
+                                <button 
+                                    onClick={prevImage}
+                                    className="absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 text-white rounded-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center transition-all z-[110]"
+                                    aria-label="Previous image"
+                                >
+                                    <FaChevronLeft size={20} />
+                                </button>
+                                <button 
+                                    onClick={nextImage}
+                                    className="absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 text-white rounded-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center transition-all z-[110]"
+                                    aria-label="Next image"
+                                >
+                                    <FaChevronRight size={20} />
+                                </button>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

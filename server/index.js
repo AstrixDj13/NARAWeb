@@ -62,6 +62,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { BlobServiceClient } from '@azure/storage-blob';
 import rateLimit from 'express-rate-limit';
+import multer from 'multer';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { v4 as uuidv4 } from 'uuid';
 import pg from 'pg';
 const { Pool } = pg;
 
@@ -145,6 +148,20 @@ const AZURE_CONTAINER_NAME = process.env.AZURE_CONTAINER_NAME || 'nara-web-data'
 
 let blobServiceClient;
 let containerClient;
+
+// DigitalOcean Spaces Configuration
+const s3Client = new S3Client({
+  endpoint: process.env.DO_SPACES_ENDPOINT,
+  region: "us-east-1", // DO Spaces uses "us-east-1" as a dummy region
+  credentials: {
+    accessKeyId: process.env.DO_SPACES_KEY,
+    secretAccessKey: process.env.DO_SPACES_SECRET
+  }
+});
+const DO_SPACES_BUCKET = process.env.DO_SPACES_BUCKET;
+
+// Multer Configuration for File Uploads
+const upload = multer({ storage: multer.memoryStorage() });
 
 // In-Memory Data Stores
 let newsletterData = [];
@@ -500,7 +517,7 @@ app.get('/api/reviews', (req, res) => {
 // POST Review
 app.post('/api/reviews', (req, res) => {
   try {
-    const { productId, userName, rating, comment } = req.body;
+    const { productId, userName, rating, comment, images } = req.body;
 
     if (!productId || !rating) {
       return res.status(400).json({ error: 'Product ID and Rating are required' });
@@ -512,6 +529,7 @@ app.post('/api/reviews', (req, res) => {
       userName: userName || 'Anonymous',
       rating: Number(rating),
       comment,
+      images: images || [],
       timestamp: new Date().toISOString()
     };
 
@@ -531,6 +549,41 @@ app.post('/api/reviews', (req, res) => {
   } catch (error) {
     console.error('Error saving review:', error);
     res.status(500).json({ error: 'Failed to save review' });
+  }
+});
+
+// POST Review Photos to DigitalOcean Spaces
+app.post('/api/reviews/upload', upload.array('photos', 3), async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: 'No files uploaded.' });
+    }
+
+    const uploadedUrls = [];
+
+    for (const file of req.files) {
+      const extension = file.originalname.split('.').pop();
+      const filename = `customer_review/${Date.now()}-${uuidv4()}.${extension}`;
+
+      const uploadParams = {
+        Bucket: DO_SPACES_BUCKET,
+        Key: filename,
+        Body: file.buffer,
+        ACL: 'public-read',
+        ContentType: file.mimetype,
+      };
+
+      await s3Client.send(new PutObjectCommand(uploadParams));
+
+      // DigitalOcean Spaces public URL format
+      const publicUrl = `https://${DO_SPACES_BUCKET}.sfo3.digitaloceanspaces.com/${filename}`;
+      uploadedUrls.push(publicUrl);
+    }
+
+    res.json({ success: true, urls: uploadedUrls });
+  } catch (error) {
+    console.error('Error uploading photos:', error);
+    res.status(500).json({ error: 'Failed to upload photos' });
   }
 });
 
