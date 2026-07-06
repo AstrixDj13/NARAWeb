@@ -156,7 +156,7 @@ const ReviewSection = ({ productId }) => {
 
                             <input
                                 type="text"
-                                className="w-full p-2 border rounded dark:bg-black dark:border-gray-700 text-black dark:text-white"
+                                className="w-full p-2 border rounded dark:bg-black dark:border-gray-700 text-black dark:!text-white"
                                 value={newReview.userName}
                                 onChange={(e) =>
                                     setNewReview({
@@ -203,7 +203,7 @@ const ReviewSection = ({ productId }) => {
                             </label>
 
                             <textarea
-                                className="w-full p-2 border rounded dark:bg-black dark:border-gray-700 text-black dark:text-white"
+                                className="w-full p-2 border rounded dark:bg-black dark:border-gray-700 text-black dark:!text-white"
                                 rows="4"
                                 value={newReview.comment}
                                 onChange={(e) =>
