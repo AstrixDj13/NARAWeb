@@ -9,7 +9,7 @@ import SizeSelector from "../components/productsDetail/SizeSelector";
 import ActionButtons from "../components/productsDetail/ActionButtons";
 import ColorSection from "../components/productsDetail/ColorSection";
 import { HiOutlineArrowRight } from "react-icons/hi";
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus, FaArrowUp } from "react-icons/fa6";
 import VariantsController from "../components/productsDetail/VariantsController";
 import DeliveryDetails from "../components/productsDetail/DeliveryDetails";
 import { ToastContainer, toast } from "react-toastify";
@@ -41,6 +41,7 @@ export default function ProductsDetailPage() {
   const [availableColors, setAvailableColors] = useState(null);
   const query = useQuery();
   const [cameFrom, setCameFrom] = useState({ page: "", link: "" });
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   const [modelInfo, setModelInfo] = useState([]);
   const params = useParams();
@@ -189,6 +190,28 @@ export default function ProductsDetailPage() {
     }
   }, [product?.id, trackEvent]);
 
+  // Back to Top logic (50% scroll)
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = document.documentElement.scrollTop;
+      const maxScroll = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      if (maxScroll > 0 && scrolled > maxScroll * 0.5) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
+
   useProductScrollTracker(product?.id ? product : null);
 
   return (
@@ -266,7 +289,7 @@ export default function ProductsDetailPage() {
             />
 
             <div className="xl:w-2/5 md:w-3/4 w-full flex flex-col gap-4 md:gap-8 pt-2 px-4 md:p-4 !pb-12 md:!px-8 xl:!pb-12">
-              <div className="md:sticky md:top-[122px] xl:top-[130px] z-20 md:bg-[#F7F7F7] dark:md:bg-black py-2 xl:py-4 -mt-2 xl:-mt-4 transition-all duration-300">
+              <div className="md:sticky md:top-[122px] xl:top-[130px] z-[100] md:bg-[#F7F7F7] dark:md:bg-black py-2 xl:py-4 -mt-2 xl:-mt-4 transition-all duration-300">
                 <ActionButtons productId={product.id} />
               </div>
               <DetailSection
@@ -310,11 +333,21 @@ export default function ProductsDetailPage() {
       <div id="reviews" className="w-full">
         <ReviewSection productId={product.id} />
       </div>
-      {/* Related Products */}
       <RelatedProducts collectionId={concernedCollectionId} productId={product.id} />
       <FooterSection />
       <ScrollGiftNote />
       <ProductVideoPopup productTitle={product.title} />
+
+      {/* Sticky Back to Top Button (Mobile Only) */}
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="md:hidden fixed bottom-32 right-4 z-[90] bg-black/80 backdrop-blur-md dark:bg-white/80 text-white dark:text-black p-3 rounded-full shadow-lg flex items-center justify-center w-11 h-11 transition-all"
+          aria-label="Back to top"
+        >
+          <FaArrowUp size={18} />
+        </button>
+      )}
     </>
   );
 }

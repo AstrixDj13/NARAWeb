@@ -254,7 +254,7 @@ export default function ActionButtons({ inline = false, productId }) {
   return (
     <div className={inline
       ? "flex flex-wrap gap-2 w-full bg-transparent !font-outfit text-sm"
-      : "md:static fixed z-[2] bottom-0 right-0 left-0 bg-[#ffff] md:bg-transparent flex flex-wrap sm:flex-nowrap justify-center md:justify-start gap-2 border-2 md:border-none shadow-lg md:!shadow-none dark:bg-black !font-outfit text-sm md:text-base p-2 md:!p-0"
+      : "md:static fixed z-[100] bottom-0 right-0 left-0 bg-[#ffff] md:bg-transparent flex flex-wrap sm:flex-nowrap justify-center md:justify-start gap-2 border-t border-gray-200 md:border-none shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:!shadow-none dark:bg-black dark:border-gray-800 !font-outfit text-sm md:text-base p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:!p-0 w-full"
     }>
 
       <ToastContainer
