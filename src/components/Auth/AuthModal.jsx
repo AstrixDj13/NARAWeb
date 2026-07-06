@@ -364,7 +364,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                                     </form>
                                 )}
 
-                                <div className="mt-4 flex items-center">
+                                {/* <div className="mt-4 flex items-center">
                                     <div className="flex-1 border-t border-gray-300"></div>
                                     <span className="px-3 text-sm text-gray-500">OR</span>
                                     <div className="flex-1 border-t border-gray-300"></div>
@@ -378,7 +378,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                                     className="w-full mt-4 border border-[#1F4A40] text-[#1F4A40] dark:border-[#1F4A40] dark:text-[#1F4A40] py-2 rounded font-semibold hover:bg-gray-50 dark:hover:bg-gray-100 transition-colors"
                                 >
                                     {loginMethod === "email" ? "Login with Phone OTP" : "Login with Email"}
-                                </button>
+                                </button> */}
                             </div>
                         ) : (
                             // Signup Form

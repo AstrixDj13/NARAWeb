@@ -33,6 +33,20 @@ const TrackingTimeline = ({ trackingData }) => {
     return !ignoredKeywords.some(keyword => text.includes(keyword));
   });
 
+  const getFriendlyStatus = (status) => {
+    if (!status) return "Status Update";
+    const s = status.toLowerCase();
+    
+    if (s.includes("manifested")) return "Order Confirmed";
+    if (s.includes("pickup scheduled")) return "Ready to Ship";
+    if (s.includes("picked up")) return "Shipped";
+    if (s.includes("out for delivery")) return "Out for Delivery";
+    if (s.includes("delivered to consignee") || s.includes("delivered")) return "Delivered";
+    if (s.includes("call placed to consignee")) return "Delivery Attempted (Call Placed)";
+    
+    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+  };
+
   const getIconForStatus = (status) => {
     const s = status?.toLowerCase() || "";
     if (s.includes("delivered")) return <FaHome className="text-green-500" />;
@@ -77,7 +91,7 @@ const TrackingTimeline = ({ trackingData }) => {
 
                 <div className="flex flex-col flex-grow pt-1.5 pb-1">
                   <h3 className={`text-base font-semibold ${isLast ? 'text-black dark:text-white' : 'text-gray-600 dark:text-gray-300'}`}>
-                    {scan.Instructions || scan.Scan || "Status Update"}
+                    {getFriendlyStatus(scan.Instructions || scan.Scan)}
                   </h3>
                   <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 mt-1 text-sm text-gray-500 dark:text-gray-400">
                     {scan.ScanDateTime && (
