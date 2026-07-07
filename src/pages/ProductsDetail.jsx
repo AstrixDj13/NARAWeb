@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import NavbarRelative from "../components/Navbar/NavbarRelative";
 import { getProductById, getProductByHandle } from "../apis/Products";
 import Loading from "../components/utils/Loading";
@@ -216,6 +217,21 @@ export default function ProductsDetailPage() {
 
   return (
     <>
+      {product && product.title && (
+        <Helmet>
+          <title>{`${product.title} | NaraWear`}</title>
+          <meta name="description" content={product.description || "Shop premium women's fashion from NaraWear."} />
+          
+          <meta property="og:title" content={`${product.title} | NaraWear`} />
+          <meta property="og:description" content={product.description || "Shop premium women's fashion from NaraWear."} />
+          <meta property="og:image" content={product.images?.edges?.[0]?.node?.url || "https://narawear.com/NaraLogo.png"} />
+          <meta property="og:url" content={`https://narawear.com${location.pathname}`} />
+
+          <meta name="twitter:title" content={`${product.title} | NaraWear`} />
+          <meta name="twitter:description" content={product.description || "Shop premium women's fashion from NaraWear."} />
+          <meta name="twitter:image" content={product.images?.edges?.[0]?.node?.url || "https://narawear.com/NaraLogo.png"} />
+        </Helmet>
+      )}
       {product && product.title && (
         <script
           type="application/ld+json"
