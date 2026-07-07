@@ -206,16 +206,5 @@
     "rating": 5,
     "comment": "the colour is very cute and the peplum style is very pretty",
     "timestamp": "2026-07-06T05:50:10.922Z"
-  },
-  {
-    "id": "1783334021637",
-    "productId": "gid://shopify/Product/9383431045334",
-    "userName": "test_upload_pic",
-    "rating": 5,
-    "comment": "nice",
-    "images": [
-      "https://nara-atelier.sfo3.digitaloceanspaces.com/customer_review/1783334019806-93f4fd8f-d6d7-4303-8c08-b1b29dfb4d55.jpg"
-    ],
-    "timestamp": "2026-07-06T10:33:41.637Z"
   }
 ]
