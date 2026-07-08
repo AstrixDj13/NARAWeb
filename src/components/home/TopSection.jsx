@@ -6,22 +6,29 @@ import { getActiveCampaigns } from "../../utils/campaignUtils";
 
 const TopSection = () => {
   const [allCollections, setAllCollections] = useState([]);
-  const [bannerCollection, setBannerCollection] = useState(null);
+  const [bannerCollections, setBannerCollections] = useState([]);
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
   const excludedTitles = [
     "C Grade Products",
     "UGC_Collection",
     "Men's Top",
     "Bestsellers",
     "Co-ord sets",
-    "Saaz"
+    "Saaz",
+    "BUY 1 GET 1 FREE"
   ];
 
   const fetchCollections = async () => {
     try {
       let fetchedCollections = await getCollections();
-      
+
+      const bogo = fetchedCollections.find(c => c.title.trim().toUpperCase().includes("BUY 1 GET 1"));
       const aaina = fetchedCollections.find(c => c.title.trim().toUpperCase().includes("AAINA"));
-      if (aaina) setBannerCollection(aaina);
+      
+      const banners = [];
+      if (bogo) banners.push(bogo);
+      if (aaina) banners.push(aaina);
+      setBannerCollections(banners);
 
       fetchedCollections = fetchedCollections.filter(
         (collection) => !excludedTitles.some(title => title.trim().toUpperCase() === collection.title.trim().toUpperCase())
@@ -82,37 +89,72 @@ const TopSection = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (bannerCollections.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % bannerCollections.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [bannerCollections.length]);
+
   return (
     <div className={`${topMarginClass} w-full bg-white dark:bg-black transition-all duration-300`}>
-      {/* AAINA Banner */}
-      {bannerCollection ? (
+      {/* Top Banners Carousel */}
+      {bannerCollections.length > 0 ? (
         <div className={`relative w-full ${bannerHeightClass} overflow-hidden mb-[2px]`}>
-          <Link to={`/collection?id=${encodeURIComponent(bannerCollection.id)}`} className="w-full h-full block group">
-            {/* Desktop Banner Image */}
-            <img
-              src={getOptimizedImageUrl(bannerCollection.imageSrc, 1200)}
-              alt={bannerCollection.title}
-              className={`w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 ${bannerCollection.mobileImageSrc ? 'hidden lg:block' : ''}`}
-            />
-            {/* Mobile Banner Image (if available) */}
-            {bannerCollection.mobileImageSrc && (
+          {bannerCollections.map((banner, index) => (
+            <Link
+              key={banner.id}
+              to={`/collection?id=${encodeURIComponent(banner.id)}`}
+              className={`absolute inset-0 w-full h-full block group transition-opacity duration-1000 ease-in-out ${
+                index === currentBannerIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+              }`}
+            >
+              {/* Desktop Banner Image */}
               <img
-                src={getOptimizedImageUrl(bannerCollection.mobileImageSrc, 800)}
-                alt={`${bannerCollection.title} Mobile`}
-                className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 lg:hidden block"
+                src={getOptimizedImageUrl(banner.imageSrc, 1200)}
+                alt={banner.title}
+                className={`w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 ${banner.mobileImageSrc ? 'hidden lg:block' : ''}`}
               />
-            )}
-            {/* Dark overlay for better text readability */}
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
-            <div className="absolute bottom-6 left-6 sm:bottom-10 sm:left-10 md:bottom-14 md:left-14 flex flex-col items-start z-10">
-              <h2 className="text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif uppercase tracking-widest drop-shadow-lg mb-4 sm:mb-6">
-                {bannerCollection.title}
-              </h2>
-              <button className="bg-white/90 hover:bg-white text-black px-6 py-3 sm:px-8 sm:py-4 font-mono font-bold text-sm sm:text-base uppercase tracking-[0.2em] transition-all duration-300">
-                Shop Now
-              </button>
+              {/* Mobile Banner Image (if available) */}
+              {banner.mobileImageSrc && (
+                <img
+                  src={getOptimizedImageUrl(banner.mobileImageSrc, 800)}
+                  alt={`${banner.title} Mobile`}
+                  className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 lg:hidden block"
+                />
+              )}
+              {/* Dark overlay for better text readability */}
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
+              <div className="absolute bottom-6 left-6 sm:bottom-10 sm:left-10 md:bottom-14 md:left-14 flex flex-col items-start z-10">
+                {!banner.title.toUpperCase().includes("BUY 1 GET 1") && (
+                  <h2 className="text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif uppercase tracking-widest drop-shadow-lg mb-4 sm:mb-6">
+                    {banner.title}
+                  </h2>
+                )}
+                <button className="bg-white/90 hover:bg-white text-black px-6 py-3 sm:px-8 sm:py-4 font-mono font-bold text-sm sm:text-base uppercase tracking-[0.2em] transition-all duration-300">
+                  Shop Now
+                </button>
+              </div>
+            </Link>
+          ))}
+
+          {/* Carousel Indicators */}
+          {bannerCollections.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+              {bannerCollections.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentBannerIndex(idx)}
+                  className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
+                    idx === currentBannerIndex ? "bg-white scale-125" : "bg-white/50 hover:bg-white/80"
+                  }`}
+                  aria-label={`Go to banner ${idx + 1}`}
+                />
+              ))}
             </div>
-          </Link>
+          )}
         </div>
       ) : (
         <div className={`relative w-full ${bannerHeightClass} overflow-hidden mb-[2px]`}>

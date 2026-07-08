@@ -104,7 +104,7 @@ const CollectionProductItem = ({
         <div className="w-full aspect-[4/5] relative">
           <ImageWithSkeleton img={img} name={name} />
           {offerTag && (
-            <div className="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 z-10">
+            <div className={`absolute top-0 left-0 text-white text-xs font-bold px-2 py-1 z-10 ${offerTag === 'B1G1' ? 'bg-green-800' : 'bg-red-600'}`}>
               {offerTag}
             </div>
           )}

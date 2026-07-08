@@ -57,8 +57,10 @@ export const campaigns = [
     {
         id: "mel-collection",
         name: "", // Showing in the countdown bar area
+        startDate: "2026-06-01T00:00:00Z",
+        targetDate: "2026-07-07T00:00:00Z",
         offerTag: "30% Off", // The tag applied to products
-        showOnExpiry: true, // This MUST be true if you omit dates
+        showOnExpiry: false, // This MUST be true if you omit dates
         collectionTitle: "MEL",
         marqueeMessage: "30% off on MEL"
     },
@@ -77,6 +79,14 @@ export const campaigns = [
         showOnExpiry: true, // This MUST be true if you omit dates
         collectionTitle: "",
         marqueeMessage: "AAINA, live now!"
+    },
+    {
+        id: "b1g1-new",
+        name: "", // Showing in the countdown area
+        offerTag: "B1G1", // The tag applied to products
+        showOnExpiry: true, // This MUST be true if you omit dates
+        collectionTitle: "BUY 1 GET 1 FREE",
+        marqueeMessage: "B1G1 free live now!*"
     }
 
 ];

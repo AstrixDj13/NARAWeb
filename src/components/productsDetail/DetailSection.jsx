@@ -203,7 +203,7 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
         )}
         {offerTag && !productOutOfStock && (
           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
-            <div className="bg-red-600 text-white text-xs font-bold px-2 py-1 w-fit whitespace-nowrap">
+            <div className={`text-white text-xs font-bold px-2 py-1 w-fit whitespace-nowrap ${offerTag === 'B1G1' ? 'bg-green-800' : 'bg-red-600'}`}>
               {offerTag}
             </div>
             <span className="text-red-600 text-xs font-bold">

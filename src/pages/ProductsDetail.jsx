@@ -10,7 +10,7 @@ import SizeSelector from "../components/productsDetail/SizeSelector";
 import ActionButtons from "../components/productsDetail/ActionButtons";
 import ColorSection from "../components/productsDetail/ColorSection";
 import { HiOutlineArrowRight } from "react-icons/hi";
-import { FaPlus, FaArrowUp } from "react-icons/fa6";
+import { FaPlus, FaArrowUp, FaXmark } from "react-icons/fa6";
 import VariantsController from "../components/productsDetail/VariantsController";
 import DeliveryDetails from "../components/productsDetail/DeliveryDetails";
 import { ToastContainer, toast } from "react-toastify";
@@ -43,6 +43,7 @@ export default function ProductsDetailPage() {
   const query = useQuery();
   const [cameFrom, setCameFrom] = useState({ page: "", link: "" });
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [isTrendingDismissed, setIsTrendingDismissed] = useState(false);
 
   const [modelInfo, setModelInfo] = useState([]);
   const params = useParams();
@@ -363,6 +364,32 @@ export default function ProductsDetailPage() {
         >
           <FaArrowUp size={18} />
         </button>
+      )}
+
+      {/* Sticky Trending Notification */}
+      {showBackToTop && !isTrendingDismissed && (
+        <div 
+          className="fixed bottom-[140px] md:bottom-10 left-1/2 transform -translate-x-1/2 z-[90] bg-[#1a1a1a] text-white px-5 py-3 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.2)] flex items-center gap-3 border border-[#333] transition-all duration-500 font-sans text-sm sm:text-base whitespace-nowrap hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(0,0,0,0.3)] group"
+        >
+          <Link to="/products/sage-structured-trendy-top?camefrompage=Products" className="flex items-center gap-3 cursor-pointer">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            </span>
+            <span className="font-medium">Sage Top: <span className="font-bold underline decoration-[#333] group-hover:decoration-white transition-colors underline-offset-4">Trending This Week</span></span>
+          </Link>
+          <div className="w-px h-5 bg-[#444]"></div>
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              setIsTrendingDismissed(true);
+            }} 
+            className="text-gray-400 hover:text-white transition-colors flex items-center justify-center p-1 rounded-full hover:bg-[#333]"
+            aria-label="Close"
+          >
+            <FaXmark size={16} />
+          </button>
+        </div>
       )}
     </>
   );
