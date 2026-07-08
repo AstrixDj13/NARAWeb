@@ -22,7 +22,7 @@ export default function WhatsAppButton() {
   }, [location.pathname]);
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 pointer-events-none">
+    <div className="fixed bottom-28 md:bottom-4 right-4 z-[110] flex flex-col items-end gap-2 pointer-events-none">
       {/* Bubble Popup */}
       <div 
         className={`bg-white dark:bg-gray-800 text-black dark:text-white px-4 py-2.5 pr-7 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.15)] border border-gray-100 dark:border-gray-700 relative text-sm w-[200px] transition-all duration-500 ease-in-out pointer-events-auto ${showBubble ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}

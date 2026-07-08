@@ -359,7 +359,7 @@ export default function ProductsDetailPage() {
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="md:hidden fixed bottom-32 right-4 z-[90] bg-black/80 backdrop-blur-md dark:bg-white/80 text-white dark:text-black p-3 rounded-full shadow-lg flex items-center justify-center w-11 h-11 transition-all"
+          className="md:hidden fixed bottom-28 left-4 z-[90] bg-black/80 backdrop-blur-md dark:bg-white/80 text-white dark:text-black p-3 rounded-full shadow-lg flex items-center justify-center w-11 h-11 transition-all"
           aria-label="Back to top"
         >
           <FaArrowUp size={18} />
@@ -369,7 +369,7 @@ export default function ProductsDetailPage() {
       {/* Sticky Trending Notification */}
       {showBackToTop && !isTrendingDismissed && (
         <div 
-          className="fixed bottom-[140px] md:bottom-10 left-1/2 transform -translate-x-1/2 z-[90] bg-[#1a1a1a] text-white px-5 py-3 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.2)] flex items-center gap-3 border border-[#333] transition-all duration-500 font-sans text-sm sm:text-base whitespace-nowrap hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(0,0,0,0.3)] group"
+          className="fixed top-32 md:top-36 left-1/2 transform -translate-x-1/2 z-[90] bg-[#1a1a1a] text-white px-5 py-3 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.2)] flex items-center gap-3 border border-[#333] transition-all duration-500 font-sans text-sm sm:text-base whitespace-nowrap hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(0,0,0,0.3)] group"
         >
           <Link to="/products/sage-structured-trendy-top?camefrompage=Products" className="flex items-center gap-3 cursor-pointer">
             <span className="relative flex h-3 w-3">
