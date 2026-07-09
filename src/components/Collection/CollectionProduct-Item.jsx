@@ -111,11 +111,11 @@ const CollectionProductItem = ({
           {name && name.toLowerCase().includes("axis jacket") && (
             <div className="absolute -top-1 right-6 z-10 animate-tag-swing flex flex-col items-center pointer-events-none">
               {/* String */}
-              <div className="w-[1.5px] h-5 bg-amber-800/80"></div>
+              <div className="w-[2px] h-5 bg-amber-800/80"></div>
               {/* Tag body */}
-              <div className="bg-black text-[#f2f2f2] px-1.5 py-2.5 rounded-sm relative shadow-xl border border-gray-800 mt-[-1px]">
+              <div className="bg-black text-[#f2f2f2] w-6 py-2.5 rounded-sm relative shadow-xl border border-gray-800 mt-[-1px] flex flex-col items-center">
                 {/* Hole */}
-                <div className="w-1.5 h-1.5 bg-white rounded-full absolute -top-1 left-1/2 -translate-x-1/2 shadow-inner"></div>
+                <div className="w-1.5 h-1.5 bg-white rounded-full absolute -top-1 left-0 right-0 mx-auto shadow-inner"></div>
                 {/* Text */}
                 <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }} className="uppercase tracking-[0.25em] text-[9px] font-bold text-center mt-0.5">
                   NARA's Pick

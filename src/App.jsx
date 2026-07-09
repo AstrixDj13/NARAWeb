@@ -186,7 +186,7 @@ function App() {
         </Suspense>
       )} {/* ✅ Chatbot with Shopify MCP integration */}
       {/*{showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}*/}
-      {showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}
+      {/*{showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}*/}
       {/*{showAainaPopup && <AainaPopup onClose={() => setShowAainaPopup(false)} />}*/}
       <CookieConsent />
       <WhatsAppButton />

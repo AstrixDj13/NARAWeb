@@ -91,12 +91,23 @@ const TopSection = () => {
 
   useEffect(() => {
     if (bannerCollections.length > 1) {
-      const interval = setInterval(() => {
+      const currentBanner = bannerCollections[currentBannerIndex];
+      const title = currentBanner?.title?.trim().toUpperCase() || "";
+      
+      let delay = 5000;
+      if (title.includes("BUY 1 GET 1")) {
+        delay = 8000;
+      } else if (title.includes("AAINA")) {
+        delay = 4000;
+      }
+
+      const timeoutId = setTimeout(() => {
         setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % bannerCollections.length);
-      }, 5000);
-      return () => clearInterval(interval);
+      }, delay);
+      
+      return () => clearTimeout(timeoutId);
     }
-  }, [bannerCollections.length]);
+  }, [bannerCollections, currentBannerIndex]);
 
   return (
     <div className={`${topMarginClass} w-full bg-white dark:bg-black transition-all duration-300`}>
