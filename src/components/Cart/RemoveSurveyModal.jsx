@@ -48,14 +48,14 @@ const RemoveSurveyModal = ({ isOpen, onClose, onConfirm, productTitle }) => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 m-auto w-[90%] max-w-md h-fit z-50 bg-white dark:bg-zinc-900 rounded-xl shadow-2xl p-6"
+            className="fixed inset-0 m-auto w-[90%] max-w-md h-fit z-50 bg-white dark:bg-white rounded-xl shadow-2xl p-6"
           >
             <div className="flex flex-col gap-4">
-              <h2 className="text-xl font-bold font-antikor uppercase text-center dark:text-white">
+              <h2 className="text-xl font-bold font-antikor uppercase text-center text-black dark:text-black">
                 Before you go...
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-300 text-center mb-2">
-                Could you tell us why you're removing <span className="font-semibold text-black dark:text-white">{productTitle}</span> from your cart?
+              <p className="text-sm text-gray-800 dark:text-gray-800 text-center mb-2">
+                Could you tell us why you're removing <span className="font-semibold text-black dark:text-black">{productTitle}</span> from your cart?
               </p>
 
               <div className="flex flex-col gap-3">
@@ -65,8 +65,8 @@ const RemoveSurveyModal = ({ isOpen, onClose, onConfirm, productTitle }) => {
                     onClick={() => setSelectedOption(option)}
                     className={`w-full text-left px-4 py-3 border rounded-lg transition-all ${
                       selectedOption === option
-                        ? "border-[#1F4A40] bg-[#1F4A40]/10 dark:border-green-500 dark:bg-green-500/20 text-[#1F4A40] dark:text-green-400 font-bold"
-                        : "border-gray-200 dark:border-gray-700 hover:border-[#1F4A40] hover:bg-gray-50 dark:hover:bg-zinc-800 dark:text-white"
+                        ? "border-[#1F4A40] bg-[#1F4A40]/10 text-[#1F4A40] dark:text-[#1F4A40] font-bold"
+                        : "border-gray-300 dark:border-gray-300 hover:border-[#1F4A40] hover:bg-gray-50 text-black dark:text-black"
                     }`}
                   >
                     {option}
@@ -78,7 +78,7 @@ const RemoveSurveyModal = ({ isOpen, onClose, onConfirm, productTitle }) => {
                 <button
                   onClick={handleSkip}
                   disabled={isSubmitting}
-                  className="w-1/3 py-3 font-semibold text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors disabled:opacity-50"
+                  className="w-1/3 py-3 font-semibold text-gray-600 dark:text-gray-600 hover:text-black dark:hover:text-black transition-colors disabled:opacity-50"
                 >
                   Skip
                 </button>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setProductsinCart, setTotalQuantityInCart } from "../../store";
 import { updateLineItem, removeCartLine } from "../../apis/Cart";
@@ -6,7 +6,7 @@ import { Skeleton } from "@mui/material";
 import { toast } from "sonner";
 import { useEventTracker } from "../../hooks/EventTracker";
 import RemoveSurveyModal from "./RemoveSurveyModal";
-
+import { calculateCartPricing } from "../../utils/cartPricing";
 export default function CartItem({
   src,
   title,
@@ -31,6 +31,10 @@ export default function CartItem({
   const productsInCart = useSelector((state) => state.cart.productsInCart);
   const dispatch = useDispatch();
   const { trackEvent } = useEventTracker();
+
+  // Get pricing based on global cart items
+  const { itemsPricing } = useMemo(() => calculateCartPricing(productsInCart), [productsInCart]);
+  const pricing = itemsPricing?.[cartLineId];
 
   // Effect
   useEffect(() => {
@@ -224,18 +228,12 @@ export default function CartItem({
                 <p className="text-xs sm:text-base flex flex-wrap items-center gap-1">
                   {pricePerItem?.currencyCode}{" "}
                   <span className="line-through text-gray-500 text-xs sm:text-xs mr-1">
-                    {isMelCollection
-                      ? (pricePerItem?.amount * 1.0 * productQuantity).toFixed(2)
-                      : ((pricePerItem?.amount * 1.0 * productQuantity) + 200).toFixed(2)
-                    }
+                    {pricing ? pricing.totalStrikeoutPrice.toFixed(2) : (pricePerItem?.amount * 1.0 * productQuantity).toFixed(2)}
                   </span>
                   <strong className="font-black">
-                    {isMelCollection
-                      ? (pricePerItem?.amount * 1.0 * productQuantity * 0.70).toFixed(2)
-                      : (pricePerItem?.amount * 1.0 * productQuantity).toFixed(2)
-                    }
+                    {pricing ? pricing.totalEffectivePrice.toFixed(2) : (pricePerItem?.amount * 1.0 * productQuantity).toFixed(2)}
                   </strong>{" "}
-                  {isMelCollection && (
+                  {pricing?.isMel && (
                     <span className="text-red-500 bg-red-100 px-1 py-0.5 rounded text-[10px] ml-1 font-bold whitespace-nowrap">
                       30% OFF
                     </span>

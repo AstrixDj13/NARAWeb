@@ -9,6 +9,7 @@ import { fixCheckoutUrl } from "../../utils/interceptors";
 import { Skeleton } from "@mui/material";
 
 import { setCheckoutUrl, setProductsinCart } from "../../store";
+import { calculateCartPricing } from "../../utils/cartPricing";
 import CartItem from "./CartItem";
 import YouMayAlsoLike from "./YouMayAlsoLike";
 import { useEventTracker } from "../../hooks/EventTracker";
@@ -105,17 +106,7 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
     toggleCartOpen();
   };
 
-  // Calculate subtotal
-  const calculateSubtotal = () => {
-    if (!productsInCart || productsInCart.length === 0) return 0;
-    return productsInCart.reduce((total, item) => {
-      const price = parseFloat(item?.node?.merchandise?.price?.amount || 0);
-      const quantity = item?.node?.quantity || 0;
-      return total + (price * quantity);
-    }, 0);
-  };
-
-  const subtotal = calculateSubtotal();
+  const { subtotal } = calculateCartPricing(productsInCart);
 
   return (
     <AnimatePresence>
