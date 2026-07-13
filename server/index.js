@@ -1134,6 +1134,7 @@ app.post('/api/wishlist', async (req, res) => {
 
     // value must be a JSON string of array of gids
     const stringifiedValue = JSON.stringify(wishlist);
+    const formattedUserId = String(userId).includes("gid://") ? userId : `gid://shopify/Customer/${userId}`;
 
     const mutation = `
       mutation metafieldsSet($metafields: [MetafieldsSetInput!]!) {
@@ -1153,7 +1154,7 @@ app.post('/api/wishlist', async (req, res) => {
     const variables = {
       metafields: [
         {
-          ownerId: userId,
+          ownerId: formattedUserId,
           namespace: "custom",
           key: "wishlist",
           type: "list.product_reference",

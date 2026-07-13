@@ -90,8 +90,7 @@ export const WishlistProvider = ({ children }) => {
 
   const syncToBackend = async (userId, list) => {
     try {
-      const baseUrl = import.meta.env.VITE_EVENT_API_URL || "http://localhost:3001";
-      await fetch(`${baseUrl}/api/wishlist`, {
+      await fetch(`/api/wishlist`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, wishlist: list })
