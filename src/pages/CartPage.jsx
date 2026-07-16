@@ -60,7 +60,7 @@ export default function CartPage() {
         window.location.href = fixedUrl;
     };
 
-    const { subtotal, savings: cartSavings } = calculateCartPricing(productsInCart);
+    const { subtotal, savings: cartSavings, itemsPricing } = calculateCartPricing(productsInCart);
     const DELIVERY_FEE = 100;
     const savings = cartSavings + DELIVERY_FEE; // 15% Loss Aversion Savings + Waived Delivery Fee
 
@@ -106,6 +106,79 @@ export default function CartPage() {
                                 <div className="md:w-2/5 flex flex-col gap-6">
                                     {/* Loss Aversion & Subtotal Section */}
                                     <div className="p-6 bg-gray-50 dark:bg-gray-800 rounded-lg flex flex-col gap-4 h-fit sticky top-24">
+                                        
+                                        {/* Checkout-style Item Breakdown */}
+                                        <div className="flex flex-col gap-4 mb-2">
+                                            {productsInCart.map((el) => {
+                                                const item = el?.node;
+                                                const cartLineId = item?.id;
+                                                const pricing = itemsPricing?.[cartLineId];
+                                                const quantity = item?.quantity;
+                                                const title = item?.merchandise?.product?.title;
+                                                const size = item?.merchandise?.selectedOptions?.find(opt => opt?.name === "Size")?.value;
+                                                const imageSrc = item?.merchandise?.image?.src;
+                                                const pricePerItem = item?.merchandise?.price;
+                                                
+                                                return (
+                                                    <div key={cartLineId} className="flex justify-between items-start gap-4">
+                                                        <div className="flex items-start gap-3">
+                                                            <div className="relative">
+                                                                <div className="w-16 h-16 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden bg-white flex items-center justify-center">
+                                                                    <img src={imageSrc} alt={title} className="w-full h-full object-contain" />
+                                                                </div>
+                                                                <span className="absolute -top-2 -right-2 bg-gray-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full z-10">
+                                                                    {quantity}
+                                                                </span>
+                                                            </div>
+                                                            <div className="flex flex-col">
+                                                                <span className="font-semibold text-sm text-gray-900 dark:text-white leading-tight">{title}</span>
+                                                                <span className="text-xs text-gray-500 mt-1">{size}</span>
+                                                                {pricing?.isBogo && (
+                                                                    <p className="text-[10px] text-gray-500 flex items-center gap-1 mt-1 font-medium">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="10" height="10" fill="currentColor"><path d="M13.7 5.3a2 2 0 0 0-.6-1.4l-3-3A2 2 0 0 0 8.7.3H2A1.5 1.5 0 0 0 .5 1.8v6.7c0 .4.2.8.5 1l6.7 6.7a2 2 0 0 0 2.8 0l3.2-3.1a2 2 0 0 0 0-2.9zM3.5 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>
+                                                                        BUY 1 GET 1 {pricing.freeCount > 0 ? `(-${pricePerItem?.currencyCode || '₹'}${(pricing.originalPrice * pricing.freeCount).toFixed(2)})` : ''}
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-col items-end text-sm">
+                                                            {pricing ? (
+                                                                pricing.totalEffectivePrice === 0 ? (
+                                                                    <>
+                                                                        <span className="line-through text-gray-500 text-xs">
+                                                                            {pricing.totalStrikeoutPrice.toFixed(2)}
+                                                                        </span>
+                                                                        {pricing.totalStrikeoutPrice !== pricing.originalPrice * quantity && (
+                                                                            <span className="line-through text-gray-500 text-xs">
+                                                                                {(pricing.originalPrice * quantity).toFixed(2)}
+                                                                            </span>
+                                                                        )}
+                                                                        <span className="font-bold text-gray-900 dark:text-white">FREE</span>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        {pricing.totalStrikeoutPrice !== pricing.totalEffectivePrice && (
+                                                                            <span className="line-through text-gray-500 text-xs">
+                                                                                {pricing.totalStrikeoutPrice.toFixed(2)}
+                                                                            </span>
+                                                                        )}
+                                                                        <span className="font-semibold text-gray-900 dark:text-white">
+                                                                            {pricePerItem?.currencyCode || 'INR'} {pricing.totalEffectivePrice.toFixed(2)}
+                                                                        </span>
+                                                                    </>
+                                                                )
+                                                            ) : (
+                                                                <span className="font-semibold text-gray-900 dark:text-white">
+                                                                    {pricePerItem?.currencyCode || '₹'} {(pricePerItem?.amount * 1.0 * quantity).toFixed(2)}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                        <hr className="border-gray-200 dark:border-gray-700 mb-2" />
+
                                         {/* Delivery Fee Display */}
                                         <div className="flex justify-between items-center text-gray-600 dark:text-gray-400">
                                             <span className="font-semibold text-lg text-green-600 dark:text-green-400">Delivery</span>

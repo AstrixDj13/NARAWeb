@@ -230,8 +230,13 @@ export default function CartItem({
                   <span className="line-through text-gray-500 text-xs sm:text-xs mr-1">
                     {pricing ? pricing.totalStrikeoutPrice.toFixed(2) : (pricePerItem?.amount * 1.0 * productQuantity).toFixed(2)}
                   </span>
+                  {pricing && pricing.totalEffectivePrice === 0 && pricing.totalStrikeoutPrice !== (pricing.originalPrice * productQuantity) && (
+                    <span className="line-through text-gray-500 text-xs sm:text-xs mr-1">
+                      {(pricing.originalPrice * productQuantity).toFixed(2)}
+                    </span>
+                  )}
                   <strong className="font-black">
-                    {pricing ? pricing.totalEffectivePrice.toFixed(2) : (pricePerItem?.amount * 1.0 * productQuantity).toFixed(2)}
+                    {pricing ? (pricing.totalEffectivePrice === 0 ? "FREE" : pricing.totalEffectivePrice.toFixed(2)) : (pricePerItem?.amount * 1.0 * productQuantity).toFixed(2)}
                   </strong>{" "}
                   {pricing?.isMel && (
                     <span className="text-red-500 bg-red-100 px-1 py-0.5 rounded text-[10px] ml-1 font-bold whitespace-nowrap">
@@ -240,6 +245,12 @@ export default function CartItem({
                   )}
                   | Size: <strong className="font-bold">{size}</strong>
                 </p>
+                {pricing?.isBogo && (
+                  <p className="text-xs text-gray-500 flex items-center gap-1 mt-1 font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="12" height="12" fill="currentColor"><path d="M13.7 5.3a2 2 0 0 0-.6-1.4l-3-3A2 2 0 0 0 8.7.3H2A1.5 1.5 0 0 0 .5 1.8v6.7c0 .4.2.8.5 1l6.7 6.7a2 2 0 0 0 2.8 0l3.2-3.1a2 2 0 0 0 0-2.9zM3.5 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>
+                    BUY 1 GET 1 {pricing.freeCount > 0 ? `(-${pricePerItem?.currencyCode || '₹'}${(pricing.originalPrice * pricing.freeCount).toFixed(2)})` : ''}
+                  </p>
+                )}
                 {stockLeft && (
                   <p className="text-red-500 text-xs font-bold mt-1">
                     {stockLeft}
