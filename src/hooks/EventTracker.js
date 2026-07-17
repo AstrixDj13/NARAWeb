@@ -217,6 +217,7 @@ export const useEventTracker = () => {
             page_title: document.title,
             page_type: detectPageType(window.location.pathname),
             page_referrer: document.referrer || sessionStorage.getItem('original_referrer'),
+            user_agent: navigator.userAgent,
 
             // Meta cookies
             ...getMetaCookies(),
