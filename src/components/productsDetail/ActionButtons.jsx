@@ -183,7 +183,6 @@ export default function ActionButtons({ inline = false, productId }) {
         return;
       }
       trackEvent('InitiateCheckout', { variant_id: variantId, currency: "INR" });
-      trackEvent('Purchase', { variant_id: variantId, currency: "INR" });
       window.location.href = checkoutUrl;
     } catch (error) {
       console.error(error);

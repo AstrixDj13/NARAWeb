@@ -65,6 +65,16 @@ const getOSInfo = () => {
         const match = ua.match(/Windows NT ([0-9.]+)/);
         if (match) os_version = match[1];
     }
+    else if (ua.indexOf("like Mac OS X") !== -1 || ua.indexOf("iPhone") !== -1 || ua.indexOf("iPad") !== -1) {
+        os_name = "iOS";
+        const match = ua.match(/OS ([0-9_]+)/);
+        if (match) os_version = match[1] ? match[1].replace(/_/g, '.') : "Unknown";
+    }
+    else if (ua.indexOf("Android") !== -1) {
+        os_name = "Android";
+        const match = ua.match(/Android ([0-9.]+)/);
+        if (match) os_version = match[1];
+    }
     else if (ua.indexOf("Mac") !== -1) {
         os_name = "macOS";
         const match = ua.match(/Mac OS X ([0-9_]+)/);
@@ -73,27 +83,17 @@ const getOSInfo = () => {
     else if (ua.indexOf("Linux") !== -1) {
         os_name = "Linux";
     }
-    else if (ua.indexOf("Android") !== -1) {
-        os_name = "Android";
-        const match = ua.match(/Android ([0-9.]+)/);
-        if (match) os_version = match[1];
-    }
-    else if (ua.indexOf("like Mac OS X") !== -1 || ua.indexOf("iPhone") !== -1 || ua.indexOf("iPad") !== -1) {
-        os_name = "iOS";
-        const match = ua.match(/OS ([0-9_]+)/);
-        if (match) os_version = match[1] ? match[1].replace(/_/g, '.') : "Unknown";
-    }
     return { os_name, os_version };
 };
 
 const getDeviceType = () => {
     const ua = navigator.userAgent;
-    if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
-        return "tablet";
-    }
-    if (/Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+    
+    // Check for both tablet and mobile keywords, categorize all as "mobile"
+    if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua) || /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
         return "mobile";
     }
+    
     return "desktop";
 };
 
