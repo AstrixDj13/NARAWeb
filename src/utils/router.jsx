@@ -25,8 +25,7 @@ const UGCCollaboration = React.lazy(() => import("../pages/UGCCollaboration"));
 const CartPage = React.lazy(() => import("../pages/CartPage"));
 const TrackOrder = React.lazy(() => import("../pages/TrackOrder"));
 const WishlistPage = React.lazy(() => import("../pages/WishlistPage"));
-
-
+const FitQuiz = React.lazy(() => import("../pages/FitQuiz"));
 
 export const router = createBrowserRouter([
   {
@@ -84,6 +83,10 @@ export const router = createBrowserRouter([
       {
         path: "wishlist",
         element: <LazyComponent component={<WishlistPage />} />,
+      },
+      {
+        path: "fit-quiz",
+        element: <LazyComponent component={<FitQuiz />} />,
       },
       {
         path: "track",

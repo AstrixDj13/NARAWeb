@@ -48,3 +48,55 @@ export const fetchProducts = async () => {
     throw error;
   }
 };
+
+export const fetchProductsBySize = async (size) => {
+  const query = `
+  {
+    products(first: 250) {
+      edges {
+        node {
+          id
+          title
+          handle
+          images(first: 2) {
+            nodes {
+              url
+            }
+          }
+          variants(first: 20) {
+            nodes {
+              id
+              availableForSale
+              selectedOptions {
+                name
+                value
+              }
+              price {
+                amount
+                currencyCode
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  `;
+  try {
+    const response = await api.post('/', { query });
+    const products = response.data.data.products.edges.map(edge => edge.node);
+    
+    // Filter products that have the specified size and are available
+    const filteredProducts = products.filter(product => {
+      return product.variants.nodes.some(variant => 
+        variant.availableForSale && 
+        variant.selectedOptions.some(opt => opt.name === 'Size' && opt.value.toUpperCase() === size.toUpperCase())
+      );
+    });
+    
+    return filteredProducts; // return all products that have this size available
+  } catch (error) {
+    console.error('Error fetching products by size:', error);
+    return [];
+  }
+};

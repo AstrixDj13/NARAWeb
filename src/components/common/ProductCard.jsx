@@ -5,7 +5,7 @@ import VideoLazy from '../loaders/VideoLazy';
 import { useOfferTag } from '../../hooks/useOfferTag';
 import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 
-const ProductCard = ({ product, className }) => {
+const ProductCard = ({ product, className, forceFullHeight }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
     const intervalRef = useRef(null);
@@ -99,6 +99,7 @@ const ProductCard = ({ product, className }) => {
                                 sizes="(max-width: 600px) 400px, 600px"
                                 alt={title}
                                 className="w-full h-full object-cover transition-opacity duration-300 ease-in-out"
+                                wrapperClassName={forceFullHeight ? "w-full h-full block" : undefined}
                                 width="600"
                                 height="800"
                                 effect="opacity"
