@@ -26,7 +26,16 @@ const FitQuiz = () => {
     return saved ? JSON.parse(saved) : [];
   });
   const [isProductsLoading, setIsProductsLoading] = useState(false);
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     sessionStorage.setItem('fitQuiz_step', JSON.stringify(step));
@@ -154,22 +163,22 @@ const FitQuiz = () => {
     if (!result) return null;
 
     return (
-      <div className="w-full max-w-4xl mx-auto p-8 bg-white dark:bg-[#111] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 text-center space-y-8">
-        <h2 className="text-3xl font-bold">Your NARA fit: {result.primary_size} ✨</h2>
+      <div className="w-full max-w-4xl mx-auto p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 text-center space-y-8">
+        <h2 style={{ color: isDark ? 'white' : 'black' }} className="text-3xl font-bold">Your NARA fit: {result.primary_size} ✨</h2>
         
-        <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed">
           {result.reasoning_message}
         </p>
 
-        <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 space-y-4 max-w-md mx-auto text-left border border-gray-100 dark:border-gray-800">
+        <div className="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-xl p-6 space-y-4 max-w-md mx-auto text-left border border-gray-100 dark:border-gray-800">
           <h3 className="font-semibold text-center mb-4">Fit Preferences</h3>
           <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-700">
-            <span className="text-gray-600 dark:text-gray-400">For a more relaxed fit:</span>
-            <span className="font-bold">Try {result.relaxed_size}</span>
+            <span className="text-gray-500 dark:text-gray-300">For a more relaxed fit:</span>
+            <span className="font-bold text-gray-900 dark:text-white">Try {result.relaxed_size}</span>
           </div>
           <div className="flex justify-between items-center pb-2">
-            <span className="text-gray-600 dark:text-gray-400">For a more fitted look:</span>
-            <span className="font-bold">Stick with {result.fitted_size}</span>
+            <span className="text-gray-500 dark:text-gray-300">For a more fitted look:</span>
+            <span className="font-bold text-gray-900 dark:text-white">Stick with {result.fitted_size}</span>
           </div>
           {result.is_between_sizes && (
             <div className="mt-4 p-3 bg-[#fdf8f4] dark:bg-[#332211] text-[#d68a59] dark:text-[#f3b58e] rounded-lg text-sm text-center font-medium">
@@ -180,7 +189,11 @@ const FitQuiz = () => {
 
         <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center">
           <button 
-            className="px-8 py-3 border-2 border-black dark:border-white text-black dark:text-white rounded-full font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            style={isDark 
+              ? { border: '2px solid white', color: 'white', background: 'transparent' }
+              : { border: '2px solid black', color: 'black', background: 'transparent' }
+            }
+            className="px-8 py-3 rounded-full font-semibold hover:opacity-80 transition-opacity"
             onClick={() => {
               setStep(1);
               setResult(null);
@@ -191,7 +204,11 @@ const FitQuiz = () => {
             Retake Quiz
           </button>
           <button 
-            className="px-8 py-3 bg-black dark:bg-white text-white dark:text-black rounded-full font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+            style={isDark 
+              ? { background: 'white', color: 'black' }
+              : { background: 'black', color: 'white' }
+            }
+            className="px-8 py-3 rounded-full font-semibold hover:opacity-80 transition-opacity"
             onClick={() => navigate('/products')}
           >
             Shop Collection
@@ -200,7 +217,7 @@ const FitQuiz = () => {
 
         {/* Recommended Products Section */}
         <div className="pt-12 mt-12 border-t border-gray-200 dark:border-gray-800">
-          <h3 className="text-2xl font-bold mb-8 text-center font-antikor">Styles Available in Size {result.primary_size}</h3>
+          <h3 style={{ color: isDark ? 'white' : 'black' }} className="text-2xl font-bold mb-8 text-center font-antikor">Styles Available in Size {result.primary_size}</h3>
           
           {isProductsLoading ? (
             <div className="flex justify-center items-center py-12">
