@@ -9,8 +9,10 @@ import { setTotalQuantityInCart, setCheckoutUrl, setProductsinCart } from "../..
 import { toast } from "sonner";
 import CartToast from "../utils/CartToast";
 import { toast as customToast } from "react-toastify";
+import { useEventTracker } from "../../hooks/EventTracker";
 
 const YouMayAlsoLike = () => {
+    const { trackEvent } = useEventTracker();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [addingToCart, setAddingToCart] = useState({});
@@ -46,6 +48,15 @@ const YouMayAlsoLike = () => {
         }
 
         setAddingToCart((prev) => ({ ...prev, [product.productId]: true }));
+
+        trackEvent('AddToCart', {
+            variant_id: product.variantId,
+            product_id: product.productId,
+            product_name: product.title,
+            price: product.price,
+            currency: 'INR',
+            quantity: 1
+        });
 
         try {
             const response = await addItemToCart(cartId, product.variantId);

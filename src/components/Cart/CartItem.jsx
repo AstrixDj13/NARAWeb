@@ -145,6 +145,26 @@ export default function CartItem({
         productQuantity + 1,
         totalQuantityInCart
       );
+
+      trackEvent('AddToCart', {
+        product_id: productId,
+        product_name: title,
+        price: pricePerItem?.amount,
+        currency: pricePerItem?.currencyCode || 'INR',
+        quantity: 1,
+        variant_size: size
+      });
+
+      if (window.fbq) {
+        window.fbq('track', 'AddToCart', {
+          content_ids: [productId],
+          content_name: title,
+          content_type: 'product',
+          value: pricePerItem?.amount || 1,
+          currency: pricePerItem?.currencyCode || 'INR',
+          quantity: 1
+        });
+      }
     }
   };
 
@@ -159,6 +179,15 @@ export default function CartItem({
           productQuantity - 1,
           totalQuantityInCart
         );
+
+        trackEvent('RemoveFromCart', {
+          product_id: productId,
+          product_name: title,
+          price: pricePerItem?.amount,
+          currency: pricePerItem?.currencyCode,
+          quantity_removed: 1,
+          variant_size: size
+        });
       }
     }
   };

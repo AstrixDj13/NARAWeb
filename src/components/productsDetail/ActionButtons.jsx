@@ -54,9 +54,11 @@ export default function ActionButtons({ inline = false, productId }) {
       if (window.fbq) {
         window.fbq('track', 'AddToCart', {
           content_ids: [variantId],
+          content_name: currentVariant?.node?.product?.title || currentVariant?.node?.title || document.title,
           content_type: 'product',
-          value: 1, // or actual price
-          currency: 'INR'
+          value: currentVariant?.node?.price?.amount || 1,
+          currency: 'INR',
+          quantity: 1
         });
       }
       const cartId = cart.id;
@@ -86,9 +88,11 @@ export default function ActionButtons({ inline = false, productId }) {
       if (window.fbq) {
         window.fbq('track', 'AddToCart', {
           content_ids: [variantId],
+          content_name: currentVariant?.node?.product?.title || currentVariant?.node?.title || document.title,
           content_type: 'product',
-          value: 1, // or actual price
-          currency: 'INR'
+          value: currentVariant?.node?.price?.amount || 1,
+          currency: 'INR',
+          quantity: 1
         });
       }
       const cartId = cart.id;
@@ -115,9 +119,11 @@ export default function ActionButtons({ inline = false, productId }) {
       if (window.fbq) {
         window.fbq('track', 'AddToCart', {
           content_ids: [variantId],
+          content_name: currentVariant?.node?.product?.title || currentVariant?.node?.title || document.title,
           content_type: 'product',
-          value: 1, // or actual price
-          currency: 'INR'
+          value: currentVariant?.node?.price?.amount || 1,
+          currency: 'INR',
+          quantity: 1
         });
       }
       console.log("logging from add to cart:", response);
@@ -152,7 +158,10 @@ export default function ActionButtons({ inline = false, productId }) {
 
     trackEvent('AddToCart', {
       variant_id: variantId,
-      currency: "INR"
+      currency: "INR",
+      price: currentVariant?.node?.price?.amount,
+      product_name: currentVariant?.node?.product?.title || currentVariant?.node?.title || document.title,
+      quantity: 1
     });
 
     if (cartId) {

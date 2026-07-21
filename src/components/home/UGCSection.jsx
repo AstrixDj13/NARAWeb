@@ -16,8 +16,10 @@ import { toast } from "sonner";
 import CartToast from "../utils/CartToast";
 import { toast as customToast } from "react-toastify";
 import { FaShoppingCart, FaVolumeMute, FaVolumeUp, FaHeart, FaTrophy } from "react-icons/fa";
+import { useEventTracker } from "../../hooks/EventTracker";
 
 const UGCSection = () => {
+    const { trackEvent } = useEventTracker();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [addingToCart, setAddingToCart] = useState(null);
@@ -332,12 +334,22 @@ const UGCSection = () => {
         }
     };
 
-    const handleAddToCart = async (e, variantId, productId) => {
+    const handleAddToCart = async (e, variantId, product) => {
         e.preventDefault();
         e.stopPropagation();
 
+        const productId = product.productId;
         if (addingToCart) return;
         setAddingToCart(productId);
+
+        trackEvent('AddToCart', {
+            variant_id: variantId,
+            product_id: productId,
+            product_name: product.title,
+            price: product.price,
+            currency: 'INR',
+            quantity: 1
+        });
 
         try {
             if (cartId) {
@@ -464,7 +476,7 @@ const UGCSection = () => {
                                                 {product.variants?.map((variant) => (
                                                     <button
                                                         key={variant.id}
-                                                        onClick={(e) => handleAddToCart(e, variant.id, product.productId)}
+                                                        onClick={(e) => handleAddToCart(e, variant.id, product)}
                                                         className="w-full text-black text-xs py-2 hover:bg-gray-100 text-center border-b border-gray-100 last:border-0"
                                                     >
                                                         {variant.title}
