@@ -109,12 +109,30 @@ const Navbar = () => {
       <nav
         className={
           !isScrolled
-            ? `${topNavClass} fixed left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-2 sm:py-2 transition-all duration-300 ${bgClass}`
-            : `fixed ${topNavClass} left-0 w-full z-[100] flex justify-between items-center md:px-10 pl-4 pr-2 py-2 sm:py-2 transition-all duration-300 ${bgClass}`
+            ? `${topNavClass} fixed left-0 w-full z-[100] flex flex-col md:flex-row justify-between items-center md:px-10 px-4 py-2 sm:py-2 transition-all duration-300 ${bgClass}`
+            : `fixed ${topNavClass} left-0 w-full z-[100] flex flex-col md:flex-row justify-between items-center md:px-10 px-4 py-2 sm:py-2 transition-all duration-300 ${bgClass}`
         }
       >
-        {/* Left Section: Hamburger and Logo */}
-        <div className="flex items-center space-x-4">
+        {/* Mobile Logo Row */}
+        <div className="md:hidden w-full flex justify-center pb-2 pt-1 border-b border-[#1F4A40] dark:border-[#D8E3B1]">
+          <Link to="/">
+            <img
+              src={
+                isScrolled
+                  ? theme === "dark"
+                    ? "/logo2.svg"
+                    : "/3.webp"
+                  : theme === "dark"
+                    ? "/logo2.svg"
+                    : "/3.webp"
+              }
+              alt="logo"
+              className="h-11 sm:h-12 object-contain"
+            />
+          </Link>
+        </div>
+        {/* Desktop Left Section: Hamburger and Logo */}
+        <div className="hidden md:flex items-center space-x-4">
           <button
             onClick={toggleMenu}
             className={`text-3xl font-bold ${isScrolled
@@ -149,11 +167,23 @@ const Navbar = () => {
         </div>
 
 
-        {/* Right Section: Navigation (Clothing) and Icons */}
-        <div className="flex gap-6 items-center">
-
-          {/* Right-side Icons */}
-          <div className="flex items-center md:space-x-5 space-x-2">
+        {/* Icons Row (Mobile: evenly spaced full width, Desktop: right aligned) */}
+        <div className="flex items-center justify-between w-full md:w-auto md:space-x-5 pt-1 md:pt-0">
+          
+          {/* Mobile Hamburger */}
+          <button
+            onClick={toggleMenu}
+            className={`md:hidden text-3xl font-bold ${isScrolled
+              ? theme === "light"
+                ? "text-black"
+                : "text-white"
+              : theme === "light"
+                ? "text-black"
+                : "text-white"
+              }`}
+          >
+            &#9776;
+          </button>
             {/*<a 
               href="https://ai.studio/apps/3a0b15aa-76c9-4448-91d8-8e16166c2c97?fullscreenApplet=true"
               target="_blank" 
@@ -240,7 +270,6 @@ const Navbar = () => {
             >
               <img src="/cat.gif" alt="Open Chat" className="w-10 h-10 object-contain drop-shadow-sm scale-[1.3] md:scale-[1.8] transition-transform md:hover:scale-[2]" />
             </button>
-          </div>
         </div>
       </nav>
 

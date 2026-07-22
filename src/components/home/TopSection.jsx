@@ -72,17 +72,17 @@ const TopSection = () => {
       const hasCountdown = activeCampaigns.some((c) => c.name || c.targetDate);
 
       if (hasMarquee && hasCountdown) {
-        setTopMarginClass("mt-[11.5rem] sm:mt-[12rem] md:mt-[12.5rem] lg:mt-[12.5rem]");
-        setBannerHeightClass("h-[calc(100vh-11.5rem)] sm:h-[calc(100vh-12rem)] md:h-[calc(100vh-12.5rem)] lg:h-[calc(100vh-12.5rem)]");
+        setTopMarginClass("mt-[13rem] sm:mt-[13rem] md:mt-[12.5rem] lg:mt-[12.5rem]");
+        setBannerHeightClass("h-[calc(100vh-13rem)] sm:h-[calc(100vh-13rem)] md:h-[calc(100vh-12.5rem)] lg:h-[calc(100vh-12.5rem)]");
       } else if (hasMarquee) {
-        setTopMarginClass("mt-[7.5rem] sm:mt-[8rem] md:mt-[8.5rem] lg:mt-[8.5rem]");
-        setBannerHeightClass("h-[calc(100vh-7.5rem)] sm:h-[calc(100vh-8rem)] md:h-[calc(100vh-8.5rem)] lg:h-[calc(100vh-8.5rem)]");
+        setTopMarginClass("mt-[10.5rem] sm:mt-[10.5rem] md:mt-[8.5rem] lg:mt-[8.5rem]");
+        setBannerHeightClass("h-[calc(100vh-10.5rem)] sm:h-[calc(100vh-10.5rem)] md:h-[calc(100vh-8.5rem)] lg:h-[calc(100vh-8.5rem)]");
       } else if (hasCountdown) {
-        setTopMarginClass("mt-[10rem] sm:mt-[10.5rem] md:mt-[11rem] lg:mt-[11rem]");
-        setBannerHeightClass("h-[calc(100vh-10rem)] sm:h-[calc(100vh-10.5rem)] md:h-[calc(100vh-11rem)] lg:h-[calc(100vh-11rem)]");
+        setTopMarginClass("mt-[11.5rem] sm:mt-[11.5rem] md:mt-[11rem] lg:mt-[11rem]");
+        setBannerHeightClass("h-[calc(100vh-11.5rem)] sm:h-[calc(100vh-11.5rem)] md:h-[calc(100vh-11rem)] lg:h-[calc(100vh-11rem)]");
       } else {
-        setTopMarginClass("mt-[6rem] sm:mt-[6.5rem] md:mt-[7rem] lg:mt-[7rem]");
-        setBannerHeightClass("h-[calc(100vh-6rem)] sm:h-[calc(100vh-6.5rem)] md:h-[calc(100vh-7rem)] lg:h-[calc(100vh-7rem)]");
+        setTopMarginClass("mt-[9rem] sm:mt-[9rem] md:mt-[7rem] lg:mt-[7rem]");
+        setBannerHeightClass("h-[calc(100vh-9rem)] sm:h-[calc(100vh-9rem)] md:h-[calc(100vh-7rem)] lg:h-[calc(100vh-7rem)]");
       }
     } catch (err) {
       console.warn("TopSection campaign check err:", err);
