@@ -7,6 +7,7 @@ import { setAppTheme } from "../../store";
 import { getCollections } from "../../apis/Collections";
 import { getActiveCampaigns } from "../../utils/campaignUtils";
 import { FaRegHeart } from "react-icons/fa";
+import { MdOutlineOndemandVideo } from "react-icons/md";
 import { useWishlist } from "../../context/WishlistContext";
 
 const AuthModal = lazy(() => import("../Auth/AuthModal"));
@@ -214,6 +215,21 @@ const Navbar = () => {
                 }`}
               />
             </button>
+
+            <Link to="/feed" className="flex items-center">
+              <MdOutlineOndemandVideo 
+                className={`scale-[0.85] md:scale-100 transform origin-center w-8 h-8 ${
+                  theme === "light" && !isScrolled
+                    ? "text-black"
+                    : theme === "dark" && !isScrolled
+                      ? "text-white"
+                      : theme === "light" && isScrolled
+                        ? "text-black"
+                        : theme === "dark" && isScrolled
+                          ? "text-white" : ""
+                }`} 
+              />
+            </Link>
 
             <button
               onClick={() => {

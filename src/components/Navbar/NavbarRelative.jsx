@@ -4,6 +4,8 @@ import CartIcon from "../CartIcon";
 import { useDispatch } from "react-redux";
 import { setAppTheme } from "../../store";
 import { Link } from "react-router-dom";
+import { MdOutlineOndemandVideo } from "react-icons/md";
+
 const NavbarRelative = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
@@ -94,6 +96,9 @@ const NavbarRelative = () => {
           </button>
           {theme == "light" ? (
             <>
+              <Link to="/feed" className="flex items-center">
+                <MdOutlineOndemandVideo className="w-8 h-8 text-[#1F4A40]" />
+              </Link>
               <Link to="/profile">
                 <img
                   title="image"
@@ -105,6 +110,9 @@ const NavbarRelative = () => {
             </>
           ) : (
             <>
+              <Link to="/feed" className="flex items-center">
+                <MdOutlineOndemandVideo className="w-8 h-8 text-white" />
+              </Link>
               <Link to={"/profile"}>
                 <img
                   title="image"

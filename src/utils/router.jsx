@@ -26,6 +26,7 @@ const CartPage = React.lazy(() => import("../pages/CartPage"));
 const TrackOrder = React.lazy(() => import("../pages/TrackOrder"));
 const WishlistPage = React.lazy(() => import("../pages/WishlistPage"));
 const FitQuiz = React.lazy(() => import("../pages/FitQuiz"));
+const VideoFeed = React.lazy(() => import("../pages/VideoFeed"));
 
 export const router = createBrowserRouter([
   {
@@ -87,6 +88,10 @@ export const router = createBrowserRouter([
       {
         path: "fit-quiz",
         element: <LazyComponent component={<FitQuiz />} />,
+      },
+      {
+        path: "feed",
+        element: <LazyComponent component={<VideoFeed />} />,
       },
       {
         path: "track",
