@@ -6,7 +6,7 @@ import NavbarRelative from "../components/Navbar/NavbarRelative";
 import CartItem from "../components/Cart/CartItem";
 import YouMayAlsoLike from "../components/Cart/YouMayAlsoLike";
 import { fixCheckoutUrl } from "../utils/interceptors";
-import { updateBuyersIndentity } from "../apis/Cart";
+import { updateBuyersIndentity, emailCartAPI } from "../apis/Cart";
 import getAccountDetailsAPI from "../apis/getAccoutDetailsAPI";
 import { Skeleton } from "@mui/material";
 import { HiArrowNarrowLeft } from "react-icons/hi";
@@ -21,7 +21,13 @@ export default function CartPage() {
     const productsInCart = useSelector((state) => state.cart.productsInCart);
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
     const accessToken = useSelector((state) => state.user.accessToken);
+    const userEmail = useSelector((state) => state.user.email);
+    const userId = useSelector((state) => state.user.id);
     const [cartLoading, setCartLoading] = useState(false); // You might want to handle loading state from redux if available
+
+    const [isEmailing, setIsEmailing] = useState(false);
+    const [showEmailInput, setShowEmailInput] = useState(false);
+    const [emailInput, setEmailInput] = useState("");
 
     const checkOutHandler = async () => {
         const fixedUrl = fixCheckoutUrl(checkoutUrl);
@@ -58,6 +64,45 @@ export default function CartPage() {
         }
 
         window.location.href = fixedUrl;
+    };
+
+    const handleEmailCart = async () => {
+        const targetEmail = isAuthenticated ? userEmail : emailInput;
+        if (!targetEmail) {
+            if (!showEmailInput) {
+                setShowEmailInput(true);
+                return;
+            }
+            return toast.error("Please enter a valid email address");
+        }
+
+        // Format products for email
+        const formattedProducts = productsInCart?.map(el => {
+            const item = el?.node;
+            const cartLineId = item?.id;
+            const pricing = itemsPricing?.[cartLineId];
+            return {
+                title: item?.merchandise?.product?.title,
+                price: item?.merchandise?.price?.amount,
+                quantity: item?.quantity,
+                size: item?.merchandise?.selectedOptions?.find((opt) => opt?.name === "Size")?.value,
+                image: item?.merchandise?.image?.src,
+                pricing: pricing
+            };
+        }) || [];
+
+        try {
+            setIsEmailing(true);
+            const anonymousId = localStorage.getItem('anonymous_id') || "";
+            await emailCartAPI(targetEmail, formattedProducts, subtotal, userId, anonymousId, savings, DELIVERY_FEE);
+            toast.success("Cart emailed successfully!");
+            setShowEmailInput(false);
+            setEmailInput("");
+        } catch (error) {
+            toast.error(error.message || "Failed to email cart");
+        } finally {
+            setIsEmailing(false);
+        }
     };
 
     const { subtotal, savings: cartSavings, itemsPricing } = calculateCartPricing(productsInCart);
@@ -206,6 +251,26 @@ export default function CartPage() {
                                             Taxes and shipping calculated at checkout
                                         </p>
                                         <Coupons />
+
+                                        {/* Email Cart Section */}
+                                        <div className="mt-2">
+                                            {!isAuthenticated && showEmailInput && (
+                                                <input 
+                                                    type="email" 
+                                                    placeholder="Enter your email" 
+                                                    value={emailInput}
+                                                    onChange={(e) => setEmailInput(e.target.value)}
+                                                    className="w-full mb-2 p-2 border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:border-[#1F4A40]"
+                                                />
+                                            )}
+                                            <button
+                                                onClick={handleEmailCart}
+                                                disabled={isEmailing || totalQuantityInCart === 0}
+                                                className="w-full text-[#1F4A40] dark:text-white border-2 border-[#1F4A40] dark:border-gray-500 px-6 py-3 font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                            >
+                                                {isEmailing ? "Sending..." : "✉️ Email My Cart"}
+                                            </button>
+                                        </div>
 
                                         <div className="flex flex-col gap-4 mt-4">
                                             {/* <button

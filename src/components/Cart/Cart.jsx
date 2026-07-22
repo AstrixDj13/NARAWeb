@@ -3,7 +3,7 @@ import { HiArrowNarrowLeft } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { getItemsInCartAPI, updateBuyersIndentity } from "../../apis/Cart";
+import { getItemsInCartAPI, updateBuyersIndentity, emailCartAPI } from "../../apis/Cart";
 import getAccountDetailsAPI from "../../apis/getAccoutDetailsAPI";
 import { fixCheckoutUrl } from "../../utils/interceptors";
 import { Skeleton } from "@mui/material";
@@ -22,11 +22,17 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   //const accessToken = useSelector((state) => state.user.accessToken);
   const accessToken = useSelector((state) => state.user.accessToken);
+  const userEmail = useSelector((state) => state.user.email);
+  const userId = useSelector((state) => state.user.id);
   const dispatch = useDispatch();
   const { trackEvent } = useEventTracker();
 
   const [cartLoading, setCartLoading] = useState(false);
   const [itemsQuantity, setItemsQuantity] = useState(0);
+
+  const [isEmailing, setIsEmailing] = useState(false);
+  const [showEmailInput, setShowEmailInput] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
 
   const cartRef = useRef(null);
 
@@ -104,6 +110,49 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
 
   const closeCartHandler = () => {
     toggleCartOpen();
+  };
+
+  const handleEmailCart = async () => {
+    const targetEmail = isAuthenticated ? userEmail : emailInput;
+    if (!targetEmail) {
+      if (!showEmailInput) {
+        setShowEmailInput(true);
+        return;
+      }
+      return toast.error("Please enter a valid email address");
+    }
+
+    const { subtotal, savings: cartSavings, itemsPricing } = calculateCartPricing(productsInCart);
+    const DELIVERY_FEE = 100;
+    const savings = cartSavings + DELIVERY_FEE;
+
+    // Format products for email
+    const formattedProducts = productsInCart?.map(el => {
+      const item = el?.node;
+      const cartLineId = item?.id;
+      const pricing = itemsPricing?.[cartLineId];
+      return {
+        title: item?.merchandise?.product?.title,
+        price: item?.merchandise?.price?.amount,
+        quantity: item?.quantity,
+        size: item?.merchandise?.selectedOptions?.find((opt) => opt?.name === "Size")?.value,
+        image: item?.merchandise?.image?.src,
+        pricing: pricing
+      };
+    }) || [];
+
+    try {
+      setIsEmailing(true);
+      const anonymousId = localStorage.getItem('anonymous_id') || "";
+      await emailCartAPI(targetEmail, formattedProducts, subtotal, userId, anonymousId, savings, DELIVERY_FEE);
+      toast.success("Cart emailed successfully!");
+      setShowEmailInput(false);
+      setEmailInput("");
+    } catch (error) {
+      toast.error(error.message || "Failed to email cart");
+    } finally {
+      setIsEmailing(false);
+    }
   };
 
   const { subtotal } = calculateCartPricing(productsInCart);
@@ -210,6 +259,26 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
                   <div className="flex justify-between items-center mb-4">
                     <span className="font-bold text-lg">Subtotal:</span>
                     <span className="font-bold text-lg text-[#1F4A40] dark:text-green-400">₹{subtotal.toFixed(2)}</span>
+                  </div>
+
+                  {/* Email Cart Section */}
+                  <div className="mb-4">
+                    {!isAuthenticated && showEmailInput && (
+                      <input 
+                        type="email" 
+                        placeholder="Enter your email" 
+                        value={emailInput}
+                        onChange={(e) => setEmailInput(e.target.value)}
+                        className="w-full mb-2 p-2 border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+                      />
+                    )}
+                    <button
+                      onClick={handleEmailCart}
+                      disabled={isEmailing || totalQuantityInCart === 0}
+                      className="w-full text-[#1F4A40] dark:text-white border-2 border-[#1F4A40] dark:border-gray-500 px-3 py-2 disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      {isEmailing ? "Sending..." : "✉️ Email My Cart"}
+                    </button>
                   </div>
 
                   {/* Checkout Buttons */}

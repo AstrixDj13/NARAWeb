@@ -710,3 +710,25 @@ export async function removeCartLine(cartId, lineId) {
     throw error;
   }
 }
+
+export async function emailCartAPI(email, products, subtotal, userId, anonymousId, savings, deliveryFee) {
+  try {
+    const response = await fetch('/api/cart/email-cart', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, products, subtotal, userId, anonymousId, savings, deliveryFee }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to email cart');
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Could not email cart: ", error.message);
+    throw error;
+  }
+}

@@ -67,6 +67,7 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import pg from 'pg';
 const { Pool } = pg;
+import nodemailer from 'nodemailer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -343,6 +344,26 @@ async function initDB() {
       ADD COLUMN IF NOT EXISTS anonymous_id VARCHAR(255);
     `);
     console.log("PostgreSQL: cart_removals table is ready.");
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS emailed_carts (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) NOT NULL,
+        cart_data JSONB NOT NULL,
+        subtotal DECIMAL(10, 2) NOT NULL,
+        sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        user_id VARCHAR(255),
+        anonymous_id VARCHAR(255)
+      );
+    `);
+    
+    // Fallback alter just in case table already exists
+    await pool.query(`
+      ALTER TABLE emailed_carts
+      ADD COLUMN IF NOT EXISTS user_id VARCHAR(255),
+      ADD COLUMN IF NOT EXISTS anonymous_id VARCHAR(255);
+    `);
+    console.log("PostgreSQL: emailed_carts table is ready.");
   } catch (error) {
     console.error("Error creating tables:", error);
   }
@@ -377,6 +398,142 @@ app.post('/api/removals', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
   console.log('--- Finished processing /api/removals ---');
+});
+
+// Email Cart Endpoint
+app.post('/api/cart/email-cart', async (req, res) => {
+  try {
+    const { email, products, subtotal, userId, anonymousId, savings, deliveryFee } = req.body;
+    if (!email || !products) {
+      return res.status(400).json({ error: 'Missing email or products' });
+    }
+
+    // Insert into DB
+    const query = `
+      INSERT INTO emailed_carts (email, cart_data, subtotal, user_id, anonymous_id)
+      VALUES ($1, $2, $3, $4, $5) RETURNING *
+    `;
+    const values = [email, JSON.stringify(products), subtotal, userId || null, anonymousId || null];
+    await pool.query(query, values);
+
+    // Setup Nodemailer
+    const transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_SMTP_SERVER || 'smtpout.secureserver.net',
+      port: 465,
+      secure: true, // true for 465, false for other ports
+      auth: {
+        user: process.env.EMAIL_USER || 'info@narawear.com',
+        pass: process.env.EMAIL_PASSWORD || process.env.EMAIL_PASS
+      }
+    });
+
+    const productsHtml = products.map(p => {
+      // Check if item has pricing info
+      const pricing = p.pricing;
+      let priceDisplay = '';
+      if (pricing) {
+          if (pricing.totalEffectivePrice === 0) {
+              let secondStrikethrough = '';
+              if (pricing.totalStrikeoutPrice !== pricing.originalPrice * p.quantity) {
+                  secondStrikethrough = `<span style="text-decoration: line-through; color: #9ca3af; font-size: 12px; margin-right: 4px;">₹${(pricing.originalPrice * p.quantity).toFixed(2)}</span>`;
+              }
+              priceDisplay = `<span style="text-decoration: line-through; color: #9ca3af; font-size: 12px; margin-right: 4px;">₹${pricing.totalStrikeoutPrice.toFixed(2)}</span>${secondStrikethrough}<br/><strong style="color: #111827;">FREE</strong>`;
+          } else {
+              if (pricing.totalStrikeoutPrice !== pricing.totalEffectivePrice) {
+                  priceDisplay = `<span style="text-decoration: line-through; color: #9ca3af; font-size: 12px; margin-right: 4px;">₹${pricing.totalStrikeoutPrice.toFixed(2)}</span><br/><strong style="color: #111827;">₹${pricing.totalEffectivePrice.toFixed(2)}</strong>`;
+              } else {
+                  priceDisplay = `<strong style="color: #111827;">₹${pricing.totalEffectivePrice.toFixed(2)}</strong>`;
+              }
+          }
+      } else {
+          priceDisplay = `<strong style="color: #111827;">₹${(p.price * p.quantity).toFixed(2)}</strong>`;
+      }
+      
+      let bogoBadge = '';
+      if (pricing?.isBogo) {
+          bogoBadge = `<div style="font-size: 11px; color: #6b7280; margin-top: 6px; display: flex; align-items: center; gap: 4px;">
+              <span>🏷️</span> BUY 1 GET 1 ${pricing.freeCount > 0 ? `(-₹${(pricing.originalPrice * pricing.freeCount).toFixed(2)})` : ''}
+          </div>`;
+      }
+
+      return `
+        <tr>
+          <td style="padding: 16px 12px; border-bottom: 1px solid #e5e7eb; width: 90px; vertical-align: top;">
+            <div style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color: #fff; width: 70px; height: 70px;">
+              <img src="${p.image}" alt="${p.title}" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
+            </div>
+          </td>
+          <td style="padding: 16px 12px; border-bottom: 1px solid #e5e7eb; vertical-align: top;">
+            <div style="font-weight: 600; font-size: 15px; color: #111827; margin-bottom: 4px;">${p.title}</div>
+            <div style="color: #6b7280; font-size: 13px; margin-bottom: 2px;">Size: ${p.size || 'N/A'}</div>
+            <div style="color: #6b7280; font-size: 13px;">Qty: ${p.quantity}</div>
+            ${bogoBadge}
+          </td>
+          <td style="padding: 16px 12px; border-bottom: 1px solid #e5e7eb; text-align: right; vertical-align: top; white-space: nowrap;">
+            ${priceDisplay}
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    const html = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; color: #374151;">
+          <h2 style="color: #111827; font-size: 24px; font-weight: 800; margin-bottom: 16px;">YOUR CART</h2>
+          <p style="color: #4b5563; font-size: 14px; margin-bottom: 24px;">Here is the breakdown of the items you saved:</p>
+          
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+            ${productsHtml}
+          </table>
+          
+          <div style="background-color: #f9fafb; padding: 24px; border-radius: 12px; border: 1px solid #f3f4f6;">
+              <table style="width: 100%; border-collapse: collapse;">
+                  ${deliveryFee !== undefined ? `
+                  <tr>
+                      <td style="padding: 6px 0; color: #16a34a; font-weight: 600; font-size: 15px;">Delivery</td>
+                      <td style="padding: 6px 0; text-align: right;">
+                          <span style="text-decoration: line-through; color: #ef4444; margin-right: 8px; font-size: 14px;">₹${deliveryFee}</span>
+                          <span style="color: #16a34a; font-weight: 600; font-size: 15px;">FREE</span>
+                      </td>
+                  </tr>` : ''}
+                  ${savings ? `
+                  <tr>
+                      <td style="padding: 6px 0; color: #16a34a; font-weight: 600; font-size: 15px;">You Saved:</td>
+                      <td style="padding: 6px 0; text-align: right; color: #16a34a; font-weight: 700; font-size: 16px;">₹${Number(savings).toFixed(2)}</td>
+                  </tr>
+                  <tr>
+                      <td colspan="2" style="padding: 0; text-align: right; color: #16a34a; font-size: 11px;">(Total savings on this order!)</td>
+                  </tr>` : ''}
+                  <tr>
+                      <td colspan="2"><hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 16px 0;" /></td>
+                  </tr>
+                  <tr>
+                      <td style="padding: 8px 0; font-size: 18px; font-weight: 700; color: #111827;">Subtotal:</td>
+                      <td style="padding: 8px 0; font-size: 22px; font-weight: 900; text-align: right; color: #1F4A40;">₹${Number(subtotal).toFixed(2)}</td>
+                  </tr>
+                  <tr>
+                      <td colspan="2" style="padding-top: 4px; text-align: right; color: #6b7280; font-size: 11px;">Taxes and shipping calculated at checkout</td>
+                  </tr>
+              </table>
+          </div>
+          
+          <div style="text-align: center; margin-top: 32px;">
+              <a href="https://narawear.com/cart" style="background-color: #1F4A40; color: #ffffff; padding: 14px 32px; text-decoration: none; font-weight: bold; border-radius: 6px; display: inline-block; font-size: 15px;">Resume Shopping</a>
+          </div>
+      </div>
+    `;
+
+    await transporter.sendMail({
+      from: `"Nara" <${process.env.EMAIL_USER || 'info@narawear.com'}>`,
+      to: email,
+      subject: "Your NARA Cart",
+      html: html
+    });
+
+    res.status(200).json({ success: true, message: 'Cart emailed successfully' });
+  } catch (error) {
+    console.error('Error emailing cart:', error);
+    res.status(500).json({ error: 'Failed to email cart' });
+  }
 });
 
 // Spinning Wheel Endpoints
