@@ -170,13 +170,7 @@ const Home = () => {
 
       <Navbar />
       
-      {/* Floating Fit Quiz Button */}
-      <Link to="/fit-quiz" className="fixed top-64 md:top-56 right-4 md:right-8 z-50 group">
-        <button className="w-14 h-14 md:w-16 md:h-16 bg-black dark:bg-white text-white dark:text-black rounded-full flex flex-col items-center justify-center shadow-lg hover:scale-105 transition-transform border-2 border-white dark:border-black">
-          <span className="text-lg md:text-xl leading-none">✨</span>
-          <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-tighter mt-0.5">Fit Quiz</span>
-        </button>
-      </Link>
+
       {/*<div className="pt-24 sm:pt-28 md:pt-32 lg:pt-36 bg-emerald-50 dark:bg-[#0e2a1a]/30">
         <TrustBadges />
       </div>*/}

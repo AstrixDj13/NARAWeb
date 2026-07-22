@@ -306,7 +306,7 @@ export default function ProductsDetailPage() {
             />
 
             <div className="xl:w-2/5 md:w-3/4 w-full flex flex-col gap-4 md:gap-8 pt-2 px-4 md:p-4 !pb-12 md:!px-8 xl:!pb-12">
-              <div className="md:sticky md:top-[122px] xl:top-[130px] z-[100] md:bg-[#F7F7F7] dark:md:bg-black py-2 xl:py-4 -mt-2 xl:-mt-4 transition-all duration-300">
+              <div className="md:sticky md:top-[135px] xl:top-[151px] z-30 md:bg-[#F7F7F7] dark:md:bg-black py-2 xl:py-4 -mt-2 xl:-mt-4 transition-all duration-300">
                 <ActionButtons productId={product.id} />
               </div>
               <DetailSection

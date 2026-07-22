@@ -152,15 +152,15 @@ const Navbar = () => {
                 isScrolled
                   ? theme === "dark"
                     ? "/logo2.svg"
-                    : "/3.webp"
+                    : "/logo.svg"
                   : theme === "dark"
                     ? "/logo2.svg"
-                    : "/3.webp"
+                    : "/logo.svg"
               }
               alt="logo"
               className={`object-contain transition-all duration-500 origin-left ${isScrolled
-                ? "h-8 sm:h-10 md:h-12 scale-100"
-                : "h-8 sm:h-10 md:h-12 scale-[1.3] sm:scale-[1.5] md:scale-[1.8] lg:scale-[2]"
+                ? "h-8 sm:h-10 md:h-16 scale-100"
+                : "h-8 sm:h-10 md:h-16 scale-[1.3] sm:scale-[1.5] md:scale-[1.8] lg:scale-[2]"
                 }`}
             />
           </Link>

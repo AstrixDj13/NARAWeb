@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, Suspense, lazy } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, Link } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import {
   setAuthStatus,
@@ -188,6 +188,14 @@ function App() {
       {/*{showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}*/}
       {/*{showSpinningWheel && <SpinningWheel onClose={() => setShowSpinningWheel(false)} />}*/}
       {/*{showAainaPopup && <AainaPopup onClose={() => setShowAainaPopup(false)} />}*/}
+      {/* Floating Fit Quiz Button (Global) */}
+      {pathname !== "/fit-quiz" && (
+        <Link to="/fit-quiz" className="fixed top-64 md:top-56 right-4 md:right-8 z-[60] group">
+          <button className="w-14 h-14 md:w-16 md:h-16 bg-[#1F4A40] text-[#D8E3B1] border-2 border-[#D8E3B1] rounded-full flex flex-col items-center justify-center shadow-lg hover:scale-105 transition-transform">
+            <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-tighter">Size Quiz</span>
+          </button>
+        </Link>
+      )}
       <CookieConsent />
       <WhatsAppButton />
     </div>
