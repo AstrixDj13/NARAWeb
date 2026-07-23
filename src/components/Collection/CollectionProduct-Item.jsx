@@ -108,7 +108,7 @@ const CollectionProductItem = ({
               {offerTag}
             </div>
           )}
-          {name && name.toLowerCase().includes("axis jacket") && (
+          {name && (name.toLowerCase().includes("indigo ikat kurti") || name.toLowerCase().includes("nyla top")) && (
             <div className="absolute -top-1 right-6 z-10 animate-tag-swing flex flex-col items-center pointer-events-none">
               {/* String */}
               <div className="w-[2px] h-5 bg-amber-800/80"></div>
