@@ -173,6 +173,8 @@ const fetchGeoData = async () => {
     return {};
 };
 
+let webVitalsCache = {};
+
 export const useEventTracker = () => {
     // We can pre-fetch geo location when the hook mounts
     useEffect(() => {
@@ -222,6 +224,9 @@ export const useEventTracker = () => {
 
             // Meta cookies
             ...getMetaCookies(),
+
+            // Web Vitals
+            ...webVitalsCache,
 
             // Custom Properties override
             ...properties,
@@ -282,28 +287,23 @@ export const useProductScrollTracker = (product) => {
 };
 
 export const useWebVitalsTracking = () => {
-    const { trackEvent } = useEventTracker();
     const hasTracked = useRef(false);
 
     useEffect(() => {
         if (hasTracked.current) return;
         hasTracked.current = true;
 
-        const sendVital = (metric) => {
-            trackEvent('WebVital', {
-                metric_name: metric.name,
-                value: metric.value,
-                rating: metric.rating,
-                navigation_type: metric.navigationType,
-                metric_id: metric.id
-            });
+        const updateVital = (metric) => {
+            const key = `web_vitals_${metric.name.toLowerCase()}`;
+            webVitalsCache[key] = metric.value;
+            webVitalsCache[`${key}_rating`] = metric.rating;
         };
 
-        onLCP(sendVital);
-        onTTFB(sendVital);
-        onCLS(sendVital);
-        onINP(sendVital);
-    }, [trackEvent]);
+        onLCP(updateVital);
+        onTTFB(updateVital);
+        onCLS(updateVital);
+        onINP(updateVital);
+    }, []);
 };
 
 export default useEventTracker;
