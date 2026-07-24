@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { onLCP, onTTFB, onCLS, onINP } from 'web-vitals';
 
 const EVENT_API_URL = import.meta.env.VITE_EVENT_API_URL || 'http://localhost:3001';
 
@@ -278,6 +279,31 @@ export const useProductScrollTracker = (product) => {
 
         return () => window.removeEventListener('scroll', handleScroll);
     }, [product, trackEvent]);
+};
+
+export const useWebVitalsTracking = () => {
+    const { trackEvent } = useEventTracker();
+    const hasTracked = useRef(false);
+
+    useEffect(() => {
+        if (hasTracked.current) return;
+        hasTracked.current = true;
+
+        const sendVital = (metric) => {
+            trackEvent('WebVital', {
+                metric_name: metric.name,
+                value: metric.value,
+                rating: metric.rating,
+                navigation_type: metric.navigationType,
+                metric_id: metric.id
+            });
+        };
+
+        onLCP(sendVital);
+        onTTFB(sendVital);
+        onCLS(sendVital);
+        onINP(sendVital);
+    }, [trackEvent]);
 };
 
 export default useEventTracker;

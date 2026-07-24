@@ -18,7 +18,7 @@ import createCart, {
   updateBuyersIndentity,
 } from "./apis/Cart";
 import { getProductVariantDetail } from "./apis/Products";
-import useEventTracker from "./hooks/EventTracker";
+import useEventTracker, { useWebVitalsTracking } from "./hooks/EventTracker";
 import SpinningWheel from "./components/SpinningWheel";
 import CookieConsent from "./components/CookieConsent";
 import WhatsAppButton from "./components/utils/WhatsAppButton";
@@ -34,6 +34,7 @@ function App() {
 
   // Analytics Tracking
   const { trackEvent } = useEventTracker();
+  useWebVitalsTracking();
 
   useEffect(() => {
     trackEvent('PageView', { page_path: pathname });
