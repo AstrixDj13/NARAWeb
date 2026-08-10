@@ -10,9 +10,11 @@ const VideoFeed = () => {
   // Replace or add your YouTube Video IDs here!
   const videoIds = [
     "CmS8bh8Eb_Q", // Ira Top Video
-    //"CmS8bh8Eb_Q", // Placeholder 2
-    //"CmS8bh8Eb_Q", // Placeholder 3
-    //"CmS8bh8Eb_Q", // Placeholder 4
+    "5_IpIvyCMmk",
+    "oCs6dzHaEF8",
+    "G7O4nsOifaI",
+    "nHXw5F-Ay8M",
+    "ljvp_TsUgt0",
   ];
 
   return (
