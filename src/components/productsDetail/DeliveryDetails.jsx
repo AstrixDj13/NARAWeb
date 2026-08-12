@@ -49,7 +49,7 @@ export default function DeliveryDetails() {
     );
 
     return (
-        <div className="mt-8 flex flex-col gap-4">
+        <div className="mt-4 flex flex-col gap-4">
             <h3 className="font-bold text-lg text-gray-900 dark:text-gray-100 font-outfit">Delivery Details</h3>
 
             <div className="relative w-full">

@@ -325,6 +325,22 @@ export default function ProductsDetailPage() {
                   variants={product.variants}
                   productId={product.id}
                 />
+                
+                <div className="w-full flex items-center justify-between bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded-lg p-3 mt-1 mb-2 shadow-sm">
+                  <span className="text-sm font-bold text-teal-800 dark:text-teal-300">
+                    Can’t find your size??
+                  </span>
+                  <a 
+                    href="https://wa.me/919326472754" 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    className="text-xs md:text-sm bg-teal-600 hover:bg-teal-700 text-white px-4 py-1.5 rounded-full font-bold transition-all shadow-sm flex items-center gap-1"
+                  >
+                    Customize it ✨
+                  </a>
+                </div>
+
+                
                 <DeliveryDetails />
                 <Coupons />
               </DetailSection>
