@@ -105,7 +105,7 @@ export default function CartPage() {
         }
     };
 
-    const { subtotal, savings: cartSavings, itemsPricing } = calculateCartPricing(productsInCart);
+    const { subtotal, savings: cartSavings, itemsPricing, isGlitchApplied } = calculateCartPricing(productsInCart, userEmail);
     const DELIVERY_FEE = 100;
     const savings = cartSavings + DELIVERY_FEE; // 15% Loss Aversion Savings + Waived Delivery Fee
 
@@ -178,7 +178,7 @@ export default function CartPage() {
                                                             <div className="flex flex-col">
                                                                 <span className="font-semibold text-sm text-gray-900 dark:text-white leading-tight">{title}</span>
                                                                 <span className="text-xs text-gray-500 mt-1">{size}</span>
-                                                                {pricing?.isBogo && (
+                                                                {!isGlitchApplied && pricing?.isBogo && (
                                                                     <p className="text-[10px] text-gray-500 flex items-center gap-1 mt-1 font-medium">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="10" height="10" fill="currentColor"><path d="M13.7 5.3a2 2 0 0 0-.6-1.4l-3-3A2 2 0 0 0 8.7.3H2A1.5 1.5 0 0 0 .5 1.8v6.7c0 .4.2.8.5 1l6.7 6.7a2 2 0 0 0 2.8 0l3.2-3.1a2 2 0 0 0 0-2.9zM3.5 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>
                                                                         BUY 1 GET 1 {pricing.freeCount > 0 ? `(-${pricePerItem?.currencyCode || '₹'}${(pricing.originalPrice * pricing.freeCount).toFixed(2)})` : ''}
@@ -234,14 +234,18 @@ export default function CartPage() {
                                         </div>
 
                                         {/* Savings Display */}
-                                        <div className="flex justify-between items-center text-green-600 dark:text-green-400">
-                                            <span className="font-bold text-lg">You Saved:</span>
-                                            <span className="font-bold text-xl">₹{savings.toFixed(2)}</span>
-                                        </div>
-                                        <p className="text-xs text-green-600 dark:text-green-400 mt-[-10px] text-right">
-                                            (Total savings on this order!)
-                                        </p>
-                                        <hr className="border-gray-300 dark:border-gray-700" />
+                                        {!isGlitchApplied && (
+                                            <>
+                                                <div className="flex justify-between items-center text-green-600 dark:text-green-400">
+                                                    <span className="font-bold text-lg">You Saved:</span>
+                                                    <span className="font-bold text-xl">₹{savings.toFixed(2)}</span>
+                                                </div>
+                                                <p className="text-xs text-green-600 dark:text-green-400 mt-[-10px] text-right">
+                                                    (Total savings on this order!)
+                                                </p>
+                                                <hr className="border-gray-300 dark:border-gray-700" />
+                                            </>
+                                        )}
 
                                         <div className="flex justify-between items-center">
                                             <span className="font-bold text-xl">Subtotal:</span>
@@ -250,9 +254,11 @@ export default function CartPage() {
                                         <p className="text-xs text-gray-500 dark:text-gray-400 text-right">
                                             Taxes and shipping calculated at checkout
                                         </p>
-                                        <p className="text-sm text-gray-700 dark:text-gray-300 font-medium text-right mt-2">
-                                            NOTE: Exchanges for size or a different piece is valid for the B1G1 sale
-                                        </p>
+                                        {!isGlitchApplied && (
+                                            <p className="text-sm text-gray-700 dark:text-gray-300 font-medium text-right mt-2">
+                                                NOTE: Exchanges for size or a different piece is valid for the B1G1 sale
+                                            </p>
+                                        )}
                                         <Coupons />
 
                                         {/* Email Cart Section */}

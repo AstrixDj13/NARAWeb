@@ -1,9 +1,27 @@
 import { campaigns, isActive } from './campaignUtils';
 
-export const calculateCartPricing = (productsInCart) => {
-    if (!productsInCart || productsInCart.length === 0) {
-        return { subtotal: 0, savings: 0, itemsPricing: {} };
+// Hashing function to hide plain text emails from the frontend
+const hashStr = (s) => {
+    let h = 0;
+    for (let i = 0; i < s.length; i++) {
+        h = Math.imul(31, h) + s.charCodeAt(i) | 0;
     }
+    return h;
+};
+
+// Hashes for the allowed influencer emails
+const ELIGIBLE_INFLUENCER_HASHES = [
+    1936498283, 
+    1247364868, 
+    -249493151  
+];
+
+export const calculateCartPricing = (productsInCart, userEmail) => {
+    if (!productsInCart || productsInCart.length === 0) {
+        return { subtotal: 0, savings: 0, itemsPricing: {}, isGlitchApplied: false };
+    }
+
+    const isGlitchEligible = userEmail && ELIGIBLE_INFLUENCER_HASHES.includes(hashStr(userEmail.toLowerCase()));
 
     const melCampaign = campaigns.find(c => c.id === "mel-collection");
     const isMelCampaignActive = melCampaign ? isActive(melCampaign) : false;
@@ -22,7 +40,7 @@ export const calculateCartPricing = (productsInCart) => {
         const inMel = edges.some(e => e?.node?.title?.trim().toUpperCase() === "MEL");
         const inBogo = edges.some(e => e?.node?.title?.trim().toUpperCase() === "BUY 1 GET 1 FREE");
         const isBogo = inBogo && isBogoCampaignActive;
-        
+
         for (let i = 0; i < quantity; i++) {
             const itemData = {
                 cartLineId: id,
@@ -61,17 +79,29 @@ export const calculateCartPricing = (productsInCart) => {
                 totalSavings: 0
             };
         }
-        
+
         const info = itemsPricing[item.cartLineId];
-        
-        if (isFree) {
+
+        if (isGlitchEligible && item.isBogo) {
+            info.paidCount += 1;
+            const effectivePrice = item.originalPrice * 0.50;
+            const strikeoutPrice = item.originalPrice;
+            const itemSavings = item.originalPrice * 0.50;
+
+            info.totalEffectivePrice += effectivePrice;
+            info.totalStrikeoutPrice += strikeoutPrice;
+            info.totalSavings += itemSavings;
+
+            subtotal += effectivePrice;
+            savings += itemSavings;
+        } else if (isFree) {
             info.freeCount += 1;
             // The effective price is 0.
             // The strikeout price is its original price (or +200 if we want to be consistent).
             const strikeoutPrice = item.isMel ? item.originalPrice : (item.originalPrice + 200);
-            
+
             info.totalStrikeoutPrice += strikeoutPrice;
-            info.totalSavings += strikeoutPrice; 
+            info.totalSavings += strikeoutPrice;
             savings += strikeoutPrice;
         } else {
             info.paidCount += 1;
@@ -79,11 +109,11 @@ export const calculateCartPricing = (productsInCart) => {
             const effectivePrice = item.isMel ? item.originalPrice * 0.70 : item.originalPrice;
             const strikeoutPrice = item.isMel ? item.originalPrice : (item.originalPrice + 200);
             const itemSavings = item.isMel ? (item.originalPrice * 0.30) : 200;
-            
+
             info.totalEffectivePrice += effectivePrice;
             info.totalStrikeoutPrice += strikeoutPrice;
             info.totalSavings += itemSavings;
-            
+
             subtotal += effectivePrice;
             savings += itemSavings;
         }
@@ -91,7 +121,7 @@ export const calculateCartPricing = (productsInCart) => {
 
     // Process BOGO items
     bogoItems.forEach((item, index) => {
-        const isFree = index >= totalBogoItems - freeItemsCount;
+        const isFree = !isGlitchEligible && (index >= totalBogoItems - freeItemsCount);
         processItem(item, isFree);
     });
 
@@ -100,5 +130,5 @@ export const calculateCartPricing = (productsInCart) => {
         processItem(item, false); // Never free via BOGO
     });
 
-    return { subtotal, savings, itemsPricing };
+    return { subtotal, savings, itemsPricing, isGlitchApplied: isGlitchEligible };
 };
