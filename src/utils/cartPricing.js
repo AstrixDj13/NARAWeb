@@ -13,7 +13,8 @@ const hashStr = (s) => {
 const ELIGIBLE_INFLUENCER_HASHES = [
     1936498283, 
     1247364868, 
-    -249493151  
+    -249493151,
+    -1377476097
 ];
 
 export const calculateCartPricing = (productsInCart, userEmail) => {
