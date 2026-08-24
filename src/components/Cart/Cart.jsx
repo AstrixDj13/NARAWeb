@@ -260,11 +260,11 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
                     <span className="font-bold text-lg">Subtotal:</span>
                     <span className="font-bold text-lg text-[#1F4A40] dark:text-green-400">₹{subtotal.toFixed(2)}</span>
                   </div>
-                  {!isGlitchApplied && (
+                  {/*!isGlitchApplied && (
                     <p className="text-sm text-gray-600 dark:text-gray-400 font-medium text-right mb-4 mt-2">
                       NOTE: Exchanges for size or a different piece is valid for the B1G1 sale
                     </p>
-                  )}
+                  )*/}
 
                   {/* Email Cart Section */}
                   <div className="mb-4">

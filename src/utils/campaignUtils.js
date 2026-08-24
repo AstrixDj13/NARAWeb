@@ -84,7 +84,7 @@ export const campaigns = [
         id: "b1g1-new",
         name: "", // Showing in the countdown area
         offerTag: "B1G1", // The tag applied to products
-        showOnExpiry: true, // This MUST be true if you omit dates
+        showOnExpiry: false, // This MUST be true if you omit dates
         collectionTitle: "BUY 1 GET 1 FREE",
         marqueeMessage: "B1G1 free live now!*"
     }

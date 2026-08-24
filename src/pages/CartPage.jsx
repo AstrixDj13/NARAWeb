@@ -254,11 +254,11 @@ export default function CartPage() {
                                         <p className="text-xs text-gray-500 dark:text-gray-400 text-right">
                                             Taxes and shipping calculated at checkout
                                         </p>
-                                        {!isGlitchApplied && (
+                                        {/*!isGlitchApplied && (
                                             <p className="text-sm text-gray-700 dark:text-gray-300 font-medium text-right mt-2">
                                                 NOTE: Exchanges for size or a different piece is valid for the B1G1 sale
                                             </p>
-                                        )}
+                                        )*/}
                                         <Coupons />
 
                                         {/* Email Cart Section */}

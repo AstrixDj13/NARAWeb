@@ -22,11 +22,9 @@ const TopSection = () => {
     try {
       let fetchedCollections = await getCollections();
 
-      const bogo = fetchedCollections.find(c => c.title.trim().toUpperCase().includes("BUY 1 GET 1"));
       const aaina = fetchedCollections.find(c => c.title.trim().toUpperCase().includes("AAINA"));
       
       const banners = [];
-      if (bogo) banners.push(bogo);
       if (aaina) banners.push(aaina);
       setBannerCollections(banners);
 
@@ -95,9 +93,7 @@ const TopSection = () => {
       const title = currentBanner?.title?.trim().toUpperCase() || "";
       
       let delay = 5000;
-      if (title.includes("BUY 1 GET 1")) {
-        delay = 8000;
-      } else if (title.includes("AAINA")) {
+      if (title.includes("AAINA")) {
         delay = 4000;
       }
 
