@@ -22,6 +22,7 @@ const BlogPost = React.lazy(() => import("../pages/BlogPost"));
 const Return_Policies = React.lazy(() => import("../pages/Return_Policies"));
 const Exchange_Policies = React.lazy(() => import("../pages/Exchange_Policies"));
 const UGCCollaboration = React.lazy(() => import("../pages/UGCCollaboration"));
+const PrivacyPolicy = React.lazy(() => import("../pages/PrivacyPolicy"));
 const CartPage = React.lazy(() => import("../pages/CartPage"));
 const TrackOrder = React.lazy(() => import("../pages/TrackOrder"));
 const WishlistPage = React.lazy(() => import("../pages/WishlistPage"));
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
       {
         path: "exchange_policies",
         element: <LazyComponent component={<Exchange_Policies />} />,
+      },
+      {
+        path: "privacy-policy",
+        element: <LazyComponent component={<PrivacyPolicy />} />,
       },
       {
         path: "behind",

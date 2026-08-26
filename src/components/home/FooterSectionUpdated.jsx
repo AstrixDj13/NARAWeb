@@ -122,6 +122,16 @@ const FooterSection = () => {
                   Exchange
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
+                >
+                  Privacy
+                </Link>
+              </li>
             </ul>
           </div>
 
