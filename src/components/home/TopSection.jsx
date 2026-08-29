@@ -23,8 +23,10 @@ const TopSection = () => {
       let fetchedCollections = await getCollections();
 
       const aaina = fetchedCollections.find(c => c.title.trim().toUpperCase().includes("AAINA"));
+      const bogo = fetchedCollections.find(c => c.title.trim().toUpperCase() === "BUY 1 GET 1 FREE");
       
       const banners = [];
+      if (bogo) banners.push(bogo);
       if (aaina) banners.push(aaina);
       setBannerCollections(banners);
 
@@ -95,6 +97,8 @@ const TopSection = () => {
       let delay = 5000;
       if (title.includes("AAINA")) {
         delay = 4000;
+      } else if (title.includes("BUY 1 GET 1")) {
+        delay = 5000;
       }
 
       const timeoutId = setTimeout(() => {
