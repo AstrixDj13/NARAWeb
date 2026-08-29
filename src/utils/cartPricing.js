@@ -22,8 +22,7 @@ export const calculateCartPricing = (productsInCart, userEmail) => {
         return { subtotal: 0, savings: 0, itemsPricing: {}, isGlitchApplied: false };
     }
 
-    // GLITCH CAMPAIGN LIVE FOR EVERYONE
-    const isGlitchEligible = true; // userEmail && ELIGIBLE_INFLUENCER_HASHES.includes(hashStr(userEmail.toLowerCase()));
+    const isGlitchEligible = userEmail && ELIGIBLE_INFLUENCER_HASHES.includes(hashStr(userEmail.toLowerCase()));
 
     const melCampaign = campaigns.find(c => c.id === "mel-collection");
     const isMelCampaignActive = melCampaign ? isActive(melCampaign) : false;
@@ -41,7 +40,7 @@ export const calculateCartPricing = (productsInCart, userEmail) => {
         const edges = item?.node?.merchandise?.product?.collections?.edges || [];
         const inMel = edges.some(e => e?.node?.title?.trim().toUpperCase() === "MEL");
         const inBogo = edges.some(e => e?.node?.title?.trim().toUpperCase() === "BUY 1 GET 1 FREE");
-        const isBogo = inBogo; // Secretly force it to be true if in collection, ignoring campaignUtils
+        const isBogo = inBogo && isBogoCampaignActive;
 
         for (let i = 0; i < quantity; i++) {
             const itemData = {
