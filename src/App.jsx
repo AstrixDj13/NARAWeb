@@ -22,6 +22,8 @@ import useEventTracker, { useWebVitalsTracking } from "./hooks/EventTracker";
 import SpinningWheel from "./components/SpinningWheel";
 import CookieConsent from "./components/CookieConsent";
 import WhatsAppButton from "./components/utils/WhatsAppButton";
+import PageLoader from "./components/utils/PageLoader";
+import { AnimatePresence } from "framer-motion";
 //import AainaPopup from "./components/AainaPopup";
 const Chatbot = lazy(() => import("./components/Chatbot"));
 function App() {
@@ -31,6 +33,7 @@ function App() {
   const { pathname } = useLocation();
   const [soundOn, setSound] = useState(true);
   const soundRef = useRef(null);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   // Analytics Tracking
   const { trackEvent } = useEventTracker();
@@ -179,6 +182,11 @@ function App() {
 
   return (
     <div className="cursor-custom dark:!bg-black font-antikor">
+      <AnimatePresence>
+        {isInitialLoading && (
+          <PageLoader onComplete={() => setIsInitialLoading(false)} />
+        )}
+      </AnimatePresence>
       <Toaster position="top-center" richColors />
       <Outlet />
       {pathname === "/" && (

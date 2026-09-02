@@ -3,7 +3,7 @@ import { fetchProducts } from "../apis/getAllProducts";
 import NavbarRelative from "../components/Navbar/NavbarRelative";
 import ProductHeader from "../components/products/header";
 import ProductItem from "../components/products/product-item";
-import PageLoader from "../components/utils/PageLoader";
+import Loading from "../components/utils/Loading";
 import FooterSection from "../components/home/FooterSectionUpdated";
 
 const Products = () => {
@@ -82,7 +82,7 @@ const Products = () => {
           className="min-h-screen scroll-smooth"
         >
           {isLoading ? (
-            <PageLoader />
+            <Loading />
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 py-4 px-4">
               {currentProducts.length === 0 ? (

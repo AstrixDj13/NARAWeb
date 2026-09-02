@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import Loading from "./Loading";
-import PageLoader from "./PageLoader";
+
 export default function LazyComponent ({ component }) {
     return(
-      <Suspense fallback={<PageLoader />}>
+      <Suspense fallback={<Loading />}>
         {component}
       </Suspense>
     )
