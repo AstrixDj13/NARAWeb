@@ -59,6 +59,10 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
         // Handle other collections in the dropdown, if needed.
         setActiveLink("");
       }
+    } else if (location.pathname === "/feed") {
+      setActiveLink("feed");
+    } else if (location.pathname === "/wishlist") {
+      setActiveLink("wishlist");
     } else {
       setActiveLink("");
     }
@@ -121,6 +125,40 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                         } text-xl md:text-2xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
                     >
                       ALL PRODUCTS
+                    </span>
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to={"/feed"}
+                    onClick={() => handleClick("feed")}
+                    className="text-lg md:text-xl  text-[#5D5D5D] italic"
+                  >
+                    <span
+                      className={`${activeLink === "feed"
+                        ? "text-green-800"
+                        : "text-black dark:!text-[#D8E3B1]"
+                        } text-xl md:text-2xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
+                    >
+                      VIDEO FEED
+                    </span>
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to={"/wishlist"}
+                    onClick={() => handleClick("wishlist")}
+                    className="text-lg md:text-xl  text-[#5D5D5D] italic"
+                  >
+                    <span
+                      className={`${activeLink === "wishlist"
+                        ? "text-green-800"
+                        : "text-black dark:!text-[#D8E3B1]"
+                        } text-xl md:text-2xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
+                    >
+                      WISHLIST
                     </span>
                   </Link>
                 </li>
@@ -330,6 +368,18 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     className="w-4 h-4 md:w-5 md:h-5"
                   />
                 </div>
+
+                <button
+                  onClick={() => {
+                    toggleMenu();
+                    window.dispatchEvent(new CustomEvent('open-chatbot'));
+                  }}
+                  className="flex items-center justify-center bg-white px-2 py-1 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                  aria-label="Open Chatbot"
+                >
+                  <img src="/cat.gif" alt="Open Chat" className="w-5 h-5 object-contain mr-1" />
+                  <span className="text-black text-xs md:text-sm font-sans font-medium">Chat</span>
+                </button>
 
               </div>
             </div>

@@ -95,10 +95,6 @@ const NavbarRelative = () => {
             )}
           </button>
           {theme == "light" ? (
-            <>
-              <Link to="/feed" className="flex items-center">
-                <MdOutlineOndemandVideo className="w-8 h-8 text-[#1F4A40]" />
-              </Link>
               <Link to="/profile">
                 <img
                   title="image"
@@ -110,9 +106,6 @@ const NavbarRelative = () => {
             </>
           ) : (
             <>
-              <Link to="/feed" className="flex items-center">
-                <MdOutlineOndemandVideo className="w-8 h-8 text-white" />
-              </Link>
               <Link to={"/profile"}>
                 <img
                   title="image"

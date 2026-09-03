@@ -214,20 +214,6 @@ const Navbar = () => {
             />
           </button>
 
-          <Link to="/feed" className="flex items-center">
-            <MonitorPlay
-              strokeWidth={0.7}
-              className={`scale-[0.85] md:scale-100 transform origin-center w-8 h-8 ${theme === "light" && !isScrolled
-                ? "text-black"
-                : theme === "dark" && !isScrolled
-                  ? "text-white"
-                  : theme === "light" && isScrolled
-                    ? "text-black"
-                    : theme === "dark" && isScrolled
-                      ? "text-white" : ""
-                }`}
-            />
-          </Link>
 
           <button
             onClick={() => {
@@ -253,36 +239,10 @@ const Navbar = () => {
             />
           </button>
 
-          <Link to="/wishlist" className="relative flex items-center justify-center p-1">
-            <Heart
-              size={23}
-              strokeWidth={1}
-              className={`scale-[0.85] md:scale-100 transform origin-center ${theme === "light" && !isScrolled
-                ? "text-black"
-                : theme === "dark" && !isScrolled
-                  ? "text-white"
-                  : theme === "light" && isScrolled
-                    ? "text-black"
-                    : theme === "dark" && isScrolled
-                      ? "text-white" : ""
-                }`}
-            />
-            {wishlist.length > 0 && (
-              <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-red-600 rounded-full flex items-center justify-center text-[9px] text-white font-bold border border-white dark:border-black">
-                {wishlist.length}
-              </span>
-            )}
-          </Link>
 
           <CartIcon theme={theme} />
 
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent('open-chatbot'))}
-            className="flex items-center justify-center p-1"
-            aria-label="Open Chatbot"
-          >
-            <img src="/cat.gif" alt="Open Chat" className="w-10 h-10 object-contain drop-shadow-sm scale-[1.3] md:scale-[1.8] transition-transform md:hover:scale-[2]" />
-          </button>
+
         </div>
       </nav>
 
