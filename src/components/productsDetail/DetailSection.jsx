@@ -168,17 +168,12 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
             <>
               <span className="line-through text-gray-500 text-base">
                 {currentVariant?.node.price.currencyCode}{" "}
-                {isMelCollection
-                  ? parseFloat(currentVariant?.node.price.amount).toFixed(2)
-                  : (parseFloat(currentVariant?.node.price.amount) + 200).toFixed(2)
-                }
+                {(parseFloat(currentVariant?.node.price.amount) + 200).toFixed(2)}
               </span>
               <span>
                 {currentVariant?.node.price.currencyCode +
                   " " +
-                  (isMelCollection
-                    ? (parseFloat(currentVariant?.node.price.amount) * 0.70).toFixed(2)
-                    : parseFloat(currentVariant?.node.price.amount).toFixed(2))}
+                  parseFloat(currentVariant?.node.price.amount).toFixed(2)}
               </span>
               {/* 30% OFF tag removed as requested */}
             </>
