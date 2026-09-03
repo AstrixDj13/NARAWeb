@@ -76,7 +76,7 @@ export default function PageLoader({ onComplete }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[9999] w-screen h-screen flex items-center justify-center bg-white dark:!bg-black overflow-hidden"
+      className="fixed inset-0 z-[9999] w-screen h-screen flex items-center justify-center bg-[#1F4A40] overflow-hidden"
       variants={bgVariants}
       initial="hidden"
       animate="visible"
@@ -101,7 +101,7 @@ export default function PageLoader({ onComplete }) {
           <motion.span
             key={index}
             variants={letterVariants}
-            className="text-6xl md:text-8xl font-medium text-[#1F4A40] dark:text-[#E8F0D6] tracking-tight"
+            className="text-6xl md:text-8xl font-medium text-[#E8F0D6] tracking-tight"
             style={{
               perspective: "1000px",
               transformStyle: "preserve-3d"
