@@ -95,6 +95,7 @@ const NavbarRelative = () => {
             )}
           </button>
           {theme == "light" ? (
+            <>
               <Link to="/profile">
                 <img
                   title="image"
