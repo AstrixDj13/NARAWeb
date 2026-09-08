@@ -38,15 +38,18 @@ const TopSection = () => {
 
       let reversedCollections = fetchedCollections.reverse();
 
+      const newArrivalsGrid = reversedCollections.find(c => c.title.trim().toUpperCase().includes("NEW ARRIVALS"));
       const tops = reversedCollections.find(c => c.title.trim().toUpperCase() === "TOPS");
       const bottoms = reversedCollections.find(c => c.title.trim().toUpperCase() === "BOTTOMS");
 
       const otherCollections = reversedCollections.filter(c =>
+        !c.title.trim().toUpperCase().includes("NEW ARRIVALS") &&
         c.title.trim().toUpperCase() !== "TOPS" &&
         c.title.trim().toUpperCase() !== "BOTTOMS"
       );
 
       const orderedCollections = [];
+      if (newArrivalsGrid) orderedCollections.push(newArrivalsGrid);
       if (tops) orderedCollections.push(tops);
       if (bottoms) orderedCollections.push(bottoms);
       orderedCollections.push(...otherCollections);
@@ -122,7 +125,7 @@ const TopSection = () => {
   ];
 
   return (
-    <div className={`${topMarginClass} w-full bg-white dark:bg-black transition-all duration-300`}>
+    <div className={`${topMarginClass} w-full bg-transparent transition-all duration-300`}>
       {/* Top Banners Carousel */}
       {bannerCollections.length > 0 ? (
         <div className={`grain-overlay relative w-full ${bannerHeightClass} overflow-hidden mb-6`}>
@@ -217,7 +220,7 @@ const TopSection = () => {
       )}
 
       {/* Bento Box Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 md:px-8 pb-12 bg-white dark:bg-black max-w-[2000px] mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 md:px-8 pb-12 bg-transparent max-w-[2000px] mx-auto">
         {allCollections.map((collection, index) => {
           const targetImageSrc = collection.mobileImageSrc || collection.imageSrc;
           const mobileUrl = getOptimizedImageUrl(targetImageSrc, 600);
@@ -275,7 +278,7 @@ const TopSection = () => {
               <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500"></div>
 
               {/* Persistent sticker tag */}
-              <span className="absolute left-3 bottom-3 z-20 bg-white/95 dark:bg-black/85 text-black dark:text-white font-['Antikor_Mono'] text-[10px] sm:text-xs uppercase tracking-widest px-3 py-1.5 rotate-[-3deg] shadow-md">
+              <span className="absolute left-3 bottom-3 z-20 bg-white dark:bg-[#1a1a1a] text-black dark:text-[#ffffff] font-['Antikor_Mono'] text-[10px] sm:text-xs uppercase tracking-widest px-3 py-1.5 rotate-[-3deg] shadow-md border border-transparent dark:border-white/20">
                 {displayName}
               </span>
 
