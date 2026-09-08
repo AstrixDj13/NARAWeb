@@ -154,9 +154,6 @@ const TopSection = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent group-hover:from-black/70 transition-colors duration-500"></div>
 
               <div className="absolute bottom-8 left-6 sm:bottom-12 sm:left-12 md:bottom-16 md:left-16 flex flex-col items-start z-10 -rotate-2 origin-bottom-left">
-                <span className="font-['Antikor_Mono'] text-[10px] sm:text-xs uppercase tracking-[0.3em] text-[#D8E3B1] mb-2 sm:mb-3">
-                  New Drop
-                </span>
                 {!banner.title.toUpperCase().includes("BUY 1 GET 1") && (
                   <h2 className="font-slussen text-white text-4xl sm:text-6xl md:text-8xl font-extrabold uppercase tracking-tighter drop-shadow-2xl mb-6">
                     {banner.title}

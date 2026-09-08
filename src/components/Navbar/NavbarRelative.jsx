@@ -33,24 +33,12 @@ const NavbarRelative = () => {
   return (
     <div>
       {/* Top Navbar */}
-      <div className="top-0 left-0 w-full z-50 flex flex-col md:flex-row justify-between items-center bg-white dark:!bg-black md:px-10 px-4 py-2 xl:!py-4 bg-opacity-80 fixed shadow-sm md:shadow-none">
+      <div className="top-0 left-0 w-full z-50 flex justify-between items-center bg-white dark:!bg-black md:px-10 px-4 py-2 xl:!py-4 bg-opacity-80 fixed shadow-sm md:shadow-none">
         
-        {/* Mobile Logo Row */}
-        <div className="md:hidden w-full flex justify-center pb-2 pt-1 border-b border-[#1F4A40] dark:border-[#D8E3B1]">
-          <Link to="/">
-            <img
-              title="image"
-              src="/logo.svg"
-              className="h-11 sm:h-12 object-contain"
-              alt="logo"
-            />
-          </Link>
-        </div>
-
-        {/* Desktop Left Section (Hamburger + Logo) */}
-        <div className="hidden md:flex items-center">
+        {/* Left Section (Hamburger + Logo) */}
+        <div className="flex items-center space-x-4">
           <button
-            className="text-4xl flex mt-[10px] items-center font-bold text-black dark:!text-white"
+            className="text-3xl sm:text-4xl flex items-center font-bold text-black dark:!text-white"
             onClick={toggleMenu}
           >
             &#9776;
@@ -59,22 +47,14 @@ const NavbarRelative = () => {
             <img
               title="image"
               src="/logo.svg"
-              className="w-48 md:ml-10 ml-4"
+              className="w-32 sm:w-40 md:w-48"
               alt="logo"
             />
           </Link>
         </div>
 
-        {/* Icons Row (Mobile: evenly spaced full width, Desktop: right aligned) */}
-        <div className="flex items-center justify-between w-full md:w-auto md:space-x-7 pt-2 md:pt-0">
-          {/* Mobile Hamburger */}
-          <button
-            className="md:hidden text-3xl flex items-center font-bold text-black dark:!text-white"
-            onClick={toggleMenu}
-          >
-            &#9776;
-          </button>
-
+        {/* Icons Row */}
+        <div className="flex items-center space-x-3 md:space-x-7">
           <button
             onClick={toggleTheme}
             className="w-8 h-8 leading-9 text-4xl rounded-full m-1 text-[#1F4A40] dark:!text-white"
