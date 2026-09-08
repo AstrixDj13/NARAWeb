@@ -109,30 +109,12 @@ const Navbar = () => {
       <nav
         className={
           !isScrolled
-            ? `${topNavClass} fixed left-0 w-full z-[100] flex flex-col md:flex-row justify-between items-center md:px-10 px-4 py-2 sm:py-2 transition-all duration-300 ${bgClass}`
-            : `fixed ${topNavClass} left-0 w-full z-[100] flex flex-col md:flex-row justify-between items-center md:px-10 px-4 py-2 sm:py-2 transition-all duration-300 ${bgClass}`
+            ? `${topNavClass} fixed left-0 w-full z-[100] flex justify-between items-center md:px-10 px-4 py-2 sm:py-2 transition-all duration-300 ${bgClass}`
+            : `fixed ${topNavClass} left-0 w-full z-[100] flex justify-between items-center md:px-10 px-4 py-2 sm:py-2 transition-all duration-300 ${bgClass}`
         }
       >
-        {/* Mobile Logo Row */}
-        <div className="md:hidden w-full flex justify-center pb-2 pt-1 border-b border-[#1F4A40] dark:border-[#D8E3B1]">
-          <Link to="/">
-            <img
-              src={
-                isScrolled
-                  ? theme === "dark"
-                    ? "/logo2.svg"
-                    : "/3.webp"
-                  : theme === "dark"
-                    ? "/logo2.svg"
-                    : "/3.webp"
-              }
-              alt="logo"
-              className="h-11 sm:h-12 object-contain"
-            />
-          </Link>
-        </div>
-        {/* Desktop Left Section: Hamburger and Logo */}
-        <div className="hidden md:flex items-center space-x-4">
+        {/* Left Section: Hamburger and Logo */}
+        <div className="flex items-center space-x-4">
           <button
             onClick={toggleMenu}
             className={`text-3xl font-bold ${isScrolled
@@ -166,37 +148,8 @@ const Navbar = () => {
           </Link>
         </div>
 
-
-        {/* Icons Row (Mobile: evenly spaced full width, Desktop: right aligned) */}
-        <div className="flex items-center justify-between w-full md:w-auto md:space-x-5 pt-1 md:pt-0">
-
-          {/* Mobile Hamburger */}
-          <button
-            onClick={toggleMenu}
-            className={`md:hidden text-3xl font-bold ${isScrolled
-              ? theme === "light"
-                ? "text-black"
-                : "text-white"
-              : theme === "light"
-                ? "text-black"
-                : "text-white"
-              }`}
-          >
-            &#9776;
-          </button>
-          {/*<a 
-              href="https://ai.studio/apps/3a0b15aa-76c9-4448-91d8-8e16166c2c97?fullscreenApplet=true"
-              target="_blank" 
-              rel="noopener noreferrer"
-              className={`text-xs md:text-sm font-semibold px-2 md:px-3 py-1 rounded-full border transition-colors flex items-center gap-1 ${
-                theme === "light" 
-                  ? "border-black text-black hover:bg-black hover:text-white" 
-                  : "border-white text-white hover:bg-white hover:text-black"
-              }`}
-            >
-              ✨ Try Out
-            </a>*/}
-
+        {/* Icons Row */}
+        <div className="flex items-center space-x-3 md:space-x-5">
           <button onClick={toggleTheme} className="text-4xl rounded-full">
             <img
               src="/home/navbar/light_icon1.svg"
@@ -213,7 +166,6 @@ const Navbar = () => {
                 }`}
             />
           </button>
-
 
           <button
             onClick={() => {
@@ -239,10 +191,7 @@ const Navbar = () => {
             />
           </button>
 
-
           <CartIcon theme={theme} />
-
-
         </div>
       </nav>
 
