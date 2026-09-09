@@ -27,9 +27,9 @@ const TopSection = () => {
       const newArrivals = fetchedCollections.find(c => c.title.trim().toUpperCase().includes("NEW ARRIVALS"));
 
       const banners = [];
+      if (newArrivals) banners.push(newArrivals);
       if (bogo) banners.push(bogo);
       if (aaina) banners.push(aaina);
-      if (newArrivals) banners.push(newArrivals);
       setBannerCollections(banners);
 
       fetchedCollections = fetchedCollections.filter(
