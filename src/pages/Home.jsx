@@ -138,7 +138,7 @@ const Home = () => {
       <style>{marqueeStyle}</style>
 
       {activeMarqueeMessages.length > 0 && (
-        <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white font-bold py-1 overflow-hidden">
+        <div className="fixed top-0 left-0 w-full z-[60] bg-[#D8E3B1] text-[#1F4A40] dark:!bg-[#1F4A40] dark:!text-[#D8E3B1] font-bold py-1 overflow-hidden">
           <motion.div
             key={animationKey}
             initial={{ x: "-100%" }}

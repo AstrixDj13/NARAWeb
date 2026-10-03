@@ -33,10 +33,10 @@ const Navbar2 = () => {
   return (
     <div>
       {/* Top Navbar */}
-      <div className="fixed top-0 left-0 w-full z-50 flex justify-between items-center bg-white dark:!bg-black md:px-10 pl-4 pr-2 py-4 bg-opacity-80">
+      <div className="fixed top-0 left-0 w-full z-50 flex justify-between items-center bg-[#D8E3B1] text-[#1F4A40] dark:!bg-[#1F4A40] dark:!text-[#D8E3B1] md:px-10 pl-4 pr-2 py-4 bg-opacity-80 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] dark:!shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)]">
         <div className="flex items-center">
           <button
-            className="text-4xl font-bold text-black dark:!text-white"
+            className="text-4xl font-bold text-[#D8E3B1] dark:!text-white"
             onClick={toggleMenu}
           >
             &#9776;
@@ -44,7 +44,7 @@ const Navbar2 = () => {
           <Link to="/">
             <img
               title="image"
-              src="/logo.svg"
+              src="/logo2.svg"
               className=" md:ml-10 ml-4"
               alt="logo"
             />
@@ -71,6 +71,7 @@ const Navbar2 = () => {
               <img
                 title="image"
                 src="home/navbar/light_icon1.svg"
+                className="white-icon"
                 alt="light mode icon"
               />
             ) : (
@@ -89,6 +90,7 @@ const Navbar2 = () => {
                 <img
                   title="image"
                   src="/home/navbar/user.svg"
+                  className="white-icon"
                   alt="light mode icon"
                 />
               </Link>

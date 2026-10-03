@@ -25,10 +25,10 @@ const ProductTicker = ({ isHomePage = false, hasMarquee = false }) => {
     }, []);
 
     const layoutClasses = isHomePage
-        ? `fixed ${hasMarquee ? 'top-[26px] md:top-7' : 'top-0'} z-[90] bg-[#0e2a1a] text-white`
+        ? `fixed ${hasMarquee ? 'top-[26px] md:top-7' : 'top-0'} z-[90] bg-[#D8E3B1] text-[#1F4A40] dark:!bg-[#1F4A40] dark:!text-[#D8E3B1]`
         : `mt-[62px] md:mt-[91px] xl:mt-[107px] sticky top-[62px] md:top-[91px] xl:top-[107px] z-40 bg-white dark:!bg-black border-b border-gray-200 dark:!border-gray-800 text-gray-800 dark:!text-white`;
 
-    const iconColor = isHomePage ? "text-white" : "text-black dark:!text-white";
+    const iconColor = isHomePage ? "text-[#1F4A40] dark:!text-[#D8E3B1]" : "text-black dark:!text-white";
 
     return (
         <div

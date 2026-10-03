@@ -33,12 +33,12 @@ const NavbarRelative = () => {
   return (
     <div>
       {/* Top Navbar */}
-      <div className="top-0 left-0 w-full z-50 flex justify-between items-center bg-white dark:!bg-black md:px-10 px-4 py-2 xl:!py-4 bg-opacity-80 fixed shadow-sm md:shadow-none">
+      <div className="top-0 left-0 w-full z-50 flex justify-between items-center bg-[#D8E3B1] text-[#1F4A40] dark:!bg-[#1F4A40] dark:!text-[#D8E3B1] md:px-10 px-4 py-2 xl:!py-4 bg-opacity-80 fixed shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] dark:!shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)] md:shadow-none">
         
         {/* Left Section (Hamburger + Logo) */}
         <div className="flex items-center space-x-4">
           <button
-            className="text-3xl sm:text-4xl flex items-center font-bold text-black dark:!text-white"
+            className="text-3xl sm:text-4xl flex items-center font-bold text-[#1F4A40] dark:!text-[#D8E3B1]"
             onClick={toggleMenu}
           >
             &#9776;
@@ -46,7 +46,7 @@ const NavbarRelative = () => {
           <Link to="/">
             <img
               title="image"
-              src="/logo.svg"
+              src={theme === "light" ? "/logo.svg" : "/logo2.svg"}
               className="w-32 sm:w-40 md:w-48"
               alt="logo"
             />

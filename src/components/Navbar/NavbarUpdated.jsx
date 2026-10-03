@@ -98,11 +98,11 @@ const Navbar = () => {
 
   const bgClass = isScrolled
     ? theme === "light"
-      ? "bg-white text-black"
-      : "bg-black text-white"
+      ? "bg-[#D8E3B1] text-[#1F4A40] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]"
+      : "bg-[#1F4A40] text-[#D8E3B1] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)]"
     : theme === "light"
-      ? "bg-white text-black"
-      : "bg-black text-white";
+      ? "bg-[#D8E3B1] text-[#1F4A40] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]"
+      : "bg-[#1F4A40] text-[#D8E3B1] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)]";
 
   return (
     <div className="relative">
@@ -119,11 +119,11 @@ const Navbar = () => {
             onClick={toggleMenu}
             className={`text-3xl font-bold ${isScrolled
               ? theme === "light"
-                ? "text-black"
-                : "text-white"
+                ? "text-[#1F4A40]"
+                : "text-[#D8E3B1]"
               : theme === "light"
-                ? "text-black"
-                : "text-white"
+                ? "text-[#1F4A40]"
+                : "text-[#D8E3B1]"
               }`}
           >
             &#9776;

@@ -56,11 +56,11 @@ const Navbar = () => {
 
   const bgClass = isScrolled
     ? theme === "light"
-      ? "bg-white text-black"
-      : "bg-black text-white"
+      ? "bg-[#D8E3B1] text-[#1F4A40] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]"
+      : "bg-[#1F4A40] text-[#D8E3B1] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)]"
     : theme === "light"
-    ? "bg-transparent text-black"
-    : "bg-transparent text-white";
+    ? "bg-[#D8E3B1] text-[#1F4A40] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]"
+    : "bg-[#1F4A40] text-[#D8E3B1] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)]";
 
   return (
     <div className="relative">
@@ -97,8 +97,8 @@ const Navbar = () => {
         </div>
         <div className="flex gap-6">
           <div className="relative group">
-            <button className="flex items-center px-4 py-2 rounded hover:bg-gray-200 dark:!hover:bg-gray-700 transition text-[#1F4A40]">
-              <span className="mr-2 font-medium text-[#1F4A40]">
+            <button className="flex items-center px-4 py-2 rounded hover:bg-gray-200 dark:!hover:bg-gray-700 transition text-[#1F4A40] dark:text-[#D8E3B1]">
+              <span className="mr-2 font-medium">
                 Browse Collections
               </span>
               {/* Down Arrow Icon */}
