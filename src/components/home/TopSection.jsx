@@ -10,7 +10,7 @@ const TopSection = () => {
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [isInView, setIsInView] = useState(true);
   const topSectionRef = useRef(null);
   const videoRef = useRef(null);
