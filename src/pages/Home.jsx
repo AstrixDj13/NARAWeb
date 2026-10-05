@@ -11,6 +11,7 @@ import FooterSection from "../components/home/FooterSectionUpdated";
 import TestimonialsSection from "../components/home/Testimonials";
 import BlogCarousel from "../components/home/BlogSection";
 import SubscribeSection from "../components/home/SubscribeSection";
+import FestiveTeaser from "../components/home/FestiveTeaser";
 import NewestArrivals from "../components/home/NewArrivals";
 import NewsletterPopup from "../components/home/NewsletterPopup";
 import UGCSection from "../components/home/UGCSection";
@@ -138,7 +139,7 @@ const Home = () => {
       <style>{marqueeStyle}</style>
 
       {activeMarqueeMessages.length > 0 && (
-        <div className="fixed top-0 left-0 w-full z-[60] bg-[#D8E3B1] text-[#1F4A40] dark:!bg-[#1F4A40] dark:!text-[#D8E3B1] font-bold py-1 overflow-hidden">
+        <div className="fixed top-0 left-0 w-full z-[60] bg-black text-white dark:!bg-white dark:!text-black font-bold py-1 overflow-hidden">
           <motion.div
             key={animationKey}
             initial={{ x: "-100%" }}
@@ -179,6 +180,7 @@ const Home = () => {
 
       {/*<BehindTheScreen />*/}
       {/*<CollectionCarousel />*/}
+      <FestiveTeaser />
       <NewestArrivals />
       <UGCSection />
       {/* <MidSection /> */}
