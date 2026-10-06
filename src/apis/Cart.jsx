@@ -177,6 +177,10 @@ export async function createAuthenticatedCart(variantId, customerAccessToken) {
         }
       }
     }
+    userErrors {
+      field
+      message
+    }
   }
 }
 
@@ -210,8 +214,13 @@ export async function createAuthenticatedCart(variantId, customerAccessToken) {
       throw new Error(`GraphQL error(s): ${errorMessages}`);
     }
 
-    const cart = response.data.data.cartCreate.cart;
+    const cartCreate = response.data.data.cartCreate;
+    const cart = cartCreate.cart;
     if (!cart) {
+      const userErrors = cartCreate.userErrors;
+      if (userErrors && userErrors.length > 0) {
+        throw new Error(userErrors.map(e => e.message).join(", "));
+      }
       throw new Error("Could not create cart! Try again later!");
     }
     console.log(cart);
@@ -294,6 +303,10 @@ export default async function createCart(itemId) {
         }
       }
     }
+    userErrors {
+      field
+      message
+    }
   }
 }
 
@@ -324,8 +337,13 @@ export default async function createCart(itemId) {
       throw new Error(`GraphQL error(s): ${errorMessages}`);
     }
 
-    const cart = response.data.data.cartCreate.cart;
+    const cartCreate = response.data.data.cartCreate;
+    const cart = cartCreate.cart;
     if (!cart) {
+      const userErrors = cartCreate.userErrors;
+      if (userErrors && userErrors.length > 0) {
+        throw new Error(userErrors.map(e => e.message).join(", "));
+      }
       throw new Error("Could not create cart! Try again later!");
     }
     console.log(cart);

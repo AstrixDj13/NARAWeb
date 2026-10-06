@@ -33,12 +33,12 @@ const NavbarRelative = () => {
   return (
     <div>
       {/* Top Navbar */}
-      <div className="top-0 left-0 w-full z-50 flex justify-between items-center bg-[#D8E3B1] text-[#1F4A40] dark:!bg-[#1F4A40] dark:!text-[#D8E3B1] md:px-10 px-4 py-2 xl:!py-4 bg-opacity-80 fixed shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] dark:!shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)] md:shadow-none">
+      <div className="top-0 left-0 w-full z-50 flex justify-between items-center bg-white text-black dark:!bg-black dark:!text-white md:px-10 px-4 py-2 xl:!py-4 bg-opacity-80 fixed shadow-md md:shadow-none">
         
         {/* Left Section (Hamburger + Logo) */}
         <div className="flex items-center space-x-4">
           <button
-            className="text-3xl sm:text-4xl flex items-center font-bold text-[#1F4A40] dark:!text-[#D8E3B1]"
+            className="text-3xl sm:text-4xl flex items-center font-bold text-black dark:!text-white"
             onClick={toggleMenu}
           >
             &#9776;
@@ -57,7 +57,7 @@ const NavbarRelative = () => {
         <div className="flex items-center space-x-3 md:space-x-7">
           <button
             onClick={toggleTheme}
-            className="w-8 h-8 leading-9 text-4xl rounded-full m-1 text-[#1F4A40] dark:!text-white"
+            className="w-8 h-8 leading-9 text-4xl rounded-full m-1 text-black dark:!text-white"
           >
             {theme == "light" ? (
               <img
