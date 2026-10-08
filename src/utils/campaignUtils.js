@@ -9,16 +9,7 @@ export const campaigns = [
         collectionTitle: "X'MAS Sale",
         marqueeMessage: "Christmas Sale: FLAT 25% OFF*!"
     },
-    {
-        id: "b1g1",
-        name: "Stock Clearance:B1G1! LIVE NOW!",
-        startDate: "2025-12-27T00:00:00+05:30",
-        endDate: "2026-01-01T00:00:00+05:30",
-        targetDate: "2026-01-01T00:00:00+05:30",
-        offerTag: "Buy1Get1",
-        collectionTitle: "Buy1-Get1 Sale",
-        marqueeMessage: "B1G1 on the Entire MEL Edit!"
-    },
+
     {
         id: "laya",
         name: "Laya: The Work Edit, LIVE NOW!",
@@ -79,14 +70,6 @@ export const campaigns = [
         showOnExpiry: true, // This MUST be true if you omit dates
         collectionTitle: "",
         marqueeMessage: "AAINA, live now!"
-    },
-    {
-        id: "b1g1-new",
-        name: "", // Showing in the countdown area
-        offerTag: "B1G1", // The tag applied to products
-        showOnExpiry: true, // This MUST be true if you omit dates
-        collectionTitle: "BUY 1 GET 1 FREE",
-        marqueeMessage: "B1G1 free live now!*"
     }
 
 ];

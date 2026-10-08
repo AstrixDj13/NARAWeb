@@ -34,9 +34,8 @@ const TopSection = () => {
       let fetchedCollections = await getCollections();
 
       const aaina = fetchedCollections.find(c => c.title.trim().toUpperCase().includes("AAINA"));
-      const bogo = fetchedCollections.find(c => c.title.trim().toUpperCase() === "BUY 1 GET 1 FREE");
-      const newArrivals = fetchedCollections.find(c => c.title.trim().toUpperCase().includes("NEW ARRIVALS"));
       const adaaFestiveBanner = fetchedCollections.find(c => c.title.trim().toUpperCase().includes("ADAA"));
+      const newArrivals = fetchedCollections.find(c => c.title.trim().toUpperCase().includes("NEW ARRIVALS"));
 
       const banners = [];
 
@@ -53,7 +52,6 @@ const TopSection = () => {
         banners.push(videoBanner);
       }
 
-      if (bogo) banners.push(bogo);
       if (aaina) banners.push(aaina);
 
       setBannerCollections(banners);
@@ -165,8 +163,6 @@ const TopSection = () => {
       let delay = 5000;
       if (title.includes("AAINA")) {
         delay = 4000;
-      } else if (title.includes("BUY 1 GET 1")) {
-        delay = 5000;
       }
 
       const timeoutId = setTimeout(() => {
@@ -275,7 +271,7 @@ const TopSection = () => {
                 )}
 
                 <div className="absolute bottom-8 left-6 sm:bottom-12 sm:left-12 md:bottom-16 md:left-16 flex flex-col items-start z-10 -rotate-2 origin-bottom-left">
-                  {!banner.title.toUpperCase().includes("BUY 1 GET 1") && !banner.isVideo && (
+                  {!banner.isVideo && (
                     <h2 className="font-slussen text-white text-4xl sm:text-6xl md:text-8xl font-extrabold uppercase tracking-tighter drop-shadow-2xl mb-6">
                       {banner.title}
                     </h2>
