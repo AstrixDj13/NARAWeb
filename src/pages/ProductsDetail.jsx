@@ -383,16 +383,16 @@ export default function ProductsDetailPage() {
       )}
 
       {/* Sticky Trending Notification */}
-      {showBackToTop && !isTrendingDismissed && (
+      {showBackToTop && !isTrendingDismissed && params.handle !== "the-plum-top-navy-stripes" && (
         <div 
           className="fixed top-32 md:top-36 left-1/2 transform -translate-x-1/2 z-[90] bg-[#1a1a1a] text-white px-5 py-3 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.2)] flex items-center gap-3 border border-[#333] transition-all duration-500 font-sans text-sm sm:text-base whitespace-nowrap hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(0,0,0,0.3)] group"
         >
-          <Link to="/products/sage-structured-trendy-top?camefrompage=Products" className="flex items-center gap-3 cursor-pointer">
+          <Link to="/products/the-plum-top-navy-stripes?camefrompage=Products" className="flex items-center gap-3 cursor-pointer">
             <span className="relative flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
             </span>
-            <span className="font-medium">Sage Top: <span className="font-bold underline decoration-[#333] group-hover:decoration-white transition-colors underline-offset-4">Trending This Week</span></span>
+            <span className="font-medium">The Plum Top: <span className="font-bold underline decoration-[#333] group-hover:decoration-white transition-colors underline-offset-4">Trending This Week</span></span>
           </Link>
           <div className="w-px h-5 bg-[#444]"></div>
           <button 
