@@ -6,7 +6,7 @@ import SizeSelector from "./SizeSelector";
 import { useDispatch } from "react-redux";
 import { setCurrentVariant, setOutOfStock } from "../../store";
 
-export default function VariantsController({ options, variants, colorsArray, scrollToImageBySrc, productId }) {
+export default function VariantsController({ options, variants, colorsArray, scrollToImageBySrc, productId, product }) {
   const [optionsList, setOptionsList] = useState([]);
   const [variantsInStock, setVariantsInStock] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState({});
@@ -154,6 +154,7 @@ export default function VariantsController({ options, variants, colorsArray, scr
             defaultSize={selectedOptions[option]}
             sizes={optionsChoiceList[option] || []}
             productId={productId}
+            product={product}
           />
         ) : (
           <VariantFilter

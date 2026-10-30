@@ -1,5 +1,70 @@
 import api from "../utils/interceptors";
 
+
+const parseMetafieldVal = (raw) => {
+  if (!raw) return null;
+
+  // 1. Single Metaobject reference
+  if (raw.reference && typeof raw.reference === "object") {
+    if (raw.reference.fields && Array.isArray(raw.reference.fields)) {
+      const labelField = raw.reference.fields.find(
+        (f) => f.key === "label" || f.key === "name" || f.key === "value"
+      );
+      if (labelField?.value && !labelField.value.startsWith("gid://")) return labelField.value;
+    }
+    if (raw.reference.handle && !raw.reference.handle.startsWith("gid://")) {
+      // Capitalize handle if simple word like "wide" -> "Wide"
+      const h = raw.reference.handle;
+      return h.charAt(0).toUpperCase() + h.slice(1);
+    }
+  }
+
+  // 2. List of Metaobject references
+  if (raw.references?.nodes && Array.isArray(raw.references.nodes)) {
+    const labels = raw.references.nodes
+      .map((node) => {
+        const labelField = node.fields?.find(
+          (f) => f.key === "label" || f.key === "name" || f.key === "value"
+        );
+        if (labelField?.value && !labelField.value.startsWith("gid://")) return labelField.value;
+        if (node.handle && !node.handle.startsWith("gid://")) {
+          return node.handle.charAt(0).toUpperCase() + node.handle.slice(1);
+        }
+        return null;
+      })
+      .filter(Boolean);
+    if (labels.length > 0) return labels.join(", ");
+  }
+
+  // 3. String value
+  let val = typeof raw === "object" && raw.value !== undefined ? raw.value : raw;
+  if (!val || typeof val !== "string") return null;
+  val = val.trim();
+
+  // If JSON array or object
+  if ((val.startsWith("[") && val.endsWith("]")) || (val.startsWith("{") && val.endsWith("}"))) {
+    try {
+      const parsed = JSON.parse(val);
+      if (Array.isArray(parsed)) {
+        const nonGids = parsed.filter(
+          (item) => typeof item === "string" && !item.startsWith("gid://")
+        );
+        if (nonGids.length > 0) return nonGids.join(", ");
+      } else if (typeof parsed === "object" && parsed !== null) {
+        const candidate = parsed.label || parsed.value || parsed.name;
+        if (candidate && !String(candidate).startsWith("gid://")) return candidate;
+      }
+    } catch {}
+  }
+
+  // If the raw string is a GID, return null so fallbacks work
+  if (val.startsWith("gid://")) {
+    return null;
+  }
+
+  return val;
+};
+
 export async function getProductById(productId) {
   const formattedId = productId.includes("gid://") ? productId : `gid://shopify/Product/${productId}`;
   const query = `
@@ -68,6 +133,86 @@ query getProductById($id: ID!) {
     worthMetafield: metafield(namespace: "custom", key: "worth") {
       value
     }
+    shopifyFit: metafield(namespace: "shopify", key: "fit") {
+      value
+      reference {
+        ... on Metaobject {
+          id
+          handle
+          fields {
+            key
+            value
+          }
+        }
+      }
+      references(first: 5) {
+        nodes {
+          ... on Metaobject {
+            id
+            handle
+            fields {
+              key
+              value
+            }
+          }
+        }
+      }
+    }
+    shopifyFabric: metafield(namespace: "shopify", key: "fabric") {
+      value
+      reference {
+        ... on Metaobject {
+          id
+          handle
+          fields {
+            key
+            value
+          }
+        }
+      }
+      references(first: 5) {
+        nodes {
+          ... on Metaobject {
+            id
+            handle
+            fields {
+              key
+              value
+            }
+          }
+        }
+      }
+    }
+    shopifyStretch: metafield(namespace: "shopify", key: "stretch") { value }
+    shopifyLining: metafield(namespace: "shopify", key: "lining") { value }
+    customFit: metafield(namespace: "custom", key: "fit") { value }
+    customFabric: metafield(namespace: "custom", key: "fabric") {
+      value
+      reference {
+        ... on Metaobject {
+          id
+          handle
+          fields {
+            key
+            value
+          }
+        }
+      }
+      references(first: 5) {
+        nodes {
+          ... on Metaobject {
+            id
+            handle
+            fields {
+              key
+              value
+            }
+          }
+        }
+      }
+    }
+    customStretch: metafield(namespace: "custom", key: "stretch") { value }
+    customLining: metafield(namespace: "custom", key: "lining") { value }
     collections(first: 10) {  # Fetch all the collection ID
         edges {
           node {
@@ -166,6 +311,13 @@ query getProductById($id: ID!) {
 
     productData.worth = productData.worthMetafield?.value || null;
 
+    productData.fitFabricDetails = {
+      fit: parseMetafieldVal(productData.customFit) || parseMetafieldVal(productData.shopifyFit) || null,
+      fabric: parseMetafieldVal(productData.customFabric) || parseMetafieldVal(productData.shopifyFabric) || null,
+      stretch: parseMetafieldVal(productData.customStretch) || parseMetafieldVal(productData.shopifyStretch) || null,
+      lining: parseMetafieldVal(productData.customLining) || parseMetafieldVal(productData.shopifyLining) || null,
+    };
+
     console.log("logging the complete product data, ", productData);
     return productData;
   } catch (error) {
@@ -241,6 +393,86 @@ query getProductByHandle($handle: String!) {
     worthMetafield: metafield(namespace: "custom", key: "worth") {
       value
     }
+    shopifyFit: metafield(namespace: "shopify", key: "fit") {
+      value
+      reference {
+        ... on Metaobject {
+          id
+          handle
+          fields {
+            key
+            value
+          }
+        }
+      }
+      references(first: 5) {
+        nodes {
+          ... on Metaobject {
+            id
+            handle
+            fields {
+              key
+              value
+            }
+          }
+        }
+      }
+    }
+    shopifyFabric: metafield(namespace: "shopify", key: "fabric") {
+      value
+      reference {
+        ... on Metaobject {
+          id
+          handle
+          fields {
+            key
+            value
+          }
+        }
+      }
+      references(first: 5) {
+        nodes {
+          ... on Metaobject {
+            id
+            handle
+            fields {
+              key
+              value
+            }
+          }
+        }
+      }
+    }
+    shopifyStretch: metafield(namespace: "shopify", key: "stretch") { value }
+    shopifyLining: metafield(namespace: "shopify", key: "lining") { value }
+    customFit: metafield(namespace: "custom", key: "fit") { value }
+    customFabric: metafield(namespace: "custom", key: "fabric") {
+      value
+      reference {
+        ... on Metaobject {
+          id
+          handle
+          fields {
+            key
+            value
+          }
+        }
+      }
+      references(first: 5) {
+        nodes {
+          ... on Metaobject {
+            id
+            handle
+            fields {
+              key
+              value
+            }
+          }
+        }
+      }
+    }
+    customStretch: metafield(namespace: "custom", key: "stretch") { value }
+    customLining: metafield(namespace: "custom", key: "lining") { value }
     collections(first: 10) {  # Fetch all the collection ID
         edges {
           node {
@@ -333,6 +565,13 @@ query getProductByHandle($handle: String!) {
     productData.concernedCollectionId = concernedCollection?.id;
 
     productData.worth = productData.worthMetafield?.value || null;
+
+    productData.fitFabricDetails = {
+      fit: parseMetafieldVal(productData.customFit) || parseMetafieldVal(productData.shopifyFit) || null,
+      fabric: parseMetafieldVal(productData.customFabric) || parseMetafieldVal(productData.shopifyFabric) || null,
+      stretch: parseMetafieldVal(productData.customStretch) || parseMetafieldVal(productData.shopifyStretch) || null,
+      lining: parseMetafieldVal(productData.customLining) || parseMetafieldVal(productData.shopifyLining) || null,
+    };
 
     console.log("logging the complete product data (by handle), ", productData);
     return productData;

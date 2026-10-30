@@ -324,6 +324,7 @@ export default function ProductsDetailPage() {
                   options={product.options}
                   variants={product.variants}
                   productId={product.id}
+                  product={product}
                 />
                 
                 <div className="w-full flex items-center justify-between bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded-lg p-3 mt-1 mb-2 shadow-sm">

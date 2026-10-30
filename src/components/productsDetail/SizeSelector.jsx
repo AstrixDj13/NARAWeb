@@ -1,7 +1,6 @@
 import SizeChart from "./SizeChart";
 
-export default function SizeSelector({ sizes, defaultSize, selectSize, productId }) {
-
+export default function SizeSelector({ sizes, defaultSize, selectSize, productId, product }) {
   return (
     <div className="flex flex-col gap-4 tracking-tighter w-full">
       <div className="flex justify-between items-center w-full">
@@ -9,7 +8,7 @@ export default function SizeSelector({ sizes, defaultSize, selectSize, productId
           Select Size
         </h2>
         {/* Size Chart Component */}
-        <SizeChart productId={productId} />
+        <SizeChart productId={productId} product={product} />
       </div>
 
       <div className="flex gap-4">
@@ -46,8 +45,9 @@ function SizeItem({ name, defaultSizeName, selectSize, enabled }) {
     <button
       title={enabled ? name : "Not available with other selected options!"}
       onClick={clickHandler}
-      className={`border-2 w-8 h-8 border-[#BEBCBD] disabled:opacity-25   ${name === defaultSizeName ? "bg-[#1F4A40] text-white" : ""
-        }`}
+      className={`border-2 w-8 h-8 border-[#BEBCBD] disabled:opacity-25 ${
+        name === defaultSizeName ? "bg-[#1F4A40] text-white" : ""
+      }`}
       disabled={!enabled}
     >
       {name}
