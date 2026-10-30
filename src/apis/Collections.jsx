@@ -69,6 +69,8 @@ export async function getCollectionById(collectionId) {
           id
           title
           handle
+          availableForSale
+          totalInventory
           metafield(namespace: "custom", key: "stock_quantity") {
             value
           }
@@ -84,6 +86,8 @@ export async function getCollectionById(collectionId) {
                   currencyCode
                 }
                 id
+                availableForSale
+                quantityAvailable
               }
             }
           }
@@ -116,23 +120,68 @@ export async function getCollectionById(collectionId) {
       title: collectionData.title,
       descriptionHtml: collectionData.descriptionHtml,
     };
-    console.log(collectionData.products.edges);
-    const products = collectionData.products.edges.map((product) => ({
-      title: product.node.title,
-      handle: product.node.handle,
-      imageSrc: product.node.variants.edges[0].node.image?.url,
-      price: product.node.variants.edges[0].node.price.amount,
-      productId: product.node.id,
-      variantId: product.node.variants.edges[0].node.id,
-      variants: product.node.variants.edges.map(v => ({
+
+    const products = collectionData.products.edges.map((product) => {
+      const node = product.node;
+      const firstVariantNode = node.variants?.edges?.[0]?.node;
+
+      const variants = (node.variants?.edges || []).map((v) => ({
         id: v.node.id,
         title: v.node.title,
-        price: v.node.price.amount
-      })),
-      stockLeft: product.node.metafield?.value ?? undefined,
-    }));
+        price: v.node.price?.amount,
+        availableForSale: v.node.availableForSale,
+        quantityAvailable: v.node.quantityAvailable,
+      }));
 
-    return { collectionDetail, products };
+      // A product is out of stock if:
+      // 1. availableForSale is explicitly false on the product
+      // 2. totalInventory is known and <= 0
+      // 3. all variants are unavailable or 0 quantity
+      // 4. custom stock_quantity metafield says 0 / sold out / out of stock
+      const hasInStockVariant =
+        variants.length === 0 ||
+        variants.some((v) => {
+          if (v.availableForSale === false) return false;
+          if (v.quantityAvailable !== undefined && v.quantityAvailable !== null) {
+            return Number(v.quantityAvailable) > 0;
+          }
+          return v.availableForSale === true;
+        });
+
+      const stockLeftVal = node.metafield?.value ?? undefined;
+      const stockStr = (stockLeftVal ?? "").toString().trim().toLowerCase();
+      const isMetafieldOutOfStock =
+        stockStr === "0" || stockStr === "out of stock" || stockStr === "sold out";
+
+      const isOutOfStock =
+        node.availableForSale === false ||
+        (node.totalInventory !== undefined &&
+          node.totalInventory !== null &&
+          Number(node.totalInventory) <= 0) ||
+        !hasInStockVariant ||
+        isMetafieldOutOfStock;
+
+      return {
+        title: node.title,
+        handle: node.handle,
+        imageSrc: firstVariantNode?.image?.url,
+        price: firstVariantNode?.price?.amount,
+        productId: node.id,
+        variantId: firstVariantNode?.id,
+        variants,
+        stockLeft: stockLeftVal,
+        availableForSale: !isOutOfStock,
+        totalInventory: node.totalInventory,
+        isOutOfStock,
+      };
+    });
+
+    // Partition: In-stock products display first, all out-of-stock products display at the end
+    const inStock = products.filter((p) => !p.isOutOfStock);
+    const outOfStock = products.filter((p) => p.isOutOfStock);
+    const sortedProducts = [...inStock, ...outOfStock];
+
+    return { collectionDetail, products: sortedProducts };
   } catch (error) {
     console.error("Could not fetch collection items:", error.message);
     throw error;

@@ -25,7 +25,10 @@ export default function CollectionDetail() {
     try {
       const response = await getCollectionById(query.get("id"));
       setCollection(response.collectionDetail);
-      setCollectionProducts(response.products);
+      const prods = response.products || [];
+      const inStock = prods.filter((p) => !p.isOutOfStock);
+      const outOfStock = prods.filter((p) => p.isOutOfStock);
+      setCollectionProducts([...inStock, ...outOfStock]);
     } catch (error) {
       console.error(error);
       // have to handle errors more gracefully!

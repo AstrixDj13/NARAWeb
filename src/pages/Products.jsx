@@ -32,7 +32,9 @@ const Products = () => {
     loadProducts();
   }, []);
 
-  const reversedProducts = [...products].reverse();
+  const inStock = [...products].reverse().filter((p) => !p.isOutOfStock);
+  const outOfStock = [...products].reverse().filter((p) => p.isOutOfStock);
+  const reversedProducts = [...inStock, ...outOfStock];
 
   // Pagination logic
   const indexOfLastProduct = currentPage * productsPerPage;

@@ -8,6 +8,8 @@ const GET_ALL_PRODUCTS_QUERY = `
         id
         title
         handle
+        availableForSale
+        totalInventory
         images(first: 5) {
           nodes {
             url
@@ -16,9 +18,11 @@ const GET_ALL_PRODUCTS_QUERY = `
         metafield(namespace: "custom", key: "stock_quantity") {
             value
           }
-        variants(first: 1) {
+        variants(first: 20) {
           nodes {
             id
+            availableForSale
+            quantityAvailable
             image {
               src
             }
@@ -32,7 +36,6 @@ const GET_ALL_PRODUCTS_QUERY = `
     }
   }
 }
-
 `;
 
 export const fetchProducts = async () => {
@@ -40,9 +43,42 @@ export const fetchProducts = async () => {
     const response = await api.post('/', {
       query: GET_ALL_PRODUCTS_QUERY,
     });
-    const products = response.data.data.products.edges.map(edge => edge.node);
-    console.log(products)
-    return products;
+    const products = response.data.data.products.edges.map(edge => {
+      const node = edge.node;
+      const variants = node.variants?.nodes || [];
+      const hasInStockVariant =
+        variants.length === 0 ||
+        variants.some(
+          v =>
+            v.availableForSale !== false &&
+            (v.quantityAvailable === undefined ||
+              v.quantityAvailable === null ||
+              Number(v.quantityAvailable) > 0)
+        );
+
+      const stockLeftVal = node.metafield?.value;
+      const stockStr = (stockLeftVal ?? '').toString().trim().toLowerCase();
+      const isMetafieldOutOfStock =
+        stockStr === '0' || stockStr === 'out of stock' || stockStr === 'sold out';
+
+      const isOutOfStock =
+        node.availableForSale === false ||
+        (node.totalInventory !== undefined &&
+          node.totalInventory !== null &&
+          Number(node.totalInventory) <= 0) ||
+        !hasInStockVariant ||
+        isMetafieldOutOfStock;
+
+      return {
+        ...node,
+        isOutOfStock,
+        availableForSale: !isOutOfStock,
+      };
+    });
+
+    const inStock = products.filter(p => !p.isOutOfStock);
+    const outOfStock = products.filter(p => p.isOutOfStock);
+    return [...inStock, ...outOfStock];
   } catch (error) {
     console.error('Error fetching products:', error);
     throw error;
