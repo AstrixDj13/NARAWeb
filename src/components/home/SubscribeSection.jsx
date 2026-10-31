@@ -1,7 +1,7 @@
 import React from "react";
-import topVideo from "../../assets/home/backgroundVideo.mp4";
-import topImage from "../../assets/home/backgroundImage.png";
-import VideoLazy from "../loaders/VideoLazy";
+// import topVideo from '../../assets/home/backgroundVideo.mp4';
+// import topImage from '../../assets/home/backgroundImage.png';
+// import VideoLazy from '../loaders/VideoLazy';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const SubscribeSection = () => {
@@ -46,9 +46,6 @@ const SubscribeSection = () => {
             </div>
           </div>
           <div className="hidden md:col-span-2 w-full h-96 md:block">
-            {/* <div className="bloc w-full h-full object-cover object-center">
-              <VideoLazy src={topVideo} poster={topImage} />
-            </div> */}
             <LazyLoadImage
               src="/home/footer/sub1.jpg"
               width={"100%"}
@@ -68,7 +65,7 @@ const SubscribeSection = () => {
 
             <div className="bloc w-full h-full object-center object-cover">
               <LazyLoadImage
-                src="/about/fabric/a1.CR2"
+                src="https://cdn.shopify.com/s/files/1/0722/8951/7782/files/3.webp?v=1793444511"
                 width={"100%"}
                 height={"100%"}
                 className="w-full h-full object-cover"
@@ -86,7 +83,7 @@ const SubscribeSection = () => {
 
             <div className="bloc w-full h-full object-center object-cover">
               <LazyLoadImage
-                src="/home/footer/5.webp"
+                src="https://cdn.shopify.com/s/files/1/0722/8951/7782/files/5.webp?v=1793444510"
                 width={"100%"}
                 height={"100%"}
                 className="w-full h-full object-cover"
@@ -103,7 +100,7 @@ const SubscribeSection = () => {
             /> */}
             <div className="bloc w-full h-full object-center object-cover">
               <LazyLoadImage
-                src="/home/footer/5.webp"
+                src="https://cdn.shopify.com/s/files/1/0722/8951/7782/files/5.webp?v=1793444510"
                 width={"100%"}
                 height={"100%"}
                 className="w-full h-full object-cover"
@@ -120,7 +117,7 @@ const SubscribeSection = () => {
             /> */}
             <div className="bloc w-full h-full object-center object-cover">
               <LazyLoadImage
-                src="/home/footer/5.webp"
+                src="https://cdn.shopify.com/s/files/1/0722/8951/7782/files/5.webp?v=1793444510"
                 width={"100%"}
                 height={"100%"}
                 className="w-full h-full object-cover"

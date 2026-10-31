@@ -33,7 +33,21 @@ function App() {
   const { pathname } = useLocation();
   const [soundOn, setSound] = useState(true);
   const soundRef = useRef(null);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(() => {
+    if (typeof window !== "undefined") {
+      const search = window.location.search || "";
+      const path = window.location.pathname || "";
+      const isAdTraffic = search.includes("fbclid") || search.includes("utm_") || search.includes("gclid");
+      const isDirectLanding = path.startsWith("/product") || path.startsWith("/collection");
+      const hasSeenLoader = sessionStorage.getItem("hasSeenLoader");
+
+      if (isAdTraffic || isDirectLanding || hasSeenLoader) {
+        return false;
+      }
+      sessionStorage.setItem("hasSeenLoader", "true");
+    }
+    return true;
+  });
 
   // Analytics Tracking
   const { trackEvent } = useEventTracker();

@@ -26,7 +26,7 @@ const FabricStorySection = () => {
             </p>
             <div className="lg:relative lg:mt-10">
               <video
-                src="/about/fabric/a4.mp4"
+                src="https://cdn.shopify.com/videos/c/o/v/ac220cbc8fe14dcf88ef85ce1ced12eb.mp4"
                 autoPlay
                 loop
                 muted
@@ -42,7 +42,7 @@ const FabricStorySection = () => {
           </div>
           <div className="col-span-3">
             <video
-              src="/about/fabric/a3.mp4"
+              src="https://cdn.shopify.com/videos/c/o/v/ff14e5580bd84eadb134ee7aad5d15e4.mp4"
               autoPlay
               loop
               muted

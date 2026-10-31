@@ -89,38 +89,44 @@ const TopSection = () => {
     }
   };
 
-  const [topMarginClass, setTopMarginClass] = useState("mt-[5rem] md:mt-[7rem]");
-  const [bannerHeightClass, setBannerHeightClass] = useState("h-[calc(100vh-5rem)] md:h-[calc(100vh-7rem)]");
-
-  useEffect(() => {
-    fetchCollections();
-  }, []);
-
-  useEffect(() => {
-    // Calculate exact header height padding dynamically based on active campaign components.
-    // The heights are derived from Marquee (1.5rem), Ticker (3rem), Countdown (2.5rem), and Navbar thickness.
-    // This permanently prevents any white gaps or crop overlapping across all device sizes.
+  // Calculate exact header height padding synchronously before initial paint to prevent CLS
+  const getInitialClasses = () => {
     try {
       const activeCampaigns = getActiveCampaigns();
       const hasMarquee = activeCampaigns.some((c) => c.marqueeMessage);
       const hasCountdown = activeCampaigns.some((c) => c.name || c.targetDate);
 
       if (hasMarquee && hasCountdown) {
-        setTopMarginClass("mt-[10.5rem] md:mt-[12.5rem]");
-        setBannerHeightClass("h-[calc(100vh-10.5rem)] md:h-[calc(100vh-12.5rem)]");
+        return {
+          topMargin: "mt-[10.5rem] md:mt-[12.5rem]",
+          bannerHeight: "h-[calc(100vh-10.5rem)] md:h-[calc(100vh-12.5rem)]",
+        };
       } else if (hasMarquee) {
-        setTopMarginClass("mt-[6.5rem] md:mt-[8.5rem]");
-        setBannerHeightClass("h-[calc(100vh-6.5rem)] md:h-[calc(100vh-8.5rem)]");
+        return {
+          topMargin: "mt-[6.5rem] md:mt-[8.5rem]",
+          bannerHeight: "h-[calc(100vh-6.5rem)] md:h-[calc(100vh-8.5rem)]",
+        };
       } else if (hasCountdown) {
-        setTopMarginClass("mt-[9rem] md:mt-[11rem]");
-        setBannerHeightClass("h-[calc(100vh-9rem)] md:h-[calc(100vh-11rem)]");
-      } else {
-        setTopMarginClass("mt-[5rem] md:mt-[7rem]");
-        setBannerHeightClass("h-[calc(100vh-5rem)] md:h-[calc(100vh-7rem)]");
+        return {
+          topMargin: "mt-[9rem] md:mt-[11rem]",
+          bannerHeight: "h-[calc(100vh-9rem)] md:h-[calc(100vh-11rem)]",
+        };
       }
     } catch (err) {
       console.warn("TopSection campaign check err:", err);
     }
+    return {
+      topMargin: "mt-[5rem] md:mt-[7rem]",
+      bannerHeight: "h-[calc(100vh-5rem)] md:h-[calc(100vh-7rem)]",
+    };
+  };
+
+  const initialClasses = getInitialClasses();
+  const [topMarginClass] = useState(initialClasses.topMargin);
+  const [bannerHeightClass] = useState(initialClasses.bannerHeight);
+
+  useEffect(() => {
+    fetchCollections();
   }, []);
 
   useEffect(() => {

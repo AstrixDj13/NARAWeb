@@ -270,7 +270,19 @@ export default function ProductsDetailPage() {
         />
       )}
       {isLoading ? (
-        <PageLoader />
+        <div className="flex flex-col bg-[#F7F7F7] dark:bg-black dark:text-[#ffff] font-antikor w-full min-h-screen">
+          <NavbarRelative />
+          <div className="h-10 w-full bg-gray-100 dark:bg-neutral-900 animate-pulse border-b border-gray-200 dark:border-neutral-800" />
+          <div className="flex flex-col gap-1 md:gap-4 items-center justify-center xl:items-stretch xl:justify-center xl:flex-row xl:!p-2 p-0 md:p-2 w-full max-w-7xl mx-auto py-6">
+            <div className="w-full md:w-3/4 xl:w-3/5 aspect-[4/5] bg-gray-200 dark:bg-neutral-800 rounded-lg animate-pulse" />
+            <div className="w-full md:w-3/4 xl:w-2/5 p-4 space-y-4">
+              <div className="h-8 bg-gray-200 dark:bg-neutral-800 rounded w-3/4 animate-pulse" />
+              <div className="h-6 bg-gray-200 dark:bg-neutral-800 rounded w-1/3 animate-pulse" />
+              <div className="h-12 bg-gray-200 dark:bg-neutral-800 rounded w-full animate-pulse mt-6" />
+              <div className="h-12 bg-gray-200 dark:bg-neutral-800 rounded w-full animate-pulse" />
+            </div>
+          </div>
+        </div>
       ) : (
         <div className="flex flex-col bg-[#F7F7F7] dark:bg-black dark:text-[#ffff] font-antikor w-full">
           <NavbarRelative />

@@ -46,13 +46,15 @@ const UGCSection = () => {
     const pendingVotes = useRef(new Set());
 
 
-    const videoFiles = [
-        "Faux 9 to 5 Crop Women's Blazer.mp4",
-        "Ivy Tie- up Boho Skirt.mp4",
-        "Laidback Luxe Trendy Shirt.mp4",
-        "Sage Structured Trendy Top.mp4",
-        "Tie-up Lounge Pants.mp4",
-    ];
+    const ugcVideoCdnMap = {
+        "Faux 9 to 5 Crop Women's Blazer.mp4": "https://cdn.shopify.com/videos/c/o/v/60ff608ce9d24fd6b19f224f0c79edcb.mp4",
+        "Ivy Tie- up Boho Skirt.mp4": "https://cdn.shopify.com/videos/c/o/v/25d33be422e142e2a89cd2e1eb275cdf.mp4",
+        "Laidback Luxe Trendy Shirt.mp4": "https://cdn.shopify.com/videos/c/o/v/11c836adbc244d7295a4cef6e5bacd98.mp4",
+        "Sage Structured Trendy Top.mp4": "https://cdn.shopify.com/videos/c/o/v/d40c241c10b14da5a78d9e371c5c91b2.mp4",
+        "Tie-up Lounge Pants.mp4": "https://cdn.shopify.com/videos/c/o/v/4e0fae86ab834d23958ebfcc6236b38a.mp4",
+    };
+
+    const videoFiles = Object.keys(ugcVideoCdnMap);
 
     /* ---------------- FETCH PRODUCTS ---------------- */
     useEffect(() => {
@@ -64,15 +66,23 @@ const UGCSection = () => {
             if (!ugcCollection) return;
 
             const { products } = await getCollectionById(ugcCollection.id);
-            const normalize = (s) => s.replace(/\s+/g, "").toLowerCase();
+            const normalize = (s) => (s || "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 
             const matched = products
                 .map((p) => {
-                    const match = videoFiles.find(
-                        (f) =>
-                            normalize(f.replace(".mp4", "")) === normalize(p.title)
-                    );
-                    return match ? { ...p, videoSrc: `/ugc_videos/${match}`, videoFilename: match } : null;
+                    const normTitle = normalize(p.title);
+                    const normHandle = normalize(p.handle);
+                    const match = videoFiles.find((f) => {
+                        const normFile = normalize(f.replace(".mp4", ""));
+                        return (
+                            normFile === normTitle ||
+                            normFile === normHandle ||
+                            normTitle.includes(normFile) ||
+                            (normTitle.length >= 4 && normFile.includes(normTitle))
+                        );
+                    });
+                    const cdnUrl = match ? ugcVideoCdnMap[match] || `/ugc_videos/${match}` : null;
+                    return match ? { ...p, videoSrc: cdnUrl, videoFilename: match } : null;
                 })
                 .filter(Boolean);
 

@@ -18,7 +18,7 @@ export default function PageLoader({ onComplete }) {
     visible: { opacity: 1 },
     exit: {
       opacity: 0,
-      transition: { duration: 1.2, ease: "easeInOut", delay: 0.3 }
+      transition: { duration: 0.35, ease: "easeInOut" }
     }
   };
 
@@ -27,7 +27,7 @@ export default function PageLoader({ onComplete }) {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.15,
+        staggerChildren: 0.08,
       },
     },
     exit: {
@@ -35,7 +35,7 @@ export default function PageLoader({ onComplete }) {
       x: isDesktop && typeof window !== "undefined" ? -window.innerWidth / 2 + 160 : 0,
       scale: 0.25,
       opacity: 0,
-      transition: { duration: 1.5, ease: "easeInOut" }
+      transition: { duration: 0.4, ease: "easeInOut" }
     }
   };
 
@@ -43,11 +43,11 @@ export default function PageLoader({ onComplete }) {
   const letterVariants = {
     hidden: {
       opacity: 0,
-      y: 40,
-      scaleY: 0.5,
-      scaleX: 1.2,
-      rotateX: 80,
-      filter: "blur(10px)",
+      y: 30,
+      scaleY: 0.6,
+      scaleX: 1.1,
+      rotateX: 60,
+      filter: "blur(6px)",
     },
     visible: {
       opacity: 1,
@@ -58,17 +58,15 @@ export default function PageLoader({ onComplete }) {
       filter: "blur(0px)",
       transition: {
         type: "spring",
-        damping: 12,
-        stiffness: 100,
-        mass: 0.8,
+        damping: 14,
+        stiffness: 120,
+        mass: 0.6,
       },
     },
     exit: {
-      rotateX: [0, 60, -60, 45, -45, 0],
-      rotateY: [0, 40, -40, 20, -20, 0],
-      rotateZ: [0, -15, 15, -10, 10, 0],
+      opacity: 0,
       transition: {
-        duration: 1.5,
+        duration: 0.3,
         ease: "easeInOut"
       }
     }
@@ -82,9 +80,9 @@ export default function PageLoader({ onComplete }) {
       animate="visible"
       exit="exit"
       onAnimationComplete={(definition) => {
-        // Wait for the 'visible' animation to complete, add a longer delay for background loading, then trigger complete
+        // Snappy completion without artificial 2-second hold
         if (definition === "visible" && onComplete) {
-          setTimeout(onComplete, 2000);
+          setTimeout(onComplete, 250);
         }
       }}
     >
@@ -118,7 +116,7 @@ export default function PageLoader({ onComplete }) {
               opacity: 1,
               scale: 1,
               rotate: 0,
-              transition: { delay: 0.8, type: "spring", stiffness: 200 }
+              transition: { delay: 0.35, type: "spring", stiffness: 220 }
             }
           }}
           className="text-4xl md:text-6xl font-medium text-[#AFA3D1] ml-2 -mt-4 md:-mt-6"

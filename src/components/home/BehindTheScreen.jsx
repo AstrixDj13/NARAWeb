@@ -50,7 +50,7 @@ const BehindTheScreen = () => {
 
             <div className="block absolute bottom-0 right-0 w-[150px] h-[300px] sm:w-[300px] sm:h-[400px] lg:w-[250px] lg:h-[450px] object-cover object-center">
               <LazyLoadImage
-                src={"/home/designs/d2.CR2"}
+                src={"https://cdn.shopify.com/s/files/1/0722/8951/7782/files/d2.CR2?v=1793445696"}
                 width={"100%"}
                 height={"100%"}
                 // PlaceholderSrc={PlaceholderImage}
@@ -80,8 +80,8 @@ const BehindTheScreen = () => {
 
             <div className="bloc absolute bottom-0 right-0 w-2/5 h-[200px] mr-20 sm:mr-40 lg:mr-36 sm:w-2/5 sm:h-[300px] lg:w-[2/5] lg:h-[300px]">
               <VideoLazy
-                src={"/home/designs/d5.mp4"}
-                poster={"/home/designs/d5.png"}
+                src={"https://cdn.shopify.com/videos/c/o/v/9ba6c35741594b4286a3d393a1b93dcd.mp4"}
+                poster={"https://cdn.shopify.com/s/files/1/0722/8951/7782/files/d5.png?v=1793444083"}
                 alt="Simple design video"
               />
             </div>

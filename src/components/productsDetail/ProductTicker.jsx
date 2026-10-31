@@ -8,6 +8,7 @@ const ProductTicker = ({ isHomePage = false, hasMarquee = false }) => {
 
     useEffect(() => {
         const interval = setInterval(() => {
+            if (document.hidden) return;
             if (scrollContainerRef.current) {
                 const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
 
@@ -19,7 +20,7 @@ const ProductTicker = ({ isHomePage = false, hasMarquee = false }) => {
                     scrollContainerRef.current.scrollBy({ left: 200, behavior: "smooth" });
                 }
             }
-        }, 3000);
+        }, 3500);
 
         return () => clearInterval(interval);
     }, []);
