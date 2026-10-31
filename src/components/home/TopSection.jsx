@@ -259,14 +259,18 @@ const TopSection = () => {
                     <img
                       src={getOptimizedImageUrl(banner.imageSrc, 1200)}
                       alt={banner.title}
-                      className={`w-full h-full object-cover object-top grayscale-[35%] contrast-[1.08] transition-[filter,transform] duration-[1200ms] group-hover:grayscale-0 group-hover:scale-105 ${banner.mobileImageSrc ? 'hidden lg:block' : ''}`}
+                      fetchpriority={index === 0 ? "high" : "auto"}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      className={`w-full h-full object-cover object-top grayscale-[35%] contrast-[1.08] transition-[filter,transform] duration-[1200ms] group-hover:grayscale-0 group-hover:scale-105 ${banner.mobileImageSrc ? "hidden lg:block" : ""}`}
                     />
                     {/* Mobile Banner Image */}
                     {banner.mobileImageSrc && (
                       <img
                         src={getOptimizedImageUrl(banner.mobileImageSrc, 800)}
                         alt={`${banner.title} Mobile`}
-                        className="w-full h-full object-cover object-top grayscale-[35%] contrast-[1.08] transition-[filter,transform] duration-[1200ms] group-hover:grayscale-0 group-hover:scale-105 lg:hidden block"
+                      fetchpriority={index === 0 ? "high" : "auto"}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      className="w-full h-full object-cover object-top grayscale-[35%] contrast-[1.08] transition-[filter,transform] duration-[1200ms] group-hover:grayscale-0 group-hover:scale-105 lg:hidden block"
                       />
                     )}
                   </>
