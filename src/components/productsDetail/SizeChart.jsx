@@ -306,16 +306,11 @@ export default function SizeChart({ productId, product }) {
           >
             {/* Modal Header */}
             <div className="p-5 sm:p-6 pb-4 border-b border-gray-100 dark:!border-neutral-800 bg-white dark:!bg-[#181818]">
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight text-gray-900 dark:!text-white">
                     {isAdaa ? ADAA_SIZE_GUIDE.title : "Size Guide"}
                   </h2>
-                  <p className="text-xs sm:text-sm text-gray-500 dark:!text-neutral-400 mt-1">
-                    {isAdaa
-                      ? ADAA_SIZE_GUIDE.subtitle
-                      : "Body measurements, taken over light clothing."}
-                  </p>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -493,10 +488,6 @@ export default function SizeChart({ productId, product }) {
                               alt="NARA How to measure body guide"
                               className="max-w-[280px] sm:max-w-[340px] w-full h-auto object-contain rounded-lg shadow-xs bg-white p-2"
                             />
-                            <p className="text-[11px] text-gray-400 dark:!text-neutral-400 mt-2 text-center">
-                              All measurements are body measurements in{" "}
-                              {unit === "in" ? "inches" : "centimeters"}.
-                            </p>
                           </div>
                         )}
                       </div>
@@ -505,6 +496,9 @@ export default function SizeChart({ productId, product }) {
 
                   {/* Suggestions Box */}
                   <div className="p-4 sm:p-5 bg-[#F9F9FA] dark:!bg-[#222222] border border-gray-200 dark:!border-neutral-800 rounded-xl space-y-3.5">
+                    <h3 className="font-serif text-base sm:text-lg font-medium tracking-tight text-gray-900 dark:!text-white">
+                      Suggestions
+                    </h3>
                     <div>
                       <h4 className="text-xs sm:text-sm font-semibold text-gray-900 dark:!text-white">
                         1. Don’t know your measurements?
