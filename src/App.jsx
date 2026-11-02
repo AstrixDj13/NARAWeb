@@ -202,7 +202,9 @@ function App() {
         )}
       </AnimatePresence>
       <Toaster position="top-center" richColors />
-      <Outlet />
+      <main id="main-content" role="main" className="min-h-screen">
+        <Outlet />
+      </main>
       {pathname === "/" && (
         <Suspense fallback={null}>
           <Chatbot />

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import VideoLazy from '../loaders/VideoLazy';
 import { useOfferTag } from '../../hooks/useOfferTag';
-import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
+import { getOptimizedImageUrl, getSrcSet } from '../../utils/imageOptimizer';
 
 const ProductCard = ({ product, className, forceFullHeight }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);

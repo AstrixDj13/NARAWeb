@@ -11,7 +11,7 @@ import FooterSection from "../components/home/FooterSectionUpdated";
 import TestimonialsSection from "../components/home/Testimonials";
 import BlogCarousel from "../components/home/BlogSection";
 import SubscribeSection from "../components/home/SubscribeSection";
-import FestiveTeaser from "../components/home/FestiveTeaser";
+// import FestiveTeaser from "../components/home/FestiveTeaser";
 import NewestArrivals from "../components/home/NewArrivals";
 import NewsletterPopup from "../components/home/NewsletterPopup";
 import UGCSection from "../components/home/UGCSection";
@@ -180,7 +180,7 @@ const Home = () => {
 
       {/*<BehindTheScreen />*/}
       {/*<CollectionCarousel />*/}
-      <FestiveTeaser />
+      {/* <FestiveTeaser /> */}
       <NewestArrivals />
       <UGCSection />
       {/* <MidSection /> */}

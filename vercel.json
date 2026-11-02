@@ -35,7 +35,7 @@
         },
         {
           "key": "Link",
-          "value": "</logo.svg>; rel=preload; as=image, </cat.gif>; rel=preload; as=image"
+          "value": "</logo.svg>; rel=preload; as=image"
         }
       ]
     },

@@ -41,15 +41,6 @@ const TopSection = () => {
 
       if (SHOW_ADAA && adaaFestiveBanner) {
         banners.push(adaaFestiveBanner);
-      } else {
-        const videoBanner = {
-          id: "video-teaser-1",
-          title: "NARA ADAA TEASER",
-          isVideo: true,
-          videoSrc: "https://cdn.shopify.com/videos/c/o/v/3ad9ec19856544c6b58c665e24efecbc.mov",
-          link: aaina ? `/collection?id=${encodeURIComponent(aaina.id)}` : "/"
-        };
-        banners.push(videoBanner);
       }
 
       if (aaina) banners.push(aaina);
@@ -259,6 +250,8 @@ const TopSection = () => {
                     <img
                       src={getOptimizedImageUrl(banner.imageSrc, 1200)}
                       alt={banner.title}
+                      width="1200"
+                      height="600"
                       fetchpriority={index === 0 ? "high" : "auto"}
                       loading={index === 0 ? "eager" : "lazy"}
                       className={`w-full h-full object-cover object-top grayscale-[35%] contrast-[1.08] transition-[filter,transform] duration-[1200ms] group-hover:grayscale-0 group-hover:scale-105 ${banner.mobileImageSrc ? "hidden lg:block" : ""}`}
@@ -268,6 +261,9 @@ const TopSection = () => {
                       <img
                         src={getOptimizedImageUrl(banner.mobileImageSrc, 800)}
                         alt={`${banner.title} Mobile`}
+                        width="800"
+                        height="1200"
+                      
                       fetchpriority={index === 0 ? "high" : "auto"}
                       loading={index === 0 ? "eager" : "lazy"}
                       className="w-full h-full object-cover object-top grayscale-[35%] contrast-[1.08] transition-[filter,transform] duration-[1200ms] group-hover:grayscale-0 group-hover:scale-105 lg:hidden block"
@@ -321,6 +317,8 @@ const TopSection = () => {
           <img
             src="/mystery.jpeg"
             alt="Mystery Banner"
+            width="1200"
+            height="600"
             className="w-full h-full object-cover object-top"
           />
         </div>
@@ -380,6 +378,8 @@ const TopSection = () => {
                   src={desktopUrl}
                   srcSet={`${mobileUrl} 600w, ${desktopUrl} 800w`}
                   sizes="(max-width: 768px) 100vw, 50vw"
+                  width="800"
+                  height="1000"
                   className="w-full h-full object-cover grayscale-[30%] contrast-[1.08] transition-[filter,transform] duration-700 ease-out group-hover:grayscale-0 group-hover:scale-[1.03]"
                   alt={collection.title}
                   fetchpriority={isPriority ? "high" : "auto"}

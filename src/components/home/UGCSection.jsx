@@ -17,6 +17,7 @@ import CartToast from "../utils/CartToast";
 import { toast as customToast } from "react-toastify";
 import { FaShoppingCart, FaVolumeMute, FaVolumeUp, FaHeart, FaTrophy } from "react-icons/fa";
 import { useEventTracker } from "../../hooks/EventTracker";
+import { getOptimizedImageUrl } from "../../utils/imageOptimizer";
 
 const UGCSection = () => {
     const { trackEvent } = useEventTracker();
@@ -198,26 +199,12 @@ const UGCSection = () => {
         return count > (max.count || 0) ? { id, count } : max;
     }, { id: null, count: 0 });
 
-    /* ---------------- DESKTOP AUTOPLAY ---------------- */
+    /* ---------------- VIEWPORT SCROLL AUTOPLAY (P0 Item 1: No preload, play only in view) ---------------- */
     useEffect(() => {
-        if (isMobile) return;
+        if (!products.length) return;
 
-        videoRefs.current.forEach((video, index) => {
-            if (!video) return;
-
-            if (!manuallyUnmuted.current.has(index)) {
-                video.muted = true;
-            }
-
-            if (!manuallyPaused.current.has(index)) {
-                video.play().catch(() => { });
-            }
-        });
-    }, [products]);
-
-    /* ---------------- MOBILE SCROLL AUTOPLAY ---------------- */
-    useEffect(() => {
-        if (!isMobile) return;
+        const thresholdVal = isMobile ? [0.6] : [0.3];
+        const minRatio = isMobile ? 0.6 : 0.3;
 
         const observer = new IntersectionObserver(
             (entries) => {
@@ -228,7 +215,7 @@ const UGCSection = () => {
 
                     if (manuallyPaused.current.has(index)) return;
 
-                    if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+                    if (entry.isIntersecting && entry.intersectionRatio >= minRatio) {
                         if (!manuallyUnmuted.current.has(index)) {
                             video.muted = true;
                         }
@@ -238,7 +225,7 @@ const UGCSection = () => {
                     }
                 });
             },
-            { threshold: [0.6] }
+            { threshold: thresholdVal }
         );
 
         videoRefs.current.forEach((video, index) => {
@@ -248,7 +235,7 @@ const UGCSection = () => {
         });
 
         return () => observer.disconnect();
-    }, [products]);
+    }, [products, isMobile]);
 
     /* ---------------- PLAY / PAUSE (CENTER) ---------------- */
     const togglePlay = (e, index) => {
@@ -400,10 +387,11 @@ const UGCSection = () => {
                             <video
                                 ref={(el) => (videoRefs.current[index] = el)}
                                 src={product.videoSrc}
+                                poster={getOptimizedImageUrl(product.imageSrc, 400)}
+                                preload="none"
                                 className="w-full h-full object-cover"
                                 loop
                                 muted
-
                                 playsInline
                             />
 
@@ -417,6 +405,7 @@ const UGCSection = () => {
                             {/* MUTE / UNMUTE BUTTON */}
                             <button
                                 onClick={(e) => toggleMute(e, index)}
+                                aria-label={mutedStates[index] ? "Unmute video" : "Mute video"}
                                 className="absolute top-3 right-3 z-10 bg-black/60 text-white p-2 rounded-full"
                             >
                                 {mutedStates[index] ? (
@@ -429,6 +418,9 @@ const UGCSection = () => {
                             {/* PLAY / PAUSE OVERLAY */}
                             <div
                                 onClick={(e) => togglePlay(e, index)}
+                                role="button"
+                                tabIndex={0}
+                                aria-label="Play or pause video"
                                 className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 hover:opacity-100 transition cursor-pointer"
                             >
                                 <div className="w-14 h-14 rounded-full bg-white/80 flex items-center justify-center">

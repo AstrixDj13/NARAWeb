@@ -31,9 +31,7 @@ const FooterSection = () => {
                   <img
                     title="image"
                     key={index}
-                    src="/home/footer/star.svg"
-                    alt="Decoration"
-                    className="w-2 h-2 lg:w-4 lg:h-4"
+                    src="/home/footer/star.svg" alt="Decoration" width="16" height="16" className="w-2 h-2 lg:w-4 lg:h-4"
                   />
                 </>
               ))}
@@ -46,9 +44,7 @@ const FooterSection = () => {
                   <img
                     title="image"
                     key={index}
-                    src="/home/footer/star.svg"
-                    alt="Decoration"
-                    className="w-2 h-2 lg:w-4 lg:h-4"
+                    src="/home/footer/star.svg" alt="Decoration" width="16" height="16" className="w-2 h-2 lg:w-4 lg:h-4"
                   />
                 </>
               ))}

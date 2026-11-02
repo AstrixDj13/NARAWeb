@@ -150,7 +150,7 @@ const Navbar = () => {
 
         {/* Icons Row */}
         <div className="flex items-center space-x-3 md:space-x-5">
-          <button onClick={toggleTheme} className="text-4xl rounded-full">
+          <button onClick={toggleTheme} aria-label="Toggle Dark or Light Mode" className="min-w-[36px] min-h-[36px] flex items-center justify-center text-4xl rounded-full">
             <img
               src="/home/navbar/light_icon1.svg"
               alt={`${theme} mode icon`}

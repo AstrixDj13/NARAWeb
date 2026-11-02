@@ -1,0 +1,26 @@
+# NaraWear
+
+> Premium women's fashion brand specializing in contemporary tops, co-ord sets, dresses, and wardrobe staples with high-quality fabrics, conscious silhouettes, and free shipping across India.
+
+## Collections & Catalog
+
+- [All Products](https://narawear.com/products): Browse the full collection of tops, bottoms, co-ord sets, and statement pieces.
+- [Adaa – The Festive Edit](https://narawear.com/collection?id=gid%3A%2F%2Fshopify%2FCollection%2F473347064118): Festive and celebratory outfits.
+- [Aaina Collection](https://narawear.com/collection?id=gid%3A%2F%2Fshopify%2FCollection%2F473347031350): Elevated classics and refined workwear/evening wear.
+- [New Arrivals](https://narawear.com/products): Latest designs and fresh seasonal drops.
+- [Fit Quiz](https://narawear.com/fit-quiz): Interactive sizing and fit recommendation tool.
+- [Video Feed](https://narawear.com/feed): Community style videos and lookbooks.
+
+## Company & Policies
+
+- [About Us](https://narawear.com/about): Our brand story, artisan craftsmanship, and textile philosophy.
+- [Return Policies](https://narawear.com/return_policies): Guidelines on returns, conditions, and timelines.
+- [Exchange Policies](https://narawear.com/exchange_policies): Information on seamless exchanges.
+- [Privacy Policy](https://narawear.com/privacy-policy): Customer data privacy standards and handling.
+- [Track Order](https://narawear.com/track-order): Live tracking for placed orders.
+
+## Contact
+
+- Website: https://narawear.com
+- WhatsApp: +91 9326472754
+
