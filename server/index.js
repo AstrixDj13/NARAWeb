@@ -1520,6 +1520,9 @@ app.get('/api/delhivery/pincode', async (req, res) => {
 app.get('*', (req, res) => {
   // Set Cache-Control for the SPA entry point
   res.set('Cache-Control', 'public, max-age=0, s-maxage=600, stale-while-revalidate=3600');
+  if (req.path === '/' || req.path === '/index.html') {
+    res.set('Link', '<https://cdn.shopify.com/s/files/1/0722/8951/7782/files/NARA3611_copy.jpg?width=800&format=webp>; rel=preload; as=image; media="(max-width: 1023px)", <https://cdn.shopify.com/s/files/1/0722/8951/7782/files/NARA3611_copy.jpg?width=1200&format=webp>; rel=preload; as=image; media="(min-width: 1024px)"');
+  }
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
