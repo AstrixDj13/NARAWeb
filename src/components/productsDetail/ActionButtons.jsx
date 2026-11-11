@@ -9,6 +9,7 @@ import createCart, {
 } from "../../apis/Cart";
 import getAccountDetailsAPI from "../../apis/getAccoutDetailsAPI";
 import { fixCheckoutUrl } from "../../utils/interceptors";
+import { initiateMagicCheckout } from "../../utils/magicCheckout";
 import { toast } from "sonner";
 import {
   setActiveCartId,
@@ -180,6 +181,21 @@ export default function ActionButtons({ inline = false, productId }) {
     }
   };
 
+  // Buy Now uses its own one-item cart, so the customer's main cart is left untouched.
+  // Falls back to Shopify checkout (checkoutUrl) if Magic Checkout is unavailable.
+  const openMagicCheckoutForBuyNow = async (cart, checkoutUrl, customerInfo) => {
+    await initiateMagicCheckout({
+      cartId: cart.id,
+      productsInCart: cart.lines?.edges || [],
+      totalQuantity: cart.totalQuantity,
+      customerDetails: customerInfo,
+      fallbackUrl: checkoutUrl,
+      onSuccess: () => {
+        trackEvent('Purchase', { variant_id: currentVariant?.node?.id, currency: "INR" });
+      },
+    });
+  };
+
   const createCartAndCheckout = async (variantId) => {
     try {
       setBuyNowBtnClicked(true);
@@ -192,7 +208,7 @@ export default function ActionButtons({ inline = false, productId }) {
         return;
       }
       trackEvent('InitiateCheckout', { variant_id: variantId, currency: "INR" });
-      window.location.href = checkoutUrl;
+      await openMagicCheckoutForBuyNow(cart, checkoutUrl, {});
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -213,8 +229,14 @@ export default function ActionButtons({ inline = false, productId }) {
       console.log("Checkout URL (authenticated):", checkoutUrl);
 
       // Enhance buyer identity
+      const customerInfo = {};
       try {
         const customerDetails = await getAccountDetailsAPI();
+        if (customerDetails) {
+          customerInfo.email = customerDetails.email || "";
+          customerInfo.phone = customerDetails.phone || "";
+          customerInfo.name = `${customerDetails.firstName || ""} ${customerDetails.lastName || ""}`.trim();
+        }
         if (customerDetails && customerDetails.defaultAddress) {
           const address = customerDetails.defaultAddress;
           const deliveryAddress = {
@@ -242,7 +264,7 @@ export default function ActionButtons({ inline = false, productId }) {
       }
       trackEvent('InitiateCheckout', { variant_id: variantId, currency: "INR" });
       //trackEvent('Purchase', { variant_id: variantId, currency: "INR" });
-      window.location.href = checkoutUrl;
+      await openMagicCheckoutForBuyNow(cart, checkoutUrl, customerInfo);
     } catch (error) {
       console.error(error);
       toast.error(error.message);
