@@ -3046,7 +3046,9 @@ app.get('/api/delhivery/pincode', async (req, res) => {
 
 app.get('/api/magic-checkout/config', (req, res) => {
 
-  const keyId = process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID || '';
+  const cleanVal = (v) => (v || '').trim().replace(/^["'\s]+|["'\s]+$/g, '');
+
+  const keyId = cleanVal(process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID || '');
 
   res.json({
 
@@ -3066,11 +3068,13 @@ app.post('/api/magic-checkout/session', async (req, res) => {
 
   try {
 
-    const keyId = process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID;
+    const cleanVal = (v) => (v || '').trim().replace(/^["'\s]+|["'\s]+$/g, '');
 
-    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+    const keyId = cleanVal(process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID);
 
+    const keySecret = cleanVal(process.env.RAZORPAY_KEY_SECRET);
 
+    console.log(`[MagicCheckout] Initiating session - keyId: ${keyId}, secretLength: ${keySecret ? keySecret.length : 0}, secretPrefix: ${keySecret ? keySecret.substring(0, 3) + '***' : 'none'}`);
 
     if (!keyId || !keySecret) {
 
@@ -3278,7 +3282,7 @@ app.post('/api/magic-checkout/verify', async (req, res) => {
 
   try {
 
-    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+    const keySecret = (process.env.RAZORPAY_KEY_SECRET || '').trim().replace(/^["'\s]+|["'\s]+$/g, '');
 
     if (!keySecret) {
 
