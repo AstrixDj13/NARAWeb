@@ -5,6 +5,7 @@ import CollectionProductItem from "../components/Collection/CollectionProduct-It
 import { useEffect, useState } from "react";
 import { getCollectionById } from "../apis/Collections";
 import FooterSection from "../components/home/FooterSectionUpdated";
+import { useEventTracker } from "../hooks/EventTracker";
 
 import { useLocation } from "react-router-dom";
 
@@ -13,6 +14,7 @@ const useQuery = () => {
 };
 
 export default function CollectionDetail() {
+  const { trackEvent } = useEventTracker();
   const [collection, setCollection] = useState({
     title: "N/A",
     descriptionHtml: "N/A",
@@ -38,6 +40,16 @@ export default function CollectionDetail() {
   useEffect(() => {
     fetchCollectionProducts(collectionId);
   }, [collectionId]);
+
+  useEffect(() => {
+    if (collection && collection.title && collection.title !== "N/A") {
+      trackEvent('collection_view', {
+        collection_id: collectionId,
+        collection_title: collection.title,
+        product_count: collectionProducts.length
+      });
+    }
+  }, [collection?.title, collectionProducts.length, collectionId, trackEvent]);
   return (
     <div className="">
       <header className="h-[4em]">

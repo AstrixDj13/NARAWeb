@@ -15,8 +15,10 @@ import Coupons from "../components/Cart/Coupons";
 import FooterSectionUpdated from "../components/home/FooterSectionUpdated";
 import { calculateCartPricing } from "../utils/cartPricing";
 import { deleteCart } from "../store";
-import { initiateMagicCheckout } from "../utils/magicCheckout";
-export default function CartPage() {
+import { initiateMagicCheckout } from "../utils/magicCheckout";
+import { useEventTracker } from "../hooks/EventTracker";
+export default function CartPage() {
+    const { trackEvent } = useEventTracker();
     const totalQuantityInCart = useSelector((state) => state.cart.totalQuantity);
     const checkoutUrl = useSelector((state) => state.cart.checkoutUrl);
     const cartId = useSelector((state) => state.cart.id);
@@ -79,6 +81,9 @@ export default function CartPage() {
             }
         }
 
+        const { subtotal } = calculateCartPricing(productsInCart, userEmail);
+        trackEvent('InitiateCheckout', { value: subtotal, currency: "INR", num_items: totalQuantityInCart });
+
         // Initiate Razorpay Magic Checkout (with automatic fallback to Shopify checkout if store-to-MID is pending)
         await initiateMagicCheckout({
             cartId,
@@ -87,6 +92,7 @@ export default function CartPage() {
             customerDetails: customerInfo,
             fallbackUrl: fixedUrl,
             onSuccess: (orderResult) => {
+                trackEvent('Purchase', { value: subtotal, currency: "INR", num_items: totalQuantityInCart });
                 dispatch(deleteCart());
                 // magicCheckout redirects to Shopify order_status_url when present
                 if (!orderResult?.order_status_url) navigate("/orders");

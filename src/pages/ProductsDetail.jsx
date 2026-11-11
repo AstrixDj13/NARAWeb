@@ -181,11 +181,16 @@ export default function ProductsDetailPage() {
   useEffect(() => {
     if (product && product.id) {
       const firstVariant = product?.variants?.edges?.[0]?.node;
+      const rawPrice = firstVariant?.price?.amount || product?.priceRange?.minVariantPrice?.amount;
+      const numPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) : 0;
       trackEvent('ViewContent', {
         product_id: product.id,
+        content_ids: [product.id],
         variant_id: firstVariant?.id,
         product_name: product.title,
-        price: firstVariant?.price?.amount || product?.priceRange?.minVariantPrice?.amount,
+        value: numPrice,
+        price: numPrice,
+        currency: "INR",
         collection: collectionId || concernedCollectionId,
         in_stock: firstVariant?.availableForSale || false
       });

@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { trackEvent } from "../hooks/EventTracker";
 
 const MAGIC_SCRIPT_SRC = "https://checkout.razorpay.com/v1/magic-checkout.js";
 
@@ -144,11 +145,30 @@ export const initiateMagicCheckout = async ({
       throw new Error("Unable to load checkout gateway.");
     }
 
-    // 2. Prepare cart payload
+    // 2. Prepare cart payload & analytics data
     const formattedCart = formatCartForMagicCheckout(cartId, productsInCart, totalQuantity);
     if (!formattedCart.token || formattedCart.items.length === 0) {
       throw new Error("Your cart is empty or invalid.");
     }
+
+    const cartItems = (productsInCart || []).map((edge) => edge?.node || edge);
+    const contentIds = cartItems
+      .map((item) => String(extractNumericId(item?.merchandise?.product?.id || item?.merchandise?.id) || ""))
+      .filter(Boolean);
+    const totalCartValue = cartItems.reduce((sum, item) => {
+      const p = parseFloat(item?.merchandise?.price?.amount || item?.price || 0);
+      const q = Number(item?.quantity) || 1;
+      return sum + p * q;
+    }, 0);
+
+    // Track InitiateCheckout
+    trackEvent("InitiateCheckout", {
+      value: totalCartValue,
+      currency: "INR",
+      num_items: totalQuantity || formattedCart.item_count,
+      content_ids: contentIds,
+      checkout_type: "magic_checkout"
+    });
 
     // 3. Request session from backend API
     const response = await fetch("/api/magic-checkout/session", {
@@ -215,6 +235,18 @@ export const initiateMagicCheckout = async ({
         try {
           const orderResult = await completeShopifyCheckout(keyId, paymentResponse);
           toast.success("Order placed successfully!");
+
+          // Track Purchase event with Meta Pixel & Analytics
+          trackEvent("Purchase", {
+            order_id: paymentResponse.razorpay_order_id,
+            payment_id: paymentResponse.razorpay_payment_id,
+            value: totalCartValue,
+            currency: "INR",
+            num_items: totalQuantity || formattedCart.item_count,
+            content_ids: contentIds,
+            checkout_type: "magic_checkout"
+          });
+
           onSuccess(orderResult);
           if (orderResult?.order_status_url) {
             window.location.href = orderResult.order_status_url;
@@ -231,6 +263,14 @@ export const initiateMagicCheckout = async ({
       modal: {
         ondismiss: function () {
           console.log("Magic Checkout closed by customer.");
+          trackEvent("checkout_abandoned", {
+            step: "razorpay_modal",
+            order_id: finalOrderId,
+            value: totalCartValue,
+            currency: "INR",
+            content_ids: contentIds,
+            reason: "dismissed"
+          });
         },
       },
     };
@@ -239,11 +279,24 @@ export const initiateMagicCheckout = async ({
 
     rzp.on("payment.failed", function (failResponse) {
       console.error("Razorpay payment failed:", failResponse.error);
+      trackEvent("payment_failed", {
+        order_id: finalOrderId,
+        error_code: failResponse.error?.code,
+        error_description: failResponse.error?.description,
+        value: totalCartValue,
+        currency: "INR"
+      });
       toast.error(failResponse.error?.description || "Payment failed. Please try again.");
       onError(failResponse.error);
     });
 
     rzp.open();
+    trackEvent("checkout_step_viewed", {
+      step: "razorpay_modal",
+      order_id: finalOrderId,
+      value: totalCartValue,
+      currency: "INR"
+    });
   } catch (err) {
     console.error("Magic Checkout initiation error:", err.message);
     if (fallbackUrl) {

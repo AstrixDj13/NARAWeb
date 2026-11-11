@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { trackEvent } from '../hooks/EventTracker';
 
 const WishlistContext = createContext();
 
@@ -102,7 +103,8 @@ export const WishlistProvider = ({ children }) => {
 
   const toggleWishlist = (productId) => {
     setWishlist(prev => {
-      const newList = prev.includes(productId) 
+      const isRemoving = prev.includes(productId);
+      const newList = isRemoving 
         ? prev.filter(id => id !== productId)
         : [...prev, productId];
       
@@ -111,6 +113,12 @@ export const WishlistProvider = ({ children }) => {
       const userId = localStorage.getItem('user_id');
       if (userId) {
         syncToBackend(userId, newList);
+      }
+
+      if (isRemoving) {
+        trackEvent('remove_from_wishlist', { product_id: productId, content_ids: [productId] });
+      } else {
+        trackEvent('AddToWishlist', { product_id: productId, content_ids: [productId] });
       }
       
       return newList;

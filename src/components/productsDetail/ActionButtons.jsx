@@ -156,11 +156,15 @@ export default function ActionButtons({ inline = false, productId }) {
     }
 
     const variantId = currentVariant.node.id;
+    const rawPrice = currentVariant?.node?.price?.amount;
+    const numPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) : 0;
 
     trackEvent('AddToCart', {
       variant_id: variantId,
+      content_ids: [variantId],
       currency: "INR",
-      price: currentVariant?.node?.price?.amount,
+      value: numPrice,
+      price: numPrice,
       product_name: currentVariant?.node?.product?.title || currentVariant?.node?.title || document.title,
       quantity: 1
     });
@@ -184,6 +188,10 @@ export default function ActionButtons({ inline = false, productId }) {
   // Buy Now uses its own one-item cart, so the customer's main cart is left untouched.
   // Falls back to Shopify checkout (checkoutUrl) if Magic Checkout is unavailable.
   const openMagicCheckoutForBuyNow = async (cart, checkoutUrl, customerInfo) => {
+    const rawPrice = currentVariant?.node?.price?.amount;
+    const numPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) : 0;
+    const variantId = currentVariant?.node?.id;
+
     await initiateMagicCheckout({
       cartId: cart.id,
       productsInCart: cart.lines?.edges || [],
@@ -191,7 +199,13 @@ export default function ActionButtons({ inline = false, productId }) {
       customerDetails: customerInfo,
       fallbackUrl: checkoutUrl,
       onSuccess: () => {
-        trackEvent('Purchase', { variant_id: currentVariant?.node?.id, currency: "INR" });
+        trackEvent('Purchase', {
+          variant_id: variantId,
+          content_ids: [variantId],
+          value: numPrice,
+          currency: "INR",
+          num_items: 1
+        });
       },
     });
   };
@@ -199,6 +213,9 @@ export default function ActionButtons({ inline = false, productId }) {
   const createCartAndCheckout = async (variantId) => {
     try {
       setBuyNowBtnClicked(true);
+      const rawPrice = currentVariant?.node?.price?.amount;
+      const numPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) : 0;
+
       const cart = await createCart(variantId);
       console.log("URL FROM CART:", cart.checkoutUrl);
       const checkoutUrl = fixCheckoutUrl(cart.checkoutUrl);
@@ -207,7 +224,13 @@ export default function ActionButtons({ inline = false, productId }) {
         toast.error("Unable to get checkout URL. Please try again.");
         return;
       }
-      trackEvent('InitiateCheckout', { variant_id: variantId, currency: "INR" });
+      trackEvent('InitiateCheckout', {
+        variant_id: variantId,
+        content_ids: [variantId],
+        value: numPrice,
+        currency: "INR",
+        num_items: 1
+      });
       await openMagicCheckoutForBuyNow(cart, checkoutUrl, {});
     } catch (error) {
       console.error(error);
@@ -262,8 +285,15 @@ export default function ActionButtons({ inline = false, productId }) {
         toast.error("Unable to get checkout URL. Please try again.");
         return;
       }
-      trackEvent('InitiateCheckout', { variant_id: variantId, currency: "INR" });
-      //trackEvent('Purchase', { variant_id: variantId, currency: "INR" });
+      const rawPrice = currentVariant?.node?.price?.amount;
+      const numPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) : 0;
+      trackEvent('InitiateCheckout', {
+        variant_id: variantId,
+        content_ids: [variantId],
+        value: numPrice,
+        currency: "INR",
+        num_items: 1
+      });
       await openMagicCheckoutForBuyNow(cart, checkoutUrl, customerInfo);
     } catch (error) {
       console.error(error);

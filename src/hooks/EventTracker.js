@@ -175,63 +175,159 @@ const fetchGeoData = async () => {
 
 let webVitalsCache = {};
 
-export const useEventTracker = () => {
-    // We can pre-fetch geo location when the hook mounts
-    useEffect(() => {
-        fetchGeoData();
-    }, []);
+/**
+ * Sanitize and dispatch events to Meta Pixel (window.fbq)
+ */
+export const sendToMetaPixel = (eventName, properties = {}) => {
+    if (typeof window === 'undefined' || !window.fbq) return;
 
-    const trackEvent = useCallback(async (eventName, properties = {}) => {
-        const browserInfo = getBrowserInfo();
-        const osInfo = getOSInfo();
-        const utmData = getSessionUTM();
-        const geoData = geoDataCache || JSON.parse(sessionStorage.getItem('geo_data') || '{}');
+    const metaStandardEventMap = {
+        // Spec snake_case events
+        page_view: 'PageView',
+        product_view: 'ViewContent',
+        collection_view: 'ViewContent',
+        add_to_cart: 'AddToCart',
+        checkout_started: 'InitiateCheckout',
+        purchase: 'Purchase',
+        search_initiated: 'Search',
+        add_to_wishlist: 'AddToWishlist',
+        account_created: 'CompleteRegistration',
+        newsletter_signup: 'Lead',
 
-        // Capture data spanning 3.1, 3.3, 3.4, 3.5, 3.6
-        const event = {
-            // 3.1 Universal Fields
-            event_id: uuidv4(),
-            event_name: eventName,
-            event_timestamp: new Date().toISOString(),
-            session_id: getSessionId(),
-            user_id: getUserId(),
-            anonymous_id: getAnonymousId(),
-            is_logged_in: !!getUserId(),
+        // PascalCase standard events
+        PageView: 'PageView',
+        ViewContent: 'ViewContent',
+        AddToCart: 'AddToCart',
+        InitiateCheckout: 'InitiateCheckout',
+        Purchase: 'Purchase',
+        Search: 'Search',
+        AddToWishlist: 'AddToWishlist',
+        CompleteRegistration: 'CompleteRegistration',
+        Lead: 'Lead',
+    };
 
-            // 3.3 Device & Browser Fields
-            device_type: getDeviceType(),
-            browser_name: browserInfo.browser_name,
-            browser_version: browserInfo.browser_version,
-            os_name: osInfo.os_name,
-            os_version: osInfo.os_version,
-            screen_resolution: `${window.screen.width}x${window.screen.height}`,
-            viewport_size: `${window.innerWidth}x${window.innerHeight}`,
+    const isStandard = metaStandardEventMap[eventName];
+    const metaEventName = isStandard || eventName;
 
-            // 3.4 Traffic Source Fields
-            ...utmData,
+    // Parse and sanitize numeric value for Meta Pixel compliance
+    const rawVal = properties.value ?? properties.price ?? properties.total_value;
+    let numericValue = undefined;
+    if (rawVal !== undefined && rawVal !== null && rawVal !== '') {
+        const parsed = typeof rawVal === 'number' ? rawVal : parseFloat(String(rawVal).replace(/[^0-9.]/g, ''));
+        if (!isNaN(parsed) && isFinite(parsed)) {
+            numericValue = parsed;
+        }
+    }
 
-            // 3.5 Geography Fields
+    // Format content_ids as array of strings
+    let contentIds = undefined;
+    if (properties.content_ids) {
+        contentIds = Array.isArray(properties.content_ids)
+            ? properties.content_ids.map(String)
+            : [String(properties.content_ids)];
+    } else if (properties.product_id) {
+        contentIds = [String(properties.product_id)];
+    } else if (properties.variant_id) {
+        contentIds = [String(properties.variant_id)];
+    }
 
-            ...geoData,
+    const payload = {};
+    if (numericValue !== undefined) {
+        payload.value = numericValue;
+        payload.currency = properties.currency || 'INR';
+    }
+    if (contentIds && contentIds.length > 0) {
+        payload.content_ids = contentIds;
+        payload.content_type = properties.content_type || 'product';
+    }
+    if (properties.product_name || properties.content_name) {
+        payload.content_name = properties.product_name || properties.content_name;
+    }
+    if (properties.category || properties.content_category) {
+        payload.content_category = properties.category || properties.content_category;
+    }
+    if (properties.num_items || properties.quantity) {
+        const num = Number(properties.num_items || properties.quantity);
+        if (!isNaN(num)) payload.num_items = num;
+    }
 
-            // 3.6 Page Context Fields
-            page_url: window.location.href,
-            page_path: window.location.pathname,
-            page_title: document.title,
-            page_type: detectPageType(window.location.pathname),
-            page_referrer: document.referrer || sessionStorage.getItem('original_referrer'),
-            user_agent: navigator.userAgent,
+    try {
+        if (isStandard) {
+            window.fbq('track', isStandard, payload);
+        } else {
+            window.fbq('trackCustom', metaEventName, payload);
+        }
+    } catch (err) {
+        console.warn('[Meta Pixel] Error tracking event:', err);
+    }
+};
 
-            // Meta cookies
-            ...getMetaCookies(),
-
-            // Web Vitals
-            ...webVitalsCache,
-
-            // Custom Properties override
+/**
+ * Dispatch events to Google Tag Manager dataLayer (window.dataLayer)
+ */
+export const sendToDataLayer = (eventName, properties = {}) => {
+    if (typeof window === 'undefined') return;
+    window.dataLayer = window.dataLayer || [];
+    try {
+        window.dataLayer.push({
+            event: eventName,
             ...properties,
-        };
+        });
+    } catch (err) {
+        console.warn('[GTM dataLayer] Error pushing event:', err);
+    }
+};
 
+/**
+ * Core event tracking dispatcher - can be called directly or from React hooks
+ */
+export const dispatchTrackEvent = async (eventName, properties = {}) => {
+    // 1. Forward to Meta Pixel immediately
+    sendToMetaPixel(eventName, properties);
+
+    // 2. Forward to Google Tag Manager dataLayer immediately
+    sendToDataLayer(eventName, properties);
+
+    // 3. Assemble complete analytics event payload
+    const browserInfo = getBrowserInfo();
+    const osInfo = getOSInfo();
+    const utmData = getSessionUTM();
+    const geoData = geoDataCache || JSON.parse(sessionStorage.getItem('geo_data') || '{}');
+
+    const event = {
+        event_id: uuidv4(),
+        event_name: eventName,
+        event_timestamp: new Date().toISOString(),
+        session_id: getSessionId(),
+        user_id: getUserId(),
+        anonymous_id: getAnonymousId(),
+        is_logged_in: !!getUserId(),
+
+        device_type: getDeviceType(),
+        browser_name: browserInfo.browser_name,
+        browser_version: browserInfo.browser_version,
+        os_name: osInfo.os_name,
+        os_version: osInfo.os_version,
+        screen_resolution: typeof window !== 'undefined' ? `${window.screen?.width}x${window.screen?.height}` : '',
+        viewport_size: typeof window !== 'undefined' ? `${window.innerWidth}x${window.innerHeight}` : '',
+
+        ...utmData,
+        ...geoData,
+
+        page_url: typeof window !== 'undefined' ? window.location.href : '',
+        page_path: typeof window !== 'undefined' ? window.location.pathname : '',
+        page_title: typeof document !== 'undefined' ? document.title : '',
+        page_type: typeof window !== 'undefined' ? detectPageType(window.location.pathname) : 'other',
+        page_referrer: typeof document !== 'undefined' ? (document.referrer || sessionStorage.getItem('original_referrer')) : '',
+        user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+
+        ...getMetaCookies(),
+        ...webVitalsCache,
+        ...properties,
+    };
+
+    // 4. Send to custom Event API (non-blocking)
+    if (EVENT_API_URL) {
         try {
             await fetch(`${EVENT_API_URL}/events`, {
                 method: 'POST',
@@ -239,12 +335,30 @@ export const useEventTracker = () => {
                 body: JSON.stringify(event),
             });
         } catch (error) {
-            console.error('Track Error:', error);
+            // Silently log in debug, don't break production
+            if (process.env.NODE_ENV === 'development') {
+                console.warn('[EventTracker] Event API dispatch notice:', error.message);
+            }
         }
+    }
+
+    return event;
+};
+
+export const useEventTracker = () => {
+    // We can pre-fetch geo location when the hook mounts
+    useEffect(() => {
+        fetchGeoData();
+    }, []);
+
+    const trackEvent = useCallback((eventName, properties = {}) => {
+        return dispatchTrackEvent(eventName, properties);
     }, []);
 
     return { trackEvent };
 };
+
+export { dispatchTrackEvent as trackEvent };
 
 export const useProductScrollTracker = (product) => {
     const { trackEvent } = useEventTracker();

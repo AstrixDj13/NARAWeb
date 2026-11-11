@@ -79,6 +79,16 @@ export default function CartItem({
           totalQuantityInCart - productQuantity + updatedQuantity
         )
       );
+
+      trackEvent('cart_quantity_change', {
+        product_id: productId,
+        content_ids: [productId],
+        product_name: title,
+        old_quantity: productQuantity,
+        new_quantity: updatedQuantity,
+        value: (parseFloat(pricePerItem?.amount || 0)) * updatedQuantity,
+        currency: pricePerItem?.currencyCode || "INR"
+      });
     } catch (error) {
       console.error(error);
       if (error?.message?.includes("GraphQL error(s)")) {
@@ -104,11 +114,15 @@ export default function CartItem({
           "Could not remove product from the cart! Please try again after you refresh the page or later."
         );
 
+      const rawPrice = pricePerItem?.amount;
+      const numPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) : 0;
       trackEvent('RemoveFromCart', {
         product_id: productId,
+        content_ids: [productId],
         product_name: title,
-        price: pricePerItem?.amount,
-        currency: pricePerItem?.currencyCode,
+        value: numPrice * (productQuantity || 1),
+        price: numPrice,
+        currency: pricePerItem?.currencyCode || "INR",
         quantity_removed: productQuantity,
         variant_size: size
       });
