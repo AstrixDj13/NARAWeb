@@ -144,6 +144,7 @@ export async function createAuthenticatedCart(variantId, customerAccessToken) {
                   value
                 }
                 product {
+                  id
                   title
                   collections(first: 10) {
                     edges {
@@ -270,6 +271,7 @@ export default async function createCart(itemId) {
                   value
                 }
                 product {
+                  id
                   title
                   collections(first: 10) {
                     edges {
@@ -383,6 +385,7 @@ export async function getItemsInCartAPI(cartId) {
                 value
               }
               product {
+                id
                 title
                 metafield(namespace: "custom", key: "stock_quantity") {
                   value

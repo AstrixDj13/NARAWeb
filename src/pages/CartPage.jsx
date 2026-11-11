@@ -1,351 +1,378 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import NavbarRelative from "../components/Navbar/NavbarRelative";
-import CartItem from "../components/Cart/CartItem";
-import YouMayAlsoLike from "../components/Cart/YouMayAlsoLike";
-import { fixCheckoutUrl } from "../utils/interceptors";
-import { updateBuyersIndentity, emailCartAPI } from "../apis/Cart";
-import getAccountDetailsAPI from "../apis/getAccoutDetailsAPI";
-import { Skeleton } from "@mui/material";
-import { HiArrowNarrowLeft } from "react-icons/hi";
-import TrustBadges from "../components/productsDetail/TrustBadges";
-import Coupons from "../components/Cart/Coupons";
-import FooterSectionUpdated from "../components/home/FooterSectionUpdated";
-import { calculateCartPricing } from "../utils/cartPricing";
-export default function CartPage() {
-    const totalQuantityInCart = useSelector((state) => state.cart.totalQuantity);
-    const checkoutUrl = useSelector((state) => state.cart.checkoutUrl);
-    const cartId = useSelector((state) => state.cart.id);
-    const productsInCart = useSelector((state) => state.cart.productsInCart);
-    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-    const accessToken = useSelector((state) => state.user.accessToken);
-    const userEmail = useSelector((state) => state.user.email);
-    const userId = useSelector((state) => state.user.id);
-    const [cartLoading, setCartLoading] = useState(false); // You might want to handle loading state from redux if available
-
-    const [isEmailing, setIsEmailing] = useState(false);
-    const [showEmailInput, setShowEmailInput] = useState(false);
-    const [emailInput, setEmailInput] = useState("");
-
-    const checkOutHandler = async () => {
-        const fixedUrl = fixCheckoutUrl(checkoutUrl);
-        if (!fixedUrl) {
-            toast.error("Unable to proceed to checkout. Please try again.");
-            return;
-        }
-        if (totalQuantityInCart === 0) return toast.error("Your cart is empty!");
-
-        // Enhance buyer identity if authenticated
-        if (isAuthenticated && accessToken) {
-            try {
-                const customerDetails = await getAccountDetailsAPI();
-                if (customerDetails && customerDetails.defaultAddress) {
-                    const address = customerDetails.defaultAddress;
-                    const deliveryAddress = {
-                        address1: address.address1,
-                        address2: address.address2,
-                        city: address.city,
-                        country: "IN", // Assuming IN based on other code
-                        firstName: address.firstName,
-                        lastName: address.lastName,
-                        province: address.province,
-                        zip: address.zip
-                    };
-
-                    await updateBuyersIndentity(cartId, customerDetails.email, deliveryAddress, customerDetails.phone);
-                    console.log("Buyer identity updated successfully");
-                }
-            } catch (err) {
-                console.error("Failed to update buyer identity:", err);
-                // Continue to checkout even if this fails
-            }
-        }
-
-        window.location.href = fixedUrl;
-    };
-
-    const handleEmailCart = async () => {
-        const targetEmail = isAuthenticated ? userEmail : emailInput;
-        if (!targetEmail) {
-            if (!showEmailInput) {
-                setShowEmailInput(true);
-                return;
-            }
-            return toast.error("Please enter a valid email address");
-        }
-
-        // Format products for email
-        const formattedProducts = productsInCart?.map(el => {
-            const item = el?.node;
-            const cartLineId = item?.id;
-            const pricing = itemsPricing?.[cartLineId];
-            return {
-                title: item?.merchandise?.product?.title,
-                price: item?.merchandise?.price?.amount,
-                quantity: item?.quantity,
-                size: item?.merchandise?.selectedOptions?.find((opt) => opt?.name === "Size")?.value,
-                image: item?.merchandise?.image?.src,
-                pricing: pricing
-            };
-        }) || [];
-
-        try {
-            setIsEmailing(true);
-            const anonymousId = localStorage.getItem('anonymous_id') || "";
-            await emailCartAPI(targetEmail, formattedProducts, subtotal, userId, anonymousId, savings, DELIVERY_FEE);
-            toast.success("Cart emailed successfully!");
-            setShowEmailInput(false);
-            setEmailInput("");
-        } catch (error) {
-            toast.error(error.message || "Failed to email cart");
-        } finally {
-            setIsEmailing(false);
-        }
-    };
-
-    const { subtotal, savings: cartSavings, itemsPricing, isGlitchApplied } = calculateCartPricing(productsInCart, userEmail);
-    const DELIVERY_FEE = 100;
-    const savings = cartSavings + DELIVERY_FEE; // 15% Loss Aversion Savings + Waived Delivery Fee
-
-    return (
-        <div className="flex flex-col min-h-screen bg-[#F7F7F7] dark:bg-black dark:text-white font-antikor">
-            <NavbarRelative />
-
-            <div className="flex flex-col items-center justify-center flex-grow px-0 pt-4 pb-0 sm:p-4 md:p-8 mt-[74px]">
-                <div className="w-full xl:w-full dark:border dark:border-gray-800 rounded-lg p-3 sm:p-2 md:p-6">
-                    <div className="flex items-center justify-between border-b pb-4 mb-4 dark:border-gray-800">
-                        <h1 className="text-3xl font-black text-gray-900 dark:text-white">YOUR CART</h1>
-                        <span className="text-gray-900 dark:text-white">{totalQuantityInCart} Items</span>
-                    </div>
-
-                    <div className="flex flex-col gap-6">
-                        {productsInCart && productsInCart.length > 0 ? (
-                            <div className="flex flex-col md:flex-row gap-6">
-                                {/* Left Column: Cart Items */}
-                                <div className="flex flex-col gap-6 md:w-3/5 h-full">
-                                    {productsInCart.map((el) => (
-                                        <CartItem
-                                            key={el?.node?.id}
-                                            cartLineId={el?.node?.id}
-                                            cartId={cartId}
-                                            src={el?.node?.merchandise?.image?.src}
-                                            quantity={el?.node?.quantity}
-                                            title={el?.node?.merchandise?.product?.title}
-                                            pricePerItem={el?.node?.merchandise?.price}
-                                            productId={el?.node?.merchandise?.id}
-                                            size={
-                                                el?.node?.merchandise?.selectedOptions?.find(
-                                                    (el) => el?.name === "Size"
-                                                )?.value
-                                            }
-                                            isMelCollection={el?.node?.merchandise?.product?.collections?.edges?.some(e => e?.node?.title?.trim().toUpperCase() === "MEL")}
-                                            stockLeft={el?.node?.merchandise?.product?.metafield?.value}
-                                            className="min-h-[160px] flex-1"
-                                        />
-                                    ))}
-                                </div>
-
-                                {/* Right Column: Summary & Trust Badges */}
-                                <div className="md:w-2/5 flex flex-col gap-6">
-                                    {/* Loss Aversion & Subtotal Section */}
-                                    <div className="p-6 bg-gray-50 dark:bg-gray-800 rounded-lg flex flex-col gap-4 h-fit sticky top-24">
-                                        
-                                        {/* Checkout-style Item Breakdown */}
-                                        <div className="flex flex-col gap-4 mb-2">
-                                            {productsInCart.map((el) => {
-                                                const item = el?.node;
-                                                const cartLineId = item?.id;
-                                                const pricing = itemsPricing?.[cartLineId];
-                                                const quantity = item?.quantity;
-                                                const title = item?.merchandise?.product?.title;
-                                                const size = item?.merchandise?.selectedOptions?.find(opt => opt?.name === "Size")?.value;
-                                                const imageSrc = item?.merchandise?.image?.src;
-                                                const pricePerItem = item?.merchandise?.price;
-                                                
-                                                return (
-                                                    <div key={cartLineId} className="flex justify-between items-start gap-4">
-                                                        <div className="flex items-start gap-3">
-                                                            <div className="relative">
-                                                                <div className="w-16 h-16 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden bg-white flex items-center justify-center">
-                                                                    <img src={imageSrc} alt={title} className="w-full h-full object-contain" />
-                                                                </div>
-                                                                <span className="absolute -top-2 -right-2 bg-gray-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full z-10">
-                                                                    {quantity}
-                                                                </span>
-                                                            </div>
-                                                            <div className="flex flex-col">
-                                                                <span className="font-semibold text-sm text-gray-900 dark:text-white leading-tight">{title}</span>
-                                                                <span className="text-xs text-gray-500 mt-1">{size}</span>
-                                                                {!isGlitchApplied && pricing?.isBogo && (
-                                                                    <p className="text-[10px] text-gray-500 flex items-center gap-1 mt-1 font-medium">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="10" height="10" fill="currentColor"><path d="M13.7 5.3a2 2 0 0 0-.6-1.4l-3-3A2 2 0 0 0 8.7.3H2A1.5 1.5 0 0 0 .5 1.8v6.7c0 .4.2.8.5 1l6.7 6.7a2 2 0 0 0 2.8 0l3.2-3.1a2 2 0 0 0 0-2.9zM3.5 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>
-                                                                        BUY 1 GET 1 {pricing.freeCount > 0 ? `(-${pricePerItem?.currencyCode || '₹'}${(pricing.originalPrice * pricing.freeCount).toFixed(2)})` : ''}
-                                                                    </p>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex flex-col items-end text-sm">
-                                                            {pricing ? (
-                                                                pricing.totalEffectivePrice === 0 ? (
-                                                                    <>
-                                                                        <span className="line-through text-gray-500 text-xs">
-                                                                            {pricing.totalStrikeoutPrice.toFixed(2)}
-                                                                        </span>
-                                                                        {pricing.totalStrikeoutPrice !== pricing.originalPrice * quantity && (
-                                                                            <span className="line-through text-gray-500 text-xs">
-                                                                                {(pricing.originalPrice * quantity).toFixed(2)}
-                                                                            </span>
-                                                                        )}
-                                                                        <span className="font-bold text-gray-900 dark:text-white">FREE</span>
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        {pricing.totalStrikeoutPrice !== pricing.totalEffectivePrice && (
-                                                                            <span className="line-through text-gray-500 text-xs">
-                                                                                {pricing.totalStrikeoutPrice.toFixed(2)}
-                                                                            </span>
-                                                                        )}
-                                                                        <span className="font-semibold text-gray-900 dark:text-white">
-                                                                            {pricePerItem?.currencyCode || 'INR'} {pricing.totalEffectivePrice.toFixed(2)}
-                                                                        </span>
-                                                                    </>
-                                                                )
-                                                            ) : (
-                                                                <span className="font-semibold text-gray-900 dark:text-white">
-                                                                    {pricePerItem?.currencyCode || '₹'} {(pricePerItem?.amount * 1.0 * quantity).toFixed(2)}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                        <hr className="border-gray-200 dark:border-gray-700 mb-2" />
-
-                                        {/* Delivery Fee Display */}
-                                        <div className="flex justify-between items-center text-gray-600 dark:text-gray-400">
-                                            <span className="font-semibold text-lg text-green-600 dark:text-green-400">Delivery</span>
-                                            <div className="flex items-center gap-[5px]">
-                                                <span className="line-through text-red-500">₹{DELIVERY_FEE}</span>
-                                                <span className="font-semibold text-lg text-green-600 dark:text-green-400">FREE</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Savings Display */}
-                                        {!isGlitchApplied && (
-                                            <>
-                                                <div className="flex justify-between items-center text-green-600 dark:text-green-400">
-                                                    <span className="font-bold text-lg">You Saved:</span>
-                                                    <span className="font-bold text-xl">₹{savings.toFixed(2)}</span>
-                                                </div>
-                                                <p className="text-xs text-green-600 dark:text-green-400 mt-[-10px] text-right">
-                                                    (Total savings on this order!)
-                                                </p>
-                                                <hr className="border-gray-300 dark:border-gray-700" />
-                                            </>
-                                        )}
-
-                                        <div className="flex justify-between items-center">
-                                            <span className="font-bold text-xl">Subtotal:</span>
-                                            <span className="font-black text-2xl text-[#1F4A40] dark:text-white">₹{subtotal.toFixed(2)}</span>
-                                        </div>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 text-right">
-                                            Taxes and shipping calculated at checkout
-                                        </p>
-                                        {/*!isGlitchApplied && (
-                                            <p className="text-sm text-gray-700 dark:text-gray-300 font-medium text-right mt-2">
-                                                NOTE: Exchanges for size or a different piece is valid for the B1G1 sale
-                                            </p>
-                                        )*/}
-                                        <Coupons />
-
-                                        {/* Email Cart Section */}
-                                        <div className="mt-2">
-                                            {!isAuthenticated && showEmailInput && (
-                                                <input 
-                                                    type="email" 
-                                                    placeholder="Enter your email" 
-                                                    value={emailInput}
-                                                    onChange={(e) => setEmailInput(e.target.value)}
-                                                    className="w-full mb-2 p-2 border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:border-[#1F4A40]"
-                                                />
-                                            )}
-                                            <button
-                                                onClick={handleEmailCart}
-                                                disabled={isEmailing || totalQuantityInCart === 0}
-                                                className="w-full text-[#1F4A40] dark:text-white border-2 border-[#1F4A40] dark:border-gray-500 px-6 py-3 font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                                            >
-                                                {isEmailing ? "Sending..." : "✉️ Email My Cart"}
-                                            </button>
-                                        </div>
-
-                                        <div className="flex flex-col gap-4 mt-4">
-                                            {/* <button
-                                                onClick={checkOutHandler}
-                                                className="w-full bg-[#1F4A40] text-white px-6 py-3 font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center gap-1"
-                                                disabled={totalQuantityInCart === 0}
-                                            >
-                                                <div className="flex items-center gap-2">
-                                                    <span>Checkout Now</span>
-                                                    <div className="flex items-center gap-1">
-                                                        <img src="/icons/upi.png" alt="UPI" className="h-5 w-auto object-contain bg-white rounded-sm px-[2px]" />
-                                                        <img src="/icons/visa.png" alt="Visa" className="h-5 w-auto object-contain bg-white rounded-sm px-[2px]" />
-                                                        <img src="/icons/mastercard.webp" alt="MasterCard" className="h-5 w-auto object-contain bg-white rounded-sm px-[2px]" />
-                                                        <span className="text-xs bg-white text-black font-bold px-1 rounded-sm">+18</span>
-                                                    </div>
-                                                </div>
-                                            </button> */}
-
-                                            <button
-                                                onClick={checkOutHandler}
-                                                className="w-full bg-[#1F4A40] text-white px-6 py-3 font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center gap-[2px]"
-                                                disabled={totalQuantityInCart === 0}
-                                            >
-                                                <div className="flex items-center gap-1">
-                                                    <span>Checkout</span>
-
-                                                    <div className="flex items-center gap-[3px]">
-                                                        <img src="/icons/upi.png" alt="UPI" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
-                                                        <img src="/icons/phonepe.jpg" alt="PhonePe" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
-                                                        <img src="/icons/gpay.webp" alt="GPay" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
-                                                        <span className="text-[10px] bg-white text-black font-bold px-[3px] rounded">+18</span>
-                                                    </div>
-                                                </div>
-                                            </button>
-
-                                            <Link
-                                                to="/products"
-                                                className="w-full flex items-center justify-center gap-2 border-2 border-[#1F4A40] text-[#1F4A40] dark:border-white dark:text-white px-6 py-3 font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                                            >
-                                                <HiArrowNarrowLeft /> Continue Shopping
-                                            </Link>
-                                        </div>
-                                        <TrustBadges />
-                                    </div>
-
-
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center gap-4 py-12">
-                                <p className="text-xl text-gray-500">Your cart is currently empty.</p>
-                                <Link
-                                    to="/products"
-                                    className="bg-[#1F4A40] text-white px-6 py-3 font-bold hover:opacity-90 transition-opacity"
-                                >
-                                    Start Shopping
-                                </Link>
-                                <TrustBadges />
-                            </div>
-                        )}
-
-                        <YouMayAlsoLike />
-                    </div>
-                </div>
-            </div>
-            <FooterSectionUpdated />
-        </div >
-    );
-}
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import NavbarRelative from "../components/Navbar/NavbarRelative";
+import CartItem from "../components/Cart/CartItem";
+import YouMayAlsoLike from "../components/Cart/YouMayAlsoLike";
+import { fixCheckoutUrl } from "../utils/interceptors";
+import { updateBuyersIndentity, emailCartAPI } from "../apis/Cart";
+import getAccountDetailsAPI from "../apis/getAccoutDetailsAPI";
+import { Skeleton } from "@mui/material";
+import { HiArrowNarrowLeft } from "react-icons/hi";
+import TrustBadges from "../components/productsDetail/TrustBadges";
+import Coupons from "../components/Cart/Coupons";
+import FooterSectionUpdated from "../components/home/FooterSectionUpdated";
+import { calculateCartPricing } from "../utils/cartPricing";
+import { deleteCart } from "../store";
+import { initiateMagicCheckout } from "../utils/magicCheckout";
+export default function CartPage() {
+    const totalQuantityInCart = useSelector((state) => state.cart.totalQuantity);
+    const checkoutUrl = useSelector((state) => state.cart.checkoutUrl);
+    const cartId = useSelector((state) => state.cart.id);
+    const productsInCart = useSelector((state) => state.cart.productsInCart);
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const accessToken = useSelector((state) => state.user.accessToken);
+    const userEmail = useSelector((state) => state.user.email);
+    const userId = useSelector((state) => state.user.id);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [cartLoading, setCartLoading] = useState(false); // You might want to handle loading state from redux if available
+
+    const [isEmailing, setIsEmailing] = useState(false);
+    const [showEmailInput, setShowEmailInput] = useState(false);
+    const [emailInput, setEmailInput] = useState("");
+
+    const checkOutHandler = async () => {
+        const fixedUrl = fixCheckoutUrl(checkoutUrl);
+        if (!fixedUrl) {
+            toast.error("Unable to proceed to checkout. Please try again.");
+            return;
+        }
+        if (totalQuantityInCart === 0) return toast.error("Your cart is empty!");
+
+        let customerInfo = {
+            name: "",
+            email: userEmail || "",
+            phone: ""
+        };
+
+        // Enhance buyer identity if authenticated
+        if (isAuthenticated && accessToken) {
+            try {
+                const customerDetails = await getAccountDetailsAPI();
+                if (customerDetails) {
+                    customerInfo.email = customerDetails.email || userEmail || "";
+                    customerInfo.phone = customerDetails.phone || "";
+                    customerInfo.name = `${customerDetails.firstName || ""} ${customerDetails.lastName || ""}`.trim();
+
+                    if (customerDetails.defaultAddress) {
+                        const address = customerDetails.defaultAddress;
+                        const deliveryAddress = {
+                            address1: address.address1,
+                            address2: address.address2,
+                            city: address.city,
+                            country: "IN", // Assuming IN based on other code
+                            firstName: address.firstName,
+                            lastName: address.lastName,
+                            province: address.province,
+                            zip: address.zip
+                        };
+
+                        await updateBuyersIndentity(cartId, customerDetails.email, deliveryAddress, customerDetails.phone);
+                        console.log("Buyer identity updated successfully");
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to update buyer identity:", err);
+                // Continue to checkout even if this fails
+            }
+        }
+
+        // Initiate Razorpay Magic Checkout (with automatic fallback to Shopify checkout if store-to-MID is pending)
+        await initiateMagicCheckout({
+            cartId,
+            productsInCart,
+            totalQuantity: totalQuantityInCart,
+            customerDetails: customerInfo,
+            fallbackUrl: fixedUrl,
+            onSuccess: (paymentData) => {
+                dispatch(deleteCart());
+                navigate("/orders");
+            }
+        });
+    };
+
+    const handleEmailCart = async () => {
+        const targetEmail = isAuthenticated ? userEmail : emailInput;
+        if (!targetEmail) {
+            if (!showEmailInput) {
+                setShowEmailInput(true);
+                return;
+            }
+            return toast.error("Please enter a valid email address");
+        }
+
+        // Format products for email
+        const formattedProducts = productsInCart?.map(el => {
+            const item = el?.node;
+            const cartLineId = item?.id;
+            const pricing = itemsPricing?.[cartLineId];
+            return {
+                title: item?.merchandise?.product?.title,
+                price: item?.merchandise?.price?.amount,
+                quantity: item?.quantity,
+                size: item?.merchandise?.selectedOptions?.find((opt) => opt?.name === "Size")?.value,
+                image: item?.merchandise?.image?.src,
+                pricing: pricing
+            };
+        }) || [];
+
+        try {
+            setIsEmailing(true);
+            const anonymousId = localStorage.getItem('anonymous_id') || "";
+            await emailCartAPI(targetEmail, formattedProducts, subtotal, userId, anonymousId, savings, DELIVERY_FEE);
+            toast.success("Cart emailed successfully!");
+            setShowEmailInput(false);
+            setEmailInput("");
+        } catch (error) {
+            toast.error(error.message || "Failed to email cart");
+        } finally {
+            setIsEmailing(false);
+        }
+    };
+
+    const { subtotal, savings: cartSavings, itemsPricing, isGlitchApplied } = calculateCartPricing(productsInCart, userEmail);
+    const DELIVERY_FEE = 100;
+    const savings = cartSavings + DELIVERY_FEE; // 15% Loss Aversion Savings + Waived Delivery Fee
+
+    return (
+        <div className="flex flex-col min-h-screen bg-[#F7F7F7] dark:bg-black dark:text-white font-antikor">
+            <NavbarRelative />
+
+            <div className="flex flex-col items-center justify-center flex-grow px-0 pt-4 pb-0 sm:p-4 md:p-8 mt-[74px]">
+                <div className="w-full xl:w-full dark:border dark:border-gray-800 rounded-lg p-3 sm:p-2 md:p-6">
+                    <div className="flex items-center justify-between border-b pb-4 mb-4 dark:border-gray-800">
+                        <h1 className="text-3xl font-black text-gray-900 dark:text-white">YOUR CART</h1>
+                        <span className="text-gray-900 dark:text-white">{totalQuantityInCart} Items</span>
+                    </div>
+
+                    <div className="flex flex-col gap-6">
+                        {productsInCart && productsInCart.length > 0 ? (
+                            <div className="flex flex-col md:flex-row gap-6">
+                                {/* Left Column: Cart Items */}
+                                <div className="flex flex-col gap-6 md:w-3/5 h-full">
+                                    {productsInCart.map((el) => (
+                                        <CartItem
+                                            key={el?.node?.id}
+                                            cartLineId={el?.node?.id}
+                                            cartId={cartId}
+                                            src={el?.node?.merchandise?.image?.src}
+                                            quantity={el?.node?.quantity}
+                                            title={el?.node?.merchandise?.product?.title}
+                                            pricePerItem={el?.node?.merchandise?.price}
+                                            productId={el?.node?.merchandise?.id}
+                                            size={
+                                                el?.node?.merchandise?.selectedOptions?.find(
+                                                    (el) => el?.name === "Size"
+                                                )?.value
+                                            }
+                                            isMelCollection={el?.node?.merchandise?.product?.collections?.edges?.some(e => e?.node?.title?.trim().toUpperCase() === "MEL")}
+                                            stockLeft={el?.node?.merchandise?.product?.metafield?.value}
+                                            className="min-h-[160px] flex-1"
+                                        />
+                                    ))}
+                                </div>
+
+                                {/* Right Column: Summary & Trust Badges */}
+                                <div className="md:w-2/5 flex flex-col gap-6">
+                                    {/* Loss Aversion & Subtotal Section */}
+                                    <div className="p-6 bg-gray-50 dark:bg-gray-800 rounded-lg flex flex-col gap-4 h-fit sticky top-24">
+                                        
+                                        {/* Checkout-style Item Breakdown */}
+                                        <div className="flex flex-col gap-4 mb-2">
+                                            {productsInCart.map((el) => {
+                                                const item = el?.node;
+                                                const cartLineId = item?.id;
+                                                const pricing = itemsPricing?.[cartLineId];
+                                                const quantity = item?.quantity;
+                                                const title = item?.merchandise?.product?.title;
+                                                const size = item?.merchandise?.selectedOptions?.find(opt => opt?.name === "Size")?.value;
+                                                const imageSrc = item?.merchandise?.image?.src;
+                                                const pricePerItem = item?.merchandise?.price;
+                                                
+                                                return (
+                                                    <div key={cartLineId} className="flex justify-between items-start gap-4">
+                                                        <div className="flex items-start gap-3">
+                                                            <div className="relative">
+                                                                <div className="w-16 h-16 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden bg-white flex items-center justify-center">
+                                                                    <img src={imageSrc} alt={title} className="w-full h-full object-contain" />
+                                                                </div>
+                                                                <span className="absolute -top-2 -right-2 bg-gray-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full z-10">
+                                                                    {quantity}
+                                                                </span>
+                                                            </div>
+                                                            <div className="flex flex-col">
+                                                                <span className="font-semibold text-sm text-gray-900 dark:text-white leading-tight">{title}</span>
+                                                                <span className="text-xs text-gray-500 mt-1">{size}</span>
+                                                                {!isGlitchApplied && pricing?.isBogo && (
+                                                                    <p className="text-[10px] text-gray-500 flex items-center gap-1 mt-1 font-medium">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="10" height="10" fill="currentColor"><path d="M13.7 5.3a2 2 0 0 0-.6-1.4l-3-3A2 2 0 0 0 8.7.3H2A1.5 1.5 0 0 0 .5 1.8v6.7c0 .4.2.8.5 1l6.7 6.7a2 2 0 0 0 2.8 0l3.2-3.1a2 2 0 0 0 0-2.9zM3.5 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>
+                                                                        BUY 1 GET 1 {pricing.freeCount > 0 ? `(-${pricePerItem?.currencyCode || '₹'}${(pricing.originalPrice * pricing.freeCount).toFixed(2)})` : ''}
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-col items-end text-sm">
+                                                            {pricing ? (
+                                                                pricing.totalEffectivePrice === 0 ? (
+                                                                    <>
+                                                                        <span className="line-through text-gray-500 text-xs">
+                                                                            {pricing.totalStrikeoutPrice.toFixed(2)}
+                                                                        </span>
+                                                                        {pricing.totalStrikeoutPrice !== pricing.originalPrice * quantity && (
+                                                                            <span className="line-through text-gray-500 text-xs">
+                                                                                {(pricing.originalPrice * quantity).toFixed(2)}
+                                                                            </span>
+                                                                        )}
+                                                                        <span className="font-bold text-gray-900 dark:text-white">FREE</span>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        {pricing.totalStrikeoutPrice !== pricing.totalEffectivePrice && (
+                                                                            <span className="line-through text-gray-500 text-xs">
+                                                                                {pricing.totalStrikeoutPrice.toFixed(2)}
+                                                                            </span>
+                                                                        )}
+                                                                        <span className="font-semibold text-gray-900 dark:text-white">
+                                                                            {pricePerItem?.currencyCode || 'INR'} {pricing.totalEffectivePrice.toFixed(2)}
+                                                                        </span>
+                                                                    </>
+                                                                )
+                                                            ) : (
+                                                                <span className="font-semibold text-gray-900 dark:text-white">
+                                                                    {pricePerItem?.currencyCode || '₹'} {(pricePerItem?.amount * 1.0 * quantity).toFixed(2)}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                        <hr className="border-gray-200 dark:border-gray-700 mb-2" />
+
+                                        {/* Delivery Fee Display */}
+                                        <div className="flex justify-between items-center text-gray-600 dark:text-gray-400">
+                                            <span className="font-semibold text-lg text-green-600 dark:text-green-400">Delivery</span>
+                                            <div className="flex items-center gap-[5px]">
+                                                <span className="line-through text-red-500">₹{DELIVERY_FEE}</span>
+                                                <span className="font-semibold text-lg text-green-600 dark:text-green-400">FREE</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Savings Display */}
+                                        {!isGlitchApplied && (
+                                            <>
+                                                <div className="flex justify-between items-center text-green-600 dark:text-green-400">
+                                                    <span className="font-bold text-lg">You Saved:</span>
+                                                    <span className="font-bold text-xl">₹{savings.toFixed(2)}</span>
+                                                </div>
+                                                <p className="text-xs text-green-600 dark:text-green-400 mt-[-10px] text-right">
+                                                    (Total savings on this order!)
+                                                </p>
+                                                <hr className="border-gray-300 dark:border-gray-700" />
+                                            </>
+                                        )}
+
+                                        <div className="flex justify-between items-center">
+                                            <span className="font-bold text-xl">Subtotal:</span>
+                                            <span className="font-black text-2xl text-[#1F4A40] dark:text-white">₹{subtotal.toFixed(2)}</span>
+                                        </div>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 text-right">
+                                            Taxes and shipping calculated at checkout
+                                        </p>
+                                        {/*!isGlitchApplied && (
+                                            <p className="text-sm text-gray-700 dark:text-gray-300 font-medium text-right mt-2">
+                                                NOTE: Exchanges for size or a different piece is valid for the B1G1 sale
+                                            </p>
+                                        )*/}
+                                        <Coupons />
+
+                                        {/* Email Cart Section */}
+                                        <div className="mt-2">
+                                            {!isAuthenticated && showEmailInput && (
+                                                <input 
+                                                    type="email" 
+                                                    placeholder="Enter your email" 
+                                                    value={emailInput}
+                                                    onChange={(e) => setEmailInput(e.target.value)}
+                                                    className="w-full mb-2 p-2 border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:border-[#1F4A40]"
+                                                />
+                                            )}
+                                            <button
+                                                onClick={handleEmailCart}
+                                                disabled={isEmailing || totalQuantityInCart === 0}
+                                                className="w-full text-[#1F4A40] dark:text-white border-2 border-[#1F4A40] dark:border-gray-500 px-6 py-3 font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                            >
+                                                {isEmailing ? "Sending..." : "✉️ Email My Cart"}
+                                            </button>
+                                        </div>
+
+                                        <div className="flex flex-col gap-4 mt-4">
+                                            {/* <button
+                                                onClick={checkOutHandler}
+                                                className="w-full bg-[#1F4A40] text-white px-6 py-3 font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center gap-1"
+                                                disabled={totalQuantityInCart === 0}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    <span>Checkout Now</span>
+                                                    <div className="flex items-center gap-1">
+                                                        <img src="/icons/upi.png" alt="UPI" className="h-5 w-auto object-contain bg-white rounded-sm px-[2px]" />
+                                                        <img src="/icons/visa.png" alt="Visa" className="h-5 w-auto object-contain bg-white rounded-sm px-[2px]" />
+                                                        <img src="/icons/mastercard.webp" alt="MasterCard" className="h-5 w-auto object-contain bg-white rounded-sm px-[2px]" />
+                                                        <span className="text-xs bg-white text-black font-bold px-1 rounded-sm">+18</span>
+                                                    </div>
+                                                </div>
+                                            </button> */}
+
+                                            <button
+                                                onClick={checkOutHandler}
+                                                className="w-full bg-[#1F4A40] text-white px-6 py-3 font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center gap-[2px]"
+                                                disabled={totalQuantityInCart === 0}
+                                            >
+                                                <div className="flex items-center gap-1">
+                                                    <span>Checkout</span>
+
+                                                    <div className="flex items-center gap-[3px]">
+                                                        <img src="/icons/upi.png" alt="UPI" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
+                                                        <img src="/icons/phonepe.jpg" alt="PhonePe" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
+                                                        <img src="/icons/gpay.webp" alt="GPay" className="h-4 w-auto object-contain bg-white rounded px-[1px]" />
+                                                        <span className="text-[10px] bg-white text-black font-bold px-[3px] rounded">+18</span>
+                                                    </div>
+                                                </div>
+                                            </button>
+
+                                            <Link
+                                                to="/products"
+                                                className="w-full flex items-center justify-center gap-2 border-2 border-[#1F4A40] text-[#1F4A40] dark:border-white dark:text-white px-6 py-3 font-bold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                            >
+                                                <HiArrowNarrowLeft /> Continue Shopping
+                                            </Link>
+                                        </div>
+                                        <TrustBadges />
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center gap-4 py-12">
+                                <p className="text-xl text-gray-500">Your cart is currently empty.</p>
+                                <Link
+                                    to="/products"
+                                    className="bg-[#1F4A40] text-white px-6 py-3 font-bold hover:opacity-90 transition-opacity"
+                                >
+                                    Start Shopping
+                                </Link>
+                                <TrustBadges />
+                            </div>
+                        )}
+
+                        <YouMayAlsoLike />
+                    </div>
+                </div>
+            </div>
+            <FooterSectionUpdated />
+        </div >
+    );
+}
