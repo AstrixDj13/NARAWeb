@@ -219,6 +219,14 @@ export async function createAuthenticatedCart(variantId, customerAccessToken) {
     const cart = cartCreate.cart;
     if (!cart) {
       const userErrors = cartCreate.userErrors;
+      // Expired/revoked customer access token -> Shopify returns "Customer is invalid".
+      // Fall back to a guest cart so add-to-cart still works, and clear the stale token.
+      const tokenInvalid = userErrors?.some(e => (e.field || []).includes("customerAccessToken"));
+      if (tokenInvalid) {
+        console.warn("Customer access token is invalid/expired. Creating guest cart instead.");
+        localStorage.removeItem("accessToken");
+        return createCart(variantId);
+      }
       if (userErrors && userErrors.length > 0) {
         throw new Error(userErrors.map(e => e.message).join(", "));
       }
