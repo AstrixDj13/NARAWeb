@@ -86,9 +86,10 @@ export default function CartPage() {
             totalQuantity: totalQuantityInCart,
             customerDetails: customerInfo,
             fallbackUrl: fixedUrl,
-            onSuccess: (paymentData) => {
+            onSuccess: (orderResult) => {
                 dispatch(deleteCart());
-                navigate("/orders");
+                // magicCheckout redirects to Shopify order_status_url when present
+                if (!orderResult?.order_status_url) navigate("/orders");
             }
         });
     };

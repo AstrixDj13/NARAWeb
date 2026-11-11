@@ -3072,17 +3072,16 @@ app.post('/api/magic-checkout/session', async (req, res) => {
 
     const keyId = cleanVal(process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID);
 
-    const keySecret = cleanVal(process.env.RAZORPAY_KEY_SECRET);
+    // Headless Shopify Magic endpoints authenticate via key_id query param only (no secret / Basic auth)
+    console.log(`[MagicCheckout] Initiating session - keyId: ${keyId}`);
 
-    console.log(`[MagicCheckout] Initiating session - keyId: ${keyId}, secretLength: ${keySecret ? keySecret.length : 0}, secretPrefix: ${keySecret ? keySecret.substring(0, 3) + '***' : 'none'}`);
-
-    if (!keyId || !keySecret) {
+    if (!keyId) {
 
       return res.status(503).json({
 
         success: false,
 
-        error: 'Razorpay keys not configured. Please set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env'
+        error: 'Razorpay key not configured. Please set RAZORPAY_KEY_ID'
 
       });
 
@@ -3090,7 +3089,7 @@ app.post('/api/magic-checkout/session', async (req, res) => {
 
 
 
-    const { cart } = req.body;
+    const { cart, analytics } = req.body;
 
     if (!cart || !cart.token || !Array.isArray(cart.items) || cart.items.length === 0) {
 
@@ -3134,7 +3133,6 @@ app.post('/api/magic-checkout/session', async (req, res) => {
 
 
 
-    const authHeader = 'Basic ' + Buffer.from(`${keyId}:${keySecret}`).toString('base64');
 
 
 
@@ -3146,9 +3144,7 @@ app.post('/api/magic-checkout/session', async (req, res) => {
 
         'Content-Type': 'application/json',
 
-        'Accept': 'application/json',
-
-        'Authorization': authHeader
+        'Accept': 'application/json'
 
       },
 
@@ -3208,15 +3204,19 @@ app.post('/api/magic-checkout/session', async (req, res) => {
 
         'Accept': 'application/json',
 
-        'Origin': 'https://api.razorpay.com',
-
-        'Authorization': authHeader
+        'Origin': 'https://api.razorpay.com'
 
       },
 
       body: JSON.stringify({
 
-        shopify_checkout_id: shopifyCheckoutId
+        shopify_checkout_id: shopifyCheckoutId,
+
+        // Optional analytics (headless Shopify docs, step 1.2)
+        ...(analytics ? {
+          fb_analytics: { fbp: analytics.fbp, fbc: analytics.fbc, event_source_url: analytics.source_url },
+          utm_parameters: { landing_page_url: analytics.source_url, user_agent: analytics.user_agent },
+        } : {})
 
       })
 
