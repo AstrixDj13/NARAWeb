@@ -1,4 +1,5 @@
 import api from "../utils/interceptors";
+import { isAdaaCollectionTitle } from "../constants/sizeGuides";
 
 
 const parseMetafieldVal = (raw) => {
@@ -297,13 +298,24 @@ query getProductById($id: ID!) {
     // Extract all collections
     const collections = productData.collections.edges.map((edge) => edge.node);
 
-    // Identify the concerned collection (prioritize LAYA first)
-    let concernedCollection = collections.find((collection) => collection.title === "LAYA - The Work Edit");
+    // 1. Prioritize ADAA collection if product belongs to ADAA (ADAA products show ADAA related products only)
+    let concernedCollection = collections.find((collection) =>
+      isAdaaCollectionTitle(collection.title)
+    );
+
+    // 2. Identify the concerned collection (prioritize LAYA second)
+    if (!concernedCollection) {
+      concernedCollection = collections.find((collection) => collection.title === "LAYA - The Work Edit");
+    }
 
     if (!concernedCollection) {
       concernedCollection = collections.find((collection) =>
         ["Tops", "Bottoms", "Co-ord sets", "Saaz: The Festive Collection"].includes(collection.title)
       );
+    }
+
+    if (!concernedCollection && collections.length > 0) {
+      concernedCollection = collections[0];
     }
 
     // Set the concerned collection ID
@@ -552,13 +564,24 @@ query getProductByHandle($handle: String!) {
     // Extract all collections
     const collections = productData.collections.edges.map((edge) => edge.node);
 
-    // Identify the concerned collection (prioritize LAYA first)
-    let concernedCollection = collections.find((collection) => collection.title === "LAYA - The Work Edit");
+    // 1. Prioritize ADAA collection if product belongs to ADAA (ADAA products show ADAA related products only)
+    let concernedCollection = collections.find((collection) =>
+      isAdaaCollectionTitle(collection.title)
+    );
+
+    // 2. Identify the concerned collection (prioritize LAYA second)
+    if (!concernedCollection) {
+      concernedCollection = collections.find((collection) => collection.title === "LAYA - The Work Edit");
+    }
 
     if (!concernedCollection) {
       concernedCollection = collections.find((collection) =>
         ["Tops", "Bottoms", "Co-ord sets", "Saaz: The Festive Collection"].includes(collection.title)
       );
+    }
+
+    if (!concernedCollection && collections.length > 0) {
+      concernedCollection = collections[0];
     }
 
     // Set the concerned collection ID
@@ -738,10 +761,15 @@ export const fetchFourProducts = async () => {
 };
 
 export const fetchSixProductsfromCol = async (collectionId, productId) => {
+  if (!collectionId) return [];
+  const formattedId = collectionId.includes("gid://")
+    ? collectionId
+    : `gid://shopify/Collection/${collectionId}`;
+
   const GET_FOUR_PRODUCTS_QUERY = `
     query getProductsByCollection($collectionId: ID!) {
       collection(id: $collectionId) {
-        products(first: 10) { # Fetch more products to ensure we can exclude the selected one
+        products(first: 20) { # Fetch more products to ensure we can exclude the selected one
           edges {
             node {
               id
@@ -769,7 +797,7 @@ export const fetchSixProductsfromCol = async (collectionId, productId) => {
     }
   `;
 
-  const variables = { collectionId };
+  const variables = { collectionId: formattedId };
 
   try {
     const response = await api.post("/", {
@@ -777,18 +805,17 @@ export const fetchSixProductsfromCol = async (collectionId, productId) => {
       variables,
     });
 
-    console.log("GraphQL Response:", response.data); // Log the full API response
+    const productEdges = response.data?.data?.collection?.products?.edges || [];
 
-    // Filter out the selected product and limit to 4 products
-    const products = response.data.data.collection.products.edges
+    // Filter out the selected product and limit to 6 products
+    const products = productEdges
       .map((edge) => edge.node)
       .filter((product) => product.id !== productId) // Exclude the selected product
       .slice(0, 6); // Limit to 6 products
-    console.log("Filtered Products:", products); // Log the filtered products
 
     return products;
   } catch (error) {
     console.error("Error fetching products:", error);
-    throw error;
+    return [];
   }
 };

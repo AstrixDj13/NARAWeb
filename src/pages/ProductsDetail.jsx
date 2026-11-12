@@ -385,7 +385,7 @@ export default function ProductsDetailPage() {
       {/* <div id="reviews" className="w-full">
         <ReviewSection productId={product.id} />
       </div> */}
-      <RelatedProducts collectionId={concernedCollectionId} productId={product.id} />
+      <RelatedProducts collectionId={concernedCollectionId} productId={product.id} product={product} />
       <FooterSection />
       <ScrollGiftNote />
       <ProductVideoPopup productTitle={product.title} />

@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import ProductItem from "../products/product-item";
 import { fetchSixProductsfromCol } from "../../apis/Products";
+import { isAdaaProduct, isAdaaCollectionTitle } from "../../constants/sizeGuides";
+import { getCollections } from "../../apis/Collections";
 
-const RelatedProducts = ({ collectionId, productId }) => {
+const RelatedProducts = ({ collectionId, productId, product }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [hasIntersected, setHasIntersected] = useState(false);
@@ -28,13 +30,56 @@ const RelatedProducts = ({ collectionId, productId }) => {
   }, []);
 
   useEffect(() => {
-    if (!hasIntersected || !collectionId || !productId) return;
+    if (!hasIntersected || !productId) return;
 
     const loadProducts = async () => {
       try {
         setIsLoading(true);
-        const productsData = await fetchSixProductsfromCol(collectionId, productId);
-        setProducts(productsData);
+
+        let targetColId = collectionId;
+        const isCurrentAdaa = isAdaaProduct(product);
+
+        // If this product is from ADAA, ensure related products are ONLY from ADAA collection
+        if (isCurrentAdaa) {
+          let adaaColId = null;
+
+          // 1. Try finding ADAA collection in product.collections.edges
+          if (product?.collections?.edges?.length) {
+            const adaaColEdge = product.collections.edges.find((e) =>
+              isAdaaCollectionTitle(e?.node?.title || e?.node?.handle || "")
+            );
+            if (adaaColEdge?.node?.id) {
+              adaaColId = adaaColEdge.node.id;
+            }
+          }
+
+          // 2. If not found in product edges, fetch all collections to locate ADAA collection ID
+          if (!adaaColId) {
+            try {
+              const allCollections = await getCollections();
+              const adaaCol = allCollections.find((c) =>
+                isAdaaCollectionTitle(c.title || c.handle || "")
+              );
+              if (adaaCol?.id) {
+                adaaColId = adaaCol.id;
+              }
+            } catch (err) {
+              console.error("Error looking up ADAA collection for related products:", err);
+            }
+          }
+
+          if (adaaColId) {
+            targetColId = adaaColId;
+          }
+        }
+
+        if (!targetColId) {
+          setIsLoading(false);
+          return;
+        }
+
+        const productsData = await fetchSixProductsfromCol(targetColId, productId);
+        setProducts(productsData || []);
       } catch (error) {
         console.error("Failed to load products:", error);
       } finally {
@@ -43,7 +88,7 @@ const RelatedProducts = ({ collectionId, productId }) => {
     };
 
     loadProducts();
-  }, [hasIntersected, collectionId, productId]);
+  }, [hasIntersected, collectionId, productId, product]);
 
   return (
     <div
