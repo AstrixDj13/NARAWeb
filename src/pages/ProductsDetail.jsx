@@ -381,9 +381,10 @@ export default function ProductsDetailPage() {
           </div>
         </div>
       )}
-      <div id="reviews" className="w-full">
+      {/* Temporarily disabled review section */}
+      {/* <div id="reviews" className="w-full">
         <ReviewSection productId={product.id} />
-      </div>
+      </div> */}
       <RelatedProducts collectionId={concernedCollectionId} productId={product.id} />
       <FooterSection />
       <ScrollGiftNote />
