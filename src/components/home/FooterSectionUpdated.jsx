@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { getCollections } from "../../apis/Collections";
 import backendApi from "../../utils/backendApi";
-import { FaChevronUp, FaMapMarkerAlt, FaEnvelope, FaInstagram, FaLinkedin, FaWhatsapp } from "react-icons/fa";
+import { FaChevronUp, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { toast } from "sonner";
 import { useEventTracker } from "../../hooks/EventTracker";
 
@@ -67,7 +67,7 @@ const FooterSection = () => {
 
       {/* Main footer content */}
       <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
 
           {/* Column 1: SHOP */}
           <div>
@@ -135,61 +135,10 @@ const FooterSection = () => {
             </ul>
           </div>
 
-          {/* Column 3: CONTACT US */}
-          <div>
-            <h3 className="font-semibold text-base mb-4 uppercase tracking-wider">Contact Us</h3>
-            <ul className="space-y-3">
-              <li className="flex items-start text-sm text-gray-400">
-                <FaMapMarkerAlt className="mt-1 mr-3 text-gray-500 flex-shrink-0" />
-                <a
-                  href={
-                    (() => {
-                      const lat = "19.0247";
-                      const lng = "73.0221";
-                      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                      return isIOS
-                        ? `https://maps.apple.com/?q=${lat},${lng}`
-                        : `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-                    })()
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors duration-200 leading-relaxed"
-                  aria-label="Open location in Maps"
-                  title="Open in Maps"
-                >
-                  S-07-3, PI No 88-91, Haware Centurion Mall, Navi Mumbai-400706, India
-                </a>
-              </li>
-              <li className="flex items-center text-sm text-gray-400">
-                <FaEnvelope className="mr-3 text-gray-500" />
-                <a
-                  href="mailto:info@narawear.com?subject=Support%20Request&body=Hello%20NARA%20Team,"
-                  aria-label="Email Nara Wear"
-                  className="hover:text-white transition-colors duration-200"
-                >
-                  info@narawear.com
-                </a>
-              </li>
-              <li className="flex items-center text-sm text-gray-400">
-                <FaWhatsapp className="mr-3 text-gray-500" />
-                <a
-                  href="https://wa.me/919326472754"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors duration-200"
-                  aria-label="WhatsApp"
-                >
-                  +91 93264 72754
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 4: SOCIAL */}
+          {/* Column 3: FOLLOW US & CONTACT */}
           <div>
             <h3 className="font-semibold text-base mb-4 uppercase tracking-wider">Follow Us</h3>
-            <div className="flex space-x-5">
+            <div className="flex space-x-5 mb-5">
               <a
                 href="https://www.instagram.com/narawearr/"
                 target="_blank"
@@ -208,7 +157,14 @@ const FooterSection = () => {
               >
                 <FaLinkedin className="text-2xl" />
               </a>
-
+            </div>
+            <div>
+              <Link
+                to="/contact"
+                className="text-gray-400 hover:text-white transition-colors duration-200 text-sm inline-block"
+              >
+                Contact Us
+              </Link>
             </div>
           </div>
 
@@ -247,7 +203,7 @@ const FooterSection = () => {
 
       {/* Copyright */}
       <div className="text-center text-xs text-gray-500">
-        <p>© {new Date().getFullYear()} NARA. All rights reserved.</p>
+        <p>NARA is a fashion brand operated by Aaishka Industries Private Limited.</p>
       </div>
     </div>
   );

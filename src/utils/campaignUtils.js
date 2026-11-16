@@ -67,11 +67,18 @@ export const campaigns = [
         id: "aaina-collection",
         name: "", // Showing in the countdown area
         offerTag: "", // The tag applied to products
-        showOnExpiry: true, // This MUST be true if you omit dates
+        showOnExpiry: false, // This MUST be true if you omit dates
         collectionTitle: "",
         marqueeMessage: "AAINA, live now!"
+    },
+    {
+        id: "adaa-collection",
+        name: "", // Showing in the countdown area
+        offerTag: "", // The tag applied to products
+        showOnExpiry: true, // This MUST be true if you omit dates
+        collectionTitle: "",
+        marqueeMessage: "ADAA, live now!"
     }
-
 ];
 
 export const isActive = (campaign) => {

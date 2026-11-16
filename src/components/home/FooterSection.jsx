@@ -77,7 +77,7 @@ const FooterSection = () => {
 
         {/* Copyright */}
         <div className="bg-black text-[8px] sm:text-[10px] font-bold text-white py-2 sm:py-4 tracking-widest">
-          <p>Copyright © 2024 NARA. All rights reserved.</p>
+          <p>NARA is a fashion brand operated by Aaishka Industries Private Limited.</p>
         </div>
       </div>
     </div>

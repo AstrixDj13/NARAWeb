@@ -28,6 +28,7 @@ const TrackOrder = React.lazy(() => import("../pages/TrackOrder"));
 const WishlistPage = React.lazy(() => import("../pages/WishlistPage"));
 const FitQuiz = React.lazy(() => import("../pages/FitQuiz"));
 const VideoFeed = React.lazy(() => import("../pages/VideoFeed"));
+const ContactUs = React.lazy(() => import("../pages/ContactUs"));
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,14 @@ export const router = createBrowserRouter([
       {
         path: "about",
         element: <LazyComponent component={<AboutUs />} />,
+      },
+      {
+        path: "contact",
+        element: <LazyComponent component={<ContactUs />} />,
+      },
+      {
+        path: "contact-us",
+        element: <LazyComponent component={<ContactUs />} />,
       },
       {
         path: "return_policies",
