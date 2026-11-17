@@ -282,9 +282,9 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                   </Link>
                 </li>
 
+                {/* Behind The Screen hidden from the menu for now; the /behind page still exists
                 <li className="flex">
                   <div className="text-lg md:text-xl  text-[#5D5D5D] italic">
-                    {/*04*/}
                   </div>
                   <Link
                     to="/behind"
@@ -295,6 +295,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     </span>
                   </Link>
                 </li>
+                */}
               </ul>
             </div>
             <div className="md:relative bottom-0 left-0 w-full text-black pb-6 pt-10 md:p-10 md:pl-12">

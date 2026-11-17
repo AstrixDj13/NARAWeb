@@ -38,6 +38,9 @@ const Policies = () => {
                             <p className="bg-[#1E7B74]/10 p-3 rounded-lg border-l-4 border-[#1E7B74] text-sm italic">
                                 A ₹99 return fee will be deducted from your refund to cover reverse logistics.
                             </p>
+                            <p className="bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border-l-4 border-red-500 text-sm font-semibold text-red-700 dark:text-red-300">
+                                Returns and Refunds are not applicable on offer products.
+                            </p>
                         </div>
                     </div>
 
