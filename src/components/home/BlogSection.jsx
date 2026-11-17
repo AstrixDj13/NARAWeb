@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { blogs } from "../../constants/blogs";
+import { blogs, blogImageSrcSet } from "../../constants/blogs";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/opacity.css';
 
@@ -49,19 +49,20 @@ const BlogCarousel = () => {
                 <div key={index} className="w-full flex-shrink-0">
                   <div className="bg-white dark:bg-[#1F1F1F] p-6 md:p-8">
                     {/* Image Grid */}
-                    <div className="grid grid-cols-2 gap-2 mb-6">
+                    {/* Blog photos are portrait, so show them side by side in portrait (3:4) frames instead of short wide boxes */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
                       {blog.images.slice(0, 4).map((src, i) => (
-                        <div key={i} className="relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+                        <div key={i} className="relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 aspect-[3/4]">
                           <LazyLoadImage
                             src={src}
-                            srcSet={`${src.replace('.webp', '-400.webp')} 400w, ${src} 1200w`}
+                            srcSet={blogImageSrcSet(src)}
                             sizes="(max-width: 600px) 400px, 1200px"
                             alt={`${blog.title} - Image ${i + 1}`}
-                            width="400"
-                            height="300"
+                            width="300"
+                            height="400"
                             wrapperClassName="block w-full h-full"
                             effect="opacity"
-                            className="w-full h-48 md:h-56 object-cover hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                           />
                         </div>
                       ))}

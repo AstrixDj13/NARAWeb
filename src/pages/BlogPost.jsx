@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { blogs } from "../constants/blogs";
+import { blogs, blogImageSrcSet } from "../constants/blogs";
 import FooterSection from "../components/home/FooterSectionUpdated";
 
 const BlogPost = () => {
@@ -71,7 +71,7 @@ const BlogPost = () => {
                     <div className="h-64 md:h-96 w-full relative">
                         <img
                             src={blog.images[0]}
-                            srcSet={`${blog.images[0].replace('.webp', '-400.webp')} 400w, ${blog.images[0]} 1200w`}
+                            srcSet={blogImageSrcSet(blog.images[0])}
                             sizes="(max-width: 600px) 400px, 1200px"
                             alt={blog.title}
                             fetchpriority="high"
@@ -98,17 +98,17 @@ const BlogPost = () => {
                         </div>
 
                         {/* Image Gallery */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10 mb-10">
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-10 mb-10">
                             {blog.images.slice(1).map((src, index) => (
-                                <div key={index} className="rounded-lg overflow-hidden h-64">
+                                <div key={index} className="rounded-lg overflow-hidden aspect-[3/4]">
                                     <img
                                         src={src}
-                                        srcSet={`${src.replace('.webp', '-400.webp')} 400w, ${src} 1200w`}
+                                        srcSet={blogImageSrcSet(src)}
                                         sizes="(max-width: 600px) 400px, 600px"
                                         alt={`${blog.title} - ${index + 2}`}
                                         loading="lazy"
                                         width="600"
-                                        height="400"
+                                        height="800"
                                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                                     />
                                 </div>
