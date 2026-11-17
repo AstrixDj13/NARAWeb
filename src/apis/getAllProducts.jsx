@@ -38,12 +38,9 @@ const GET_ALL_PRODUCTS_QUERY = `
 }
 `;
 
-export const fetchProducts = async () => {
-  try {
-    const response = await api.post('/', {
-      query: GET_ALL_PRODUCTS_QUERY,
-    });
-    const products = response.data.data.products.edges.map(edge => {
+// Adds isOutOfStock / availableForSale to each product and puts in-stock products first.
+const normalizeProducts = (edges) => {
+    const products = edges.map(edge => {
       const node = edge.node;
       const variants = node.variants?.nodes || [];
       const hasInStockVariant =
@@ -79,8 +76,70 @@ export const fetchProducts = async () => {
     const inStock = products.filter(p => !p.isOutOfStock);
     const outOfStock = products.filter(p => p.isOutOfStock);
     return [...inStock, ...outOfStock];
+};
+
+export const fetchProducts = async () => {
+  try {
+    const response = await api.post('/', {
+      query: GET_ALL_PRODUCTS_QUERY,
+    });
+    return normalizeProducts(response.data.data.products.edges);
   } catch (error) {
     console.error('Error fetching products:', error);
+    throw error;
+  }
+};
+
+const GET_COLLECTION_PRODUCTS_QUERY = `
+query($id: ID!, $first: Int!) {
+  collection(id: $id) {
+    products(first: $first) {
+      edges {
+        node {
+          id
+          title
+          handle
+          availableForSale
+          totalInventory
+          images(first: 5) {
+            nodes {
+              url
+            }
+          }
+          metafield(namespace: "custom", key: "stock_quantity") {
+            value
+          }
+          variants(first: 20) {
+            nodes {
+              id
+              availableForSale
+              quantityAvailable
+              image {
+                src
+              }
+              price {
+                amount
+                currencyCode
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+// Products of one collection, in the same shape as fetchProducts (for ProductCard).
+export const fetchCollectionProducts = async (collectionId, first = 20) => {
+  try {
+    const response = await api.post('/', {
+      query: GET_COLLECTION_PRODUCTS_QUERY,
+      variables: { id: collectionId, first },
+    });
+    return normalizeProducts(response.data?.data?.collection?.products?.edges || []);
+  } catch (error) {
+    console.error('Error fetching collection products:', error);
     throw error;
   }
 };

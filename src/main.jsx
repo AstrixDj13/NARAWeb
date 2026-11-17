@@ -9,6 +9,12 @@ import { HelmetProvider } from "react-helmet-async";
 import "./index.css";
 import ScrollToTop from "./components/utils/ScrollToTop.jsx";
 
+// The app scrolls to the top on every route change (ScrollToTop / App.jsx), so stop the browser
+// from restoring an old scroll position on Back/Forward, which made Back land mid-page or at the bottom.
+if ("scrollRestoration" in window.history) {
+  window.history.scrollRestoration = "manual";
+}
+
 createRoot(document.getElementById("root")).render(
   <HelmetProvider>
     <Provider store={store}>

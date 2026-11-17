@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getCollections } from "../../apis/Collections";
+import { SALE_COLLECTION_ID, SALE_URL } from "../../utils/collectionLinks";
+
+// Blinking highlight for the FOR SALE menu item (disabled for users who prefer reduced motion)
+const saleBlinkStyle = `
+@keyframes nara-sale-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+.nara-sale-blink { animation: nara-sale-blink 1s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .nara-sale-blink { animation: none; }
+}
+`;
 
 const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }) => {
   const [activeLink, setActiveLink] = useState("home");
@@ -47,6 +60,8 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
       setActiveLink("about");
     } else if (location.pathname === "/products") {
       setActiveLink("products");
+    } else if (location.pathname === "/collection" && collectionId === SALE_COLLECTION_ID) {
+      setActiveLink("sale");
     } else if (location.pathname === "/collection" && collectionId) {
       const bestsellersCollection = collections.find(item => item.title === "Bestsellers");
       const newArrivalsCollection = collections.find(item => item.title === "Chaon: The Summer Edit 2025");
@@ -125,6 +140,25 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                         } text-xl md:text-2xl font-semibold   not-italic pl-4 md:pl-8 md:tracking-widest`}
                     >
                       ALL PRODUCTS
+                    </span>
+                  </Link>
+                </li>
+
+                <li>
+                  <style>{saleBlinkStyle}</style>
+                  <Link
+                    to={SALE_URL}
+                    onClick={() => handleClick("sale")}
+                    className="inline-flex items-center"
+                  >
+                    <span
+                      className={`text-xl md:text-2xl font-bold not-italic pl-4 md:pl-8 md:tracking-widest text-red-600 dark:!text-red-400 ${activeLink === "sale" ? "underline underline-offset-4" : ""}`}
+                    >
+                      <span className="nara-sale-blink">FOR SALE</span>
+                    </span>
+                    <span className="relative flex h-3 w-3 ml-3" aria-hidden="true">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
                     </span>
                   </Link>
                 </li>

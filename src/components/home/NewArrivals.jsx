@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { NEW_ARRIVALS_COLLECTION_ID } from "../../utils/collectionLinks";
 import VideoLazy from "../loaders/VideoLazy";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { fetchProducts } from "../../apis/getAllProducts";
+import { fetchCollectionProducts } from "../../apis/getAllProducts";
 import ProductCard from "../common/ProductCard";
 
 const NewestArrivals = () => {
@@ -13,7 +14,7 @@ const NewestArrivals = () => {
     const loadProducts = async () => {
       try {
         setIsLoading(true);
-        const productsData = await fetchProducts();
+        const productsData = await fetchCollectionProducts(NEW_ARRIVALS_COLLECTION_ID);
         setProducts(productsData);
       } catch (error) {
         console.error("Failed to load products:", error);
@@ -45,8 +46,8 @@ const NewestArrivals = () => {
     );
   }
 
-  // Take the last 4 products from the fetched array
-  const latestFour = products.slice(-4);
+  // First 4 products of the New Arrivals collection (in-stock first, then Shopify collection order)
+  const latestFour = products.slice(0, 4);
 
   return (
     <section id="newest-arrivals-section" className="bg-white pt-20 dark:!bg-black my-2">

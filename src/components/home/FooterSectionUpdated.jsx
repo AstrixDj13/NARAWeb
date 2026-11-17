@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { getCollections } from "../../apis/Collections";
+import { NEW_ARRIVALS_URL } from "../../utils/collectionLinks";
 import backendApi from "../../utils/backendApi";
 import { FaChevronUp, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { toast } from "sonner";
 import { useEventTracker } from "../../hooks/EventTracker";
 
 const FooterSection = () => {
-  const [allCollections, setAllCollections] = useState([]);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const { trackEvent } = useEventTracker();
@@ -30,20 +29,6 @@ const FooterSection = () => {
       setLoading(false);
     }
   };
-
-  const fetchCollections = async () => {
-    try {
-      const allCollections = await getCollections();
-      console.log(allCollections);
-      setAllCollections(allCollections.reverse());
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCollections();
-  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -75,11 +60,7 @@ const FooterSection = () => {
             <ul className="space-y-3">
               <li>
                 <Link
-                  to={
-                    allCollections.length === 0
-                      ? "#"
-                      : `/collection?id=${encodeURIComponent(allCollections[0].id)}`
-                  }
+                  to={NEW_ARRIVALS_URL}
                   className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
                 >
                   New In

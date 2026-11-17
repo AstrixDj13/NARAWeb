@@ -103,6 +103,14 @@ const Home = () => {
   const [animationKey, setAnimationKey] = useState(0);
   const [marqueeDuration, setMarqueeDuration] = useState(16);
 
+  // Always open the home page at the top, including when arriving via the browser Back button.
+  // (The lazy-loaded page mounts after the browser's own scroll restoration, so re-apply once it has painted.)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const raf = requestAnimationFrame(() => window.scrollTo(0, 0));
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   useEffect(() => {
     const checkMobile = () => setMarqueeDuration(window.innerWidth < 768 ? 8 : 16);
     checkMobile();
