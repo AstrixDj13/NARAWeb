@@ -3,10 +3,6 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 export default function MobileZoomImage({ img, isPriority }) {
     return (
         <div className="relative w-full h-full">
-            {/* UX Hint */}
-            <div className="absolute top-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded z-10">
-                Pinch to zoom
-            </div>
 
             <TransformWrapper
                 minScale={1}

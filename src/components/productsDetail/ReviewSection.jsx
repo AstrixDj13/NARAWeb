@@ -4,7 +4,7 @@ import { FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { toast } from 'sonner';
 import { fetchReviews, submitReview, uploadReviewPhotos } from '../../apis/Reviews';
 
-const ReviewSection = ({ productId }) => {
+const ReviewSection = ({ productId, hideWhenEmpty = false }) => {
     const [reviews, setReviews] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [newReview, setNewReview] = useState({ userName: '', rating: 5, comment: '' });
@@ -114,6 +114,9 @@ const ReviewSection = ({ productId }) => {
             reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
         ).toFixed(1)
         : 0;
+
+    // Only show the section on products that actually have reviews
+    if (hideWhenEmpty && reviews.length === 0) return null;
 
     return (
         <div className="w-full">

@@ -6,7 +6,8 @@ import { useEffect, useState, useMemo } from "react";
 import useQuery from "../../hooks/useQuery";
 import { useOfferTag } from "../../hooks/useOfferTag";
 import { campaigns, calculateTimeLeft } from "../../utils/campaignUtils";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaHeart, FaRegHeart } from "react-icons/fa";
+import { useWishlist } from "../../context/WishlistContext";
 import { FaStar } from "react-icons/fa6";
 import { fetchReviews } from "../../apis/Reviews";
 
@@ -20,7 +21,9 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
   );
   const offerTag = useOfferTag(productId);
   const [timeLeft, setTimeLeft] = useState({});
-  const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
+  const [isDescriptionOpen, setIsDescriptionOpen] = useState(true);
+  const { wishlist, toggleWishlist } = useWishlist();
+  const isWishlisted = productId ? wishlist.includes(productId) : false;
   const [isWorthOpen, setIsWorthOpen] = useState(false);
   const [isReturnOpen, setIsReturnOpen] = useState(false);
 
@@ -46,31 +49,6 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
   }
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
   const [reviews, setReviews] = useState([]);
-
-  const [randomCartCount, setRandomCartCount] = useState(7);
-
-  useEffect(() => {
-    if (!productId) return;
-
-    const updateCount = () => {
-      const now = new Date();
-      const dateString = now.getFullYear() + "-" + now.getMonth() + "-" + now.getDate();
-      const currentHour = now.getHours();
-
-      let hash = 0;
-      const str = String(productId) + "-" + dateString;
-      for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-      }
-
-      const baseCount = (Math.abs(hash) % 9) + 1;
-      setRandomCartCount(baseCount + currentHour);
-    };
-
-    updateCount();
-    const interval = setInterval(updateCount, 60000);
-    return () => clearInterval(interval);
-  }, [productId]);
 
   useEffect(() => {
     if (productId) {
@@ -135,29 +113,41 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
           <Link className="text-[#656565]">{title?.slice(0, 20)}...</Link>
         </div>
 
-        <h2 className="font-black xl:text-2xl text-xl"> {title}</h2>{" "}
+        <div className="flex items-start justify-between gap-3">
+          <h1 className="font-black xl:text-2xl text-xl leading-tight">{title}</h1>
+          {productId && (
+            <button
+              onClick={() => toggleWishlist(productId)}
+              className="shrink-0 w-10 h-10 rounded-full border border-gray-300 dark:border-gray-700 flex items-center justify-center bg-white dark:bg-black"
+              aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            >
+              {isWishlisted ? <FaHeart className="text-red-500" size={18} /> : <FaRegHeart size={18} />}
+            </button>
+          )}
+        </div>
         {/*{product?.title}*/}
 
-        {/*<div
-          className="flex items-center gap-3 my-1 cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => {
-            const el = document.getElementById('reviews');
-            if (el) {
-              const y = el.getBoundingClientRect().top + window.scrollY - 100; // Offset for navbar
-              window.scrollTo({ top: y, behavior: 'smooth' });
-            }
-          }}
-        >
-          <div className="text-2xl font-bold">{averageRating}</div>
-          <div>
-            <div className="flex text-yellow-400 text-sm">
+        {reviews?.length > 0 && (
+          <button
+            type="button"
+            className="flex items-center gap-2 w-fit hover:opacity-80 transition-opacity"
+            onClick={() => {
+              const el = document.getElementById('reviews');
+              if (el) {
+                const y = el.getBoundingClientRect().top + window.scrollY - 100; // Offset for navbar
+                window.scrollTo({ top: y, behavior: 'smooth' });
+              }
+            }}
+          >
+            <div className="flex text-sm">
               {[...Array(5)].map((_, i) => (
                 <FaStar key={i} className={i < Math.round(averageRating) ? "text-yellow-400" : "text-gray-300"} />
               ))}
             </div>
-            <p className="text-xs text-gray-500 mt-0.5">{reviews?.length || 0} reviews</p>
-          </div>
-        </div>*/}
+            <span className="text-sm font-semibold">{averageRating}</span>
+            <span className="text-xs text-gray-500 underline">({reviews.length} {reviews.length === 1 ? "review" : "reviews"})</span>
+          </button>
+        )}
 
         <h3 className="tracking-tight font-semibold text-xl flex items-center gap-2">
           {productOutOfStock ? (
@@ -187,15 +177,6 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
         <span className="text-xs tracking-tighter capitalize">
           (Incl. of all taxes)
         </span>
-        {!productOutOfStock && (
-          <div className="overflow-hidden w-full mt-1">
-            <div className={`text-red-600 text-sm font-bold ${classes.slideInRight}`}>
-              <span className="animate-pulse inline-block">
-                {randomCartCount} people added this to cart today !!!
-              </span>
-            </div>
-          </div>
-        )}
         {offerTag && !productOutOfStock && (
           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1">
             <div className={`text-white text-xs font-bold px-2 py-1 w-fit whitespace-nowrap ${offerTag === 'B1G1' ? 'bg-green-800' : 'bg-red-600'}`}>
@@ -215,6 +196,12 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
       </div>
 
       {children}
+
+      <ul className="flex flex-col gap-2 text-sm text-gray-800 dark:text-gray-200 font-outfit">
+        <li className="flex items-start gap-2"><span className="text-[#1E7B74] font-bold">✓</span> Free delivery · dispatched in 24–48 hrs, delivered in 4–5 days</li>
+        <li className="flex items-start gap-2"><span className="text-[#1E7B74] font-bold">✓</span> Easy exchange within 10 days of delivery</li>
+        <li className="flex items-start gap-2"><span className="text-[#1E7B74] font-bold">✓</span> Secure payment with UPI, cards &amp; netbanking</li>
+      </ul>
 
       <div className="mt-6 flex flex-col border-t border-gray-200 dark:border-gray-800">
         {/* Description HTML section */}
@@ -277,6 +264,7 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
               <div className="mt-2 space-y-1">
                 <p className="font-semibold text-[#1E7B74]">Returns:</p>
                 <p>A ₹99 return fee will be deducted from your refund to cover reverse logistics.</p>
+                <p className="font-semibold">Returns and Refunds are not applicable on offer products.</p>
               </div>
 
               <div className="mt-2 space-y-1">

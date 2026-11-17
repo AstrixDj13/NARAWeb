@@ -152,7 +152,7 @@ export default function ImageGallery({
 
   return (
     <>
-      <div className={`relative w-full ${isMobile ? "flex aspect-[3/4]" : "grid grid-cols-2 gap-4 p-2 h-max"} lg:w-[50%]`}>
+      <div className={`relative w-full ${isMobile ? "flex aspect-[4/5]" : "grid grid-cols-2 gap-4 p-2 h-max"} lg:w-[50%]`}>
         {isMobile ? (
           renderSlider()
         ) : (

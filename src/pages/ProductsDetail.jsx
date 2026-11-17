@@ -22,10 +22,8 @@ import ReviewSection from "../components/productsDetail/ReviewSection";
 import TrustBadges from "../components/productsDetail/TrustBadges";
 import ProductTicker from "../components/productsDetail/ProductTicker";
 import { useProductScrollTracker, useEventTracker } from "../hooks/EventTracker";
-import Coupons from "../components/Cart/Coupons";
 import CommunityPrompt from "../components/productsDetail/CommunityPrompt";
 import FooterSection from "../components/home/FooterSectionUpdated";
-import ScrollGiftNote from "../components/productsDetail/ScrollGiftNote";
 import ProductVideoPopup from "../components/productsDetail/ProductVideoPopup";
 
 export default function ProductsDetailPage() {
@@ -296,7 +294,7 @@ export default function ProductsDetailPage() {
 
           <div className="flex flex-col gap-1 md:gap-4 items-center justify-center xl:items-stretch xl:justify-center xl:flex-row dark:bg-black xl:!p-2 p-0 md:p-2 w-full">
             {/* breadcrumb */}
-            <div className="md:w-3/4 flex xl:hidden text-sm gap-4 font-outfit w-full overflow-hidden p-2 md:p-0">
+            <div className="md:w-3/4 hidden md:flex xl:hidden text-sm gap-4 font-outfit w-full overflow-hidden p-2 md:p-0">
               <Link className="underline flex items-center gap-3 shrink-0" to="/">
                 Home{" "}
                 <img title="image" src="/icons/leftTriangleIcon.svg" alt="" />
@@ -323,9 +321,6 @@ export default function ProductsDetailPage() {
             />
 
             <div className="xl:w-2/5 md:w-3/4 w-full flex flex-col gap-4 md:gap-8 pt-2 px-4 md:p-4 !pb-12 md:!px-8 xl:!pb-12">
-              <div className="md:sticky md:top-[135px] xl:top-[151px] z-30 md:bg-[#F7F7F7] dark:md:bg-black py-2 xl:py-4 -mt-2 xl:-mt-4 transition-all duration-300">
-                <ActionButtons productId={product.id} />
-              </div>
               <DetailSection
                 title={product.title}
                 descriptionHtml={product.descriptionHtml}
@@ -344,6 +339,9 @@ export default function ProductsDetailPage() {
                   product={product}
                 />
                 
+                {/* Add to Bag / Buy Now: inline under the sizes on desktop, fixed bottom bar on phones */}
+                <ActionButtons productId={product.id} productTitle={product.title} />
+
                 <div className="w-full flex items-center justify-between bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded-lg p-3 mt-1 mb-2 shadow-sm">
                   <span className="text-sm font-bold text-teal-800 dark:text-teal-300">
                     Can’t find your size??
@@ -360,7 +358,6 @@ export default function ProductsDetailPage() {
 
                 
                 <DeliveryDetails />
-                <Coupons />
               </DetailSection>
 
               <div className="mt-1 xl:mt-0 w-full">
@@ -381,13 +378,14 @@ export default function ProductsDetailPage() {
           </div>
         </div>
       )}
-      {/* Temporarily disabled review section */}
-      {/* <div id="reviews" className="w-full">
-        <ReviewSection productId={product.id} />
-      </div> */}
+      {/* Reviews: only rendered when this product has reviews */}
+      <div id="reviews" className="w-full">
+        <ReviewSection productId={product.id} hideWhenEmpty />
+      </div>
       <RelatedProducts collectionId={concernedCollectionId} productId={product.id} product={product} />
       <FooterSection />
-      <ScrollGiftNote />
+      {/* Space so the fixed mobile buy bar never covers the footer */}
+      <div className="h-20 md:hidden" aria-hidden="true" />
       <ProductVideoPopup productTitle={product.title} />
 
       {/* Sticky Back to Top Button (Mobile Only) */}
@@ -401,31 +399,6 @@ export default function ProductsDetailPage() {
         </button>
       )}
 
-      {/* Sticky Trending Notification */}
-      {showBackToTop && !isTrendingDismissed && params.handle !== "the-plum-top-navy-stripes" && (
-        <div 
-          className="fixed top-32 md:top-36 left-1/2 transform -translate-x-1/2 z-[90] bg-[#1a1a1a] text-white px-5 py-3 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.2)] flex items-center gap-3 border border-[#333] transition-all duration-500 font-sans text-sm sm:text-base whitespace-nowrap hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(0,0,0,0.3)] group"
-        >
-          <Link to="/products/the-plum-top-navy-stripes?camefrompage=Products" className="flex items-center gap-3 cursor-pointer">
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-            </span>
-            <span className="font-medium">The Plum Top: <span className="font-bold underline decoration-[#333] group-hover:decoration-white transition-colors underline-offset-4">Trending This Week</span></span>
-          </Link>
-          <div className="w-px h-5 bg-[#444]"></div>
-          <button 
-            onClick={(e) => {
-              e.preventDefault();
-              setIsTrendingDismissed(true);
-            }} 
-            className="text-gray-400 hover:text-white transition-colors flex items-center justify-center p-1 rounded-full hover:bg-[#333]"
-            aria-label="Close"
-          >
-            <FaXmark size={16} />
-          </button>
-        </div>
-      )}
     </>
   );
 }

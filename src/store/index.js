@@ -98,6 +98,10 @@ const activeProductSlice = createSlice({
   initialState: {
     currentVariant: null,
     outOfStock: false,
+    // Size must be picked by the shopper (no pre-selected size) when a product has several sizes
+    sizeRequired: false,
+    sizeConfirmed: true,
+    sizePromptAt: 0,
   },
   reducers: {
     setCurrentVariant(state, action) {
@@ -105,6 +109,15 @@ const activeProductSlice = createSlice({
     },
     setOutOfStock(state, action) {
       state.outOfStock = action.payload
+    },
+    setSizeRequired(state, action) {
+      state.sizeRequired = action.payload;
+    },
+    setSizeConfirmed(state, action) {
+      state.sizeConfirmed = action.payload;
+    },
+    promptForSize(state, action) {
+      state.sizePromptAt = action.payload;
     }
   }
 
@@ -136,7 +149,7 @@ const store = configureStore({
 
 
 export const { setUser, setFullName, setEmail, setPhone, setAddresses, setAuthStatus, setDefaultAddressId, setDefaultAddress, setAreAddressesLoading, logoutUser } = userSlice.actions;
-export const { setCurrentVariant, setOutOfStock } = activeProductSlice.actions;
+export const { setCurrentVariant, setOutOfStock, setSizeRequired, setSizeConfirmed, promptForSize } = activeProductSlice.actions;
 export const { setActiveCartId, setCheckoutUrl, setTotalQuantityInCart, setProductsinCart, deleteCart, setIsCartOpen } = cartSlice.actions;
 export const { setAppTheme } = appSlice.actions;
 

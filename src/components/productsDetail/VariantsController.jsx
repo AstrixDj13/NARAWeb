@@ -3,8 +3,8 @@ import { HiOutlineArrowRight } from "react-icons/hi";
 import { toast } from "sonner";
 import ColorSection from "./ColorSection";
 import SizeSelector from "./SizeSelector";
-import { useDispatch } from "react-redux";
-import { setCurrentVariant, setOutOfStock } from "../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentVariant, setOutOfStock, setSizeRequired, setSizeConfirmed } from "../../store";
 
 export default function VariantsController({ options, variants, colorsArray, scrollToImageBySrc, productId, product }) {
   const [optionsList, setOptionsList] = useState([]);
@@ -13,6 +13,7 @@ export default function VariantsController({ options, variants, colorsArray, scr
   const [optionsChoiceList, setOptionsChoiceList] = useState({});
   const [defaultColor, setDefaultColor] = useState(null);
   const dispatch = useDispatch();
+  const sizeConfirmed = useSelector((state) => state.activeProduct.sizeConfirmed);
 
   useEffect(() => {
 
@@ -27,6 +28,12 @@ export default function VariantsController({ options, variants, colorsArray, scr
 
     setOptionsChoiceList(choicesList);
     setOptionsList(optionsList);
+
+    // Don't pre-select a size: if the product has more than one size, the shopper must pick one.
+    const sizeOption = options?.find((option) => option.name === "Size");
+    const needsSizeChoice = !!sizeOption && (sizeOption.values?.length || 0) > 1;
+    dispatch(setSizeRequired(needsSizeChoice));
+    dispatch(setSizeConfirmed(!needsSizeChoice));
 
     const inStockVariants = variants?.edges?.filter(
       (variant) => parseInt(variant.node.quantityAvailable) > 0
@@ -105,6 +112,7 @@ export default function VariantsController({ options, variants, colorsArray, scr
 
         scrollToImageBySrc(matchedNode.node?.image?.src);
         dispatch(setCurrentVariant(matchedNode));
+        if (name === "Size") dispatch(setSizeConfirmed(true));
       }
     }
 
@@ -151,7 +159,7 @@ export default function VariantsController({ options, variants, colorsArray, scr
           <SizeSelector
             key={option}
             selectSize={handleOptionChange}
-            defaultSize={selectedOptions[option]}
+            defaultSize={sizeConfirmed ? selectedOptions[option] : null}
             sizes={optionsChoiceList[option] || []}
             productId={productId}
             product={product}
