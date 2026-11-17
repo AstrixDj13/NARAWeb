@@ -188,25 +188,13 @@ export default function ActionButtons({ inline = false, productId }) {
   // Buy Now uses its own one-item cart, so the customer's main cart is left untouched.
   // Falls back to Shopify checkout (checkoutUrl) if Magic Checkout is unavailable.
   const openMagicCheckoutForBuyNow = async (cart, checkoutUrl, customerInfo) => {
-    const rawPrice = currentVariant?.node?.price?.amount;
-    const numPrice = rawPrice ? parseFloat(String(rawPrice).replace(/[^0-9.]/g, '')) : 0;
-    const variantId = currentVariant?.node?.id;
-
     await initiateMagicCheckout({
       cartId: cart.id,
       productsInCart: cart.lines?.edges || [],
       totalQuantity: cart.totalQuantity,
       customerDetails: customerInfo,
       fallbackUrl: checkoutUrl,
-      onSuccess: () => {
-        trackEvent('Purchase', {
-          variant_id: variantId,
-          content_ids: [variantId],
-          value: numPrice,
-          currency: "INR",
-          num_items: 1
-        });
-      },
+      // Purchase tracking and the redirect to /order-confirmation happen inside magicCheckout
     });
   };
 

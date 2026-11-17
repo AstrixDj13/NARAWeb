@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import { trackEvent } from "../hooks/EventTracker";
 
 const MAGIC_SCRIPT_SRC = "https://checkout.razorpay.com/v1/magic-checkout.js";
+export const LAST_ORDER_KEY = "nara_last_order";
 
 /**
  * Dynamically loads the Razorpay Magic Checkout script (headless Shopify flow, step 1.3)
@@ -119,8 +120,8 @@ const completeShopifyCheckout = async (keyId, paymentResponse, attempts = 3) => 
  * @param {Object} [params.customerDetails] - Pre-filled customer info ({ name, email, phone })
  * @param {string} [params.fallbackUrl] - Standard Shopify checkout URL to redirect to if Magic Checkout is unavailable
  * @param {string} [params.couponCode] - Shopify discount code to auto-apply (step 1.4)
- * @param {Function} [params.onSuccess] - Called with the Complete Checkout result ({ order_status_url, ... }) after the Shopify order is created.
- *   If the result has order_status_url, the user is redirected there after onSuccess runs.
+ * @param {Function} [params.onSuccess] - Called after a successful payment (with the Complete Checkout result, or null if
+ *   order creation is still pending). Use it to clear local cart state; the customer is then sent to /order-confirmation.
  * @param {Function} [params.onError] - Callback on payment or session error
  */
 export const initiateMagicCheckout = async ({
@@ -231,34 +232,66 @@ export const initiateMagicCheckout = async ({
           body: JSON.stringify(paymentResponse),
         }).catch((verErr) => console.error("Signature verification error:", verErr));
 
-        // Step 1.5: create the Shopify order via Razorpay Complete Checkout
+        // Snapshot of what was bought, so the thank-you page can render instantly
+        // (the server fills in the confirmed order number, address and totals).
         try {
-          const orderResult = await completeShopifyCheckout(keyId, paymentResponse);
-          toast.success("Order placed successfully!");
+          sessionStorage.setItem(
+            LAST_ORDER_KEY,
+            JSON.stringify({
+              razorpayOrderId: paymentResponse.razorpay_order_id,
+              paymentId: paymentResponse.razorpay_payment_id,
+              amount: totalCartValue,
+              items: cartItems.map((item) => ({
+                title: item?.merchandise?.product?.title || "",
+                variantTitle:
+                  item?.merchandise?.title && item.merchandise.title !== "Default Title" ? item.merchandise.title : "",
+                quantity: Number(item?.quantity) || 1,
+                image: item?.merchandise?.image?.src || item?.merchandise?.image?.url || "",
+                unitPrice: parseFloat(item?.merchandise?.price?.amount || 0),
+              })),
+              placedAt: new Date().toISOString(),
+            })
+          );
+        } catch (e) {
+          // sessionStorage unavailable (private mode) — the page will load everything from the server
+        }
 
-          // Track Purchase event with Meta Pixel & Analytics
-          trackEvent("Purchase", {
-            order_id: paymentResponse.razorpay_order_id,
-            payment_id: paymentResponse.razorpay_payment_id,
-            value: totalCartValue,
-            currency: "INR",
-            num_items: totalQuantity || formattedCart.item_count,
-            content_ids: contentIds,
-            checkout_type: "magic_checkout"
-          });
+        // The paid Shopify cart no longer exists; drop it so the app doesn't try to reload it.
+        try {
+          if (localStorage.getItem("cartId") === cartId) localStorage.removeItem("cartId");
+        } catch (e) { /* ignore */ }
 
-          onSuccess(orderResult);
-          if (orderResult?.order_status_url) {
-            window.location.href = orderResult.order_status_url;
-          }
+        trackEvent("Purchase", {
+          order_id: paymentResponse.razorpay_order_id,
+          payment_id: paymentResponse.razorpay_payment_id,
+          value: totalCartValue,
+          currency: "INR",
+          num_items: totalQuantity || formattedCart.item_count,
+          content_ids: contentIds,
+          checkout_type: "magic_checkout"
+        });
+
+        // Step 1.5: create the Shopify order via Razorpay Complete Checkout.
+        // The payment is already captured, so the customer goes to the thank-you page either way;
+        // that page re-checks whether the Shopify order exists.
+        let orderResult = null;
+        try {
+          orderResult = await completeShopifyCheckout(keyId, paymentResponse);
         } catch (completeErr) {
           console.error("Complete checkout failed:", completeErr, paymentResponse);
-          toast.error(
-            `Payment received, but we couldn't confirm your order yet. Please contact support with payment ID ${paymentResponse.razorpay_payment_id}.`,
-            { autoClose: false }
-          );
-          onError(completeErr);
         }
+
+        try {
+          onSuccess(orderResult);
+        } catch (cbErr) {
+          console.error("onSuccess callback error:", cbErr);
+        }
+
+        const params = new URLSearchParams({
+          order_id: paymentResponse.razorpay_order_id,
+          payment_id: paymentResponse.razorpay_payment_id,
+        });
+        window.location.href = `/order-confirmation?${params.toString()}`;
       },
       modal: {
         ondismiss: function () {

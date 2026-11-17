@@ -29,6 +29,7 @@ const WishlistPage = React.lazy(() => import("../pages/WishlistPage"));
 const FitQuiz = React.lazy(() => import("../pages/FitQuiz"));
 const VideoFeed = React.lazy(() => import("../pages/VideoFeed"));
 const ContactUs = React.lazy(() => import("../pages/ContactUs"));
+const OrderConfirmation = React.lazy(() => import("../pages/OrderConfirmation"));
 
 export const router = createBrowserRouter([
   {
@@ -110,6 +111,10 @@ export const router = createBrowserRouter([
       {
         path: "track",
         element: <LazyComponent component={<TrackOrder />} />,
+      },
+      {
+        path: "order-confirmation",
+        element: <LazyComponent component={<OrderConfirmation />} />,
       },
       {
         element: <RedirectWhenLoggedIn />,

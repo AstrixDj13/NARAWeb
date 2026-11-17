@@ -3348,6 +3348,130 @@ app.post('/api/magic-checkout/verify', async (req, res) => {
 
 
 
+// Order summary for the thank-you page (/order-confirmation).
+// Requires both the Razorpay order ID and the payment ID, and checks that the payment
+// belongs to that order and succeeded, so order details can't be looked up by order ID alone.
+app.get('/api/magic-checkout/order-summary', async (req, res) => {
+  try {
+    const orderId = String(req.query.order_id || '');
+    const paymentId = String(req.query.payment_id || '');
+    if (!/^order_[A-Za-z0-9]+$/.test(orderId) || !/^pay_[A-Za-z0-9]+$/.test(paymentId)) {
+      return res.status(400).json({ success: false, error: 'Invalid order reference.' });
+    }
+
+    const cleanVal = (v) => (v || '').trim().replace(/^["'s]+|["'s]+$/g, '');
+    const keyId = cleanVal(process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID);
+    const keySecret = cleanVal(process.env.RAZORPAY_KEY_SECRET);
+    if (!keyId || !keySecret) {
+      return res.status(500).json({ success: false, error: 'Payment gateway not configured.' });
+    }
+    const rzpAuth = 'Basic ' + Buffer.from(`${keyId}:${keySecret}`).toString('base64');
+    const rzpGet = async (path) => {
+      const r = await fetch(`https://api.razorpay.com/v1${path}`, { headers: { Authorization: rzpAuth } });
+      if (!r.ok) {
+        const err = new Error(`Razorpay ${path.split('/')[1]} lookup failed (${r.status})`);
+        err.status = r.status;
+        throw err;
+      }
+      return r.json();
+    };
+
+    const payment = await rzpGet(`/payments/${paymentId}`);
+    if (payment.order_id !== orderId || !['captured', 'authorized'].includes(payment.status)) {
+      return res.status(404).json({ success: false, error: 'Order not found.' });
+    }
+    const order = await rzpGet(`/orders/${orderId}`);
+
+    const paise = (v) => Math.round(Number(v || 0)) / 100;
+    const cd = order.customer_details || {};
+    const ship = cd.shipping_address || null;
+    const maskContact = (c) => {
+      const d = String(c || '').replace(/D/g, '');
+      return d.length >= 4 ? `******${d.slice(-4)}` : '';
+    };
+
+    // Shopify order (created by Razorpay's Complete Checkout) — has the real line items and order number
+    const shopifyOrderId = order.notes?.shopify_order_id || null;
+    let shopifyOrder = null;
+    if (shopifyOrderId && process.env.SHOPIFY_ACCESS_TOKEN) {
+      try {
+        const shopifyStore = process.env.SHOPIFY_STORE_URL || '72cbc9-6d.myshopify.com';
+        const query = `query($id: ID!) { order(id: $id) {
+          name createdAt
+          lineItems(first: 50) { edges { node {
+            title variantTitle quantity image { url }
+            originalUnitPriceSet { shopMoney { amount } }
+            discountedTotalSet { shopMoney { amount } }
+          } } }
+        } }`;
+        const r = await fetch(`https://${shopifyStore}/admin/api/2024-07/graphql.json`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': process.env.SHOPIFY_ACCESS_TOKEN },
+          body: JSON.stringify({ query, variables: { id: `gid://shopify/Order/${shopifyOrderId}` } }),
+        });
+        const j = await r.json();
+        shopifyOrder = j?.data?.order || null;
+      } catch (e) {
+        console.error('[OrderSummary] Shopify lookup failed:', e.message);
+      }
+    }
+
+    const items = (shopifyOrder?.lineItems?.edges || []).map(({ node }) => ({
+      title: node.title,
+      variantTitle: node.variantTitle && node.variantTitle !== 'Default Title' ? node.variantTitle : '',
+      quantity: node.quantity,
+      image: node.image?.url || '',
+      unitPrice: Number(node.originalUnitPriceSet?.shopMoney?.amount || 0),
+      total: Number(node.discountedTotalSet?.shopMoney?.amount || 0),
+    }));
+
+    const subtotal = paise(order.line_items_total || order.amount);
+    const shippingFee = paise(order.shipping_fee);
+    const codFee = paise(order.cod_fee);
+    const amount = paise(order.amount);
+    const discount = Math.max(0, Math.round((subtotal + shippingFee + codFee - amount) * 100) / 100);
+
+    res.json({
+      success: true,
+      orderNumber: shopifyOrder?.name || (order.receipt && String(order.receipt).startsWith('#') ? order.receipt : null),
+      shopifyConfirmed: !!shopifyOrderId,
+      razorpayOrderId: order.id,
+      paymentId: payment.id,
+      paymentMethod: payment.method || null,
+      paymentStatus: payment.status,
+      placedAt: shopifyOrder?.createdAt || new Date((order.created_at || 0) * 1000).toISOString(),
+      currency: order.currency || 'INR',
+      amountPaid: paise(order.amount_paid) || paise(payment.amount),
+      subtotal,
+      shippingFee,
+      codFee,
+      discount,
+      promotions: (order.promotions || []).map((p) => ({ code: p.code, value: paise(p.value) })),
+      customer: {
+        name: ship?.name || '',
+        email: cd.email || payment.email || '',
+        contact: maskContact(cd.contact || payment.contact),
+      },
+      shippingAddress: ship ? {
+        name: ship.name || '',
+        line1: ship.line1 || '',
+        line2: ship.line2 || '',
+        city: ship.city || '',
+        state: ship.state || '',
+        zipcode: ship.zipcode || '',
+        country: (ship.country || '').toUpperCase() === 'IN' ? 'India' : (ship.country || ''),
+      } : null,
+      items,
+    });
+  } catch (error) {
+    if (error.status === 400 || error.status === 404) {
+      return res.status(404).json({ success: false, error: 'Order not found.' });
+    }
+    console.error('[OrderSummary] Error:', error.message);
+    res.status(502).json({ success: false, error: 'Could not load order details right now.' });
+  }
+});
+
 // ==========================================
 // Razorpay Magic Checkout: Promotions & Shipping Endpoints
 // (Configured in Razorpay Dashboard > Magic Checkout > Setup & Settings)

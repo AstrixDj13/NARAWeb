@@ -94,12 +94,10 @@ export default function Cart({ toggleCartOpen, cartOpen }) {
       totalQuantity: totalQuantityInCart,
       customerDetails: customerInfo,
       fallbackUrl: fixedUrl,
-      onSuccess: (orderResult) => {
-        trackEvent('Purchase', { value: subtotal, currency: "INR", num_items: totalQuantityInCart });
+      onSuccess: () => {
+        // Purchase is tracked in magicCheckout, which then redirects to /order-confirmation
         dispatch(deleteCart());
         toggleCartOpen();
-        // magicCheckout redirects to Shopify order_status_url when present
-        if (!orderResult?.order_status_url) navigate("/orders");
       }
     });
   };
