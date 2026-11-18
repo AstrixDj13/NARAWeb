@@ -14,8 +14,8 @@ export default function SizeChart({ productId, product }) {
   const [unit, setUnit] = useState("in"); // "in" | "cm"
   const [howToMeasureOpen, setHowToMeasureOpen] = useState(false);
 
-  // ADAA detection
-  const [isAdaa, setIsAdaa] = useState(() => isAdaaProduct(product));
+  // New size guide for all products (men's tops switch to their own table below)
+  const [useNewGuide, setUseNewGuide] = useState(true);
 
   // Fit & Fabric details from product metafields
   const fitFabric = getFitFabricDetails(product);
@@ -31,14 +31,14 @@ export default function SizeChart({ productId, product }) {
   const [showTops, setShowTops] = useState(false);
   const [showBottoms, setShowBottoms] = useState(false);
   const [showMenTops, setShowMenTops] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  // Update isAdaa if product prop changes
+  // Update useNewGuide if product prop changes
   useEffect(() => {
     if (product) {
       const match = isAdaaProduct(product);
       if (match) {
-        setIsAdaa(true);
+        setUseNewGuide(true);
         setLoading(false);
         return;
       }
@@ -69,84 +69,31 @@ export default function SizeChart({ productId, product }) {
     }
   }, [isOpen]);
 
-  // Check collections if not immediately resolved via product prop
+  // The new size guide (measurements + Fit & Fabric details) is used for every product.
+  // Only men's tops keep their own men's measurement table.
   useEffect(() => {
-    const checkCollections = async () => {
-      // If already identified as ADAA via product prop, skip fetching
-      if (isAdaaProduct(product)) {
-        setIsAdaa(true);
-        setLoading(false);
-        return;
-      }
-
-      if (!productId && !product?.id) {
-        setLoading(false);
-        return;
-      }
-
+    let cancelled = false;
+    const checkMenTop = async () => {
       const targetId = productId || product?.id;
-
+      if (!targetId || isAdaaProduct(product)) return;
       try {
         const collections = await getCollections();
-
-        // 1. Check if product belongs to ADAA - The Festive Edit collection
-        const adaaCollection = collections.find((c) =>
-          isAdaaCollectionTitle(c.title)
-        );
-
-        if (adaaCollection) {
-          try {
-            const { products } = await getCollectionById(adaaCollection.id);
-            const inAdaa = products.some(
-              (p) => p.productId === targetId || p.id === targetId
-            );
-            if (inAdaa) {
-              setIsAdaa(true);
-              setLoading(false);
-              return;
-            }
-          } catch (e) {
-            console.error("Error fetching ADAA collection products:", e);
-          }
+        const menTop = collections.find((c) => c.title === "Men's Top");
+        if (!menTop) return;
+        const { products } = await getCollectionById(menTop.id);
+        const inMenTop = products.some((p) => p.productId === targetId || p.id === targetId);
+        if (inMenTop && !cancelled) {
+          setUseNewGuide(false);
+          setShowMenTops(true);
         }
-
-        // 2. Legacy fallback for other collections
-        const relevantCollections = collections.filter((c) =>
-          ["Tops", "Bottoms", "Co-ord sets", "Men's Top"].includes(c.title)
-        );
-
-        let isTop = false;
-        let isBottom = false;
-        let isMenTop = false;
-
-        for (const collection of relevantCollections) {
-          const { products } = await getCollectionById(collection.id);
-          const productInCollection = products.some(
-            (p) => p.productId === targetId || p.id === targetId
-          );
-
-          if (productInCollection) {
-            if (collection.title === "Tops") isTop = true;
-            if (collection.title === "Bottoms") isBottom = true;
-            if (collection.title === "Men's Top") isMenTop = true;
-            if (collection.title === "Co-ord sets") {
-              isTop = true;
-              isBottom = true;
-            }
-          }
-        }
-
-        setShowTops(isTop);
-        setShowBottoms(isBottom);
-        setShowMenTops(isMenTop);
       } catch (error) {
         console.error("Error checking size chart collections:", error);
-      } finally {
-        setLoading(false);
       }
     };
-
-    checkCollections();
+    checkMenTop();
+    return () => {
+      cancelled = true;
+    };
   }, [productId, product]);
 
   // Convert measurement based on active unit
@@ -261,7 +208,7 @@ export default function SizeChart({ productId, product }) {
 
   // If loading or not part of any size chart collection, do not render
   if (loading) return null;
-  if (!isAdaa && !showTops && !showBottoms && !showMenTops) return null;
+  if (!useNewGuide && !showTops && !showBottoms && !showMenTops) return null;
 
   const isCoords = showTops && showBottoms;
 
@@ -309,13 +256,13 @@ export default function SizeChart({ productId, product }) {
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-2xl sm:text-3xl font-serif font-medium tracking-tight text-gray-900 dark:!text-white">
-                    {isAdaa ? ADAA_SIZE_GUIDE.title : "Size Guide"}
+                    {useNewGuide ? ADAA_SIZE_GUIDE.title : "Size Guide"}
                   </h2>
                 </div>
 
                 <div className="flex items-center gap-3">
                   {/* Inches / Centimeters Toggle Pill */}
-                  {isAdaa && (
+                  {useNewGuide && (
                     <div className="inline-flex items-center bg-[#F1F1F3] dark:!bg-[#282828] p-1 rounded-full text-xs font-medium shadow-inner">
                       <button
                         type="button"
@@ -357,7 +304,7 @@ export default function SizeChart({ productId, product }) {
 
             {/* Modal Body (Scrollable) */}
             <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6 bg-white dark:!bg-[#181818]">
-              {isAdaa ? (
+              {useNewGuide ? (
                 <>
                   {/* Standard Size Table */}
                   <div className="overflow-hidden rounded-xl border border-gray-200 dark:!border-neutral-800 shadow-sm bg-white dark:!bg-[#1F1F1F]">

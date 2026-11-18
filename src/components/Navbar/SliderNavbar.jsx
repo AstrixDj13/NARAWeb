@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { getCollections } from "../../apis/Collections";
 import { SALE_COLLECTION_ID, SALE_URL } from "../../utils/collectionLinks";
 
-// Blinking highlight for the FOR SALE menu item (disabled for users who prefer reduced motion)
+// Blinking highlight for the SALE menu item (disabled for users who prefer reduced motion)
 const saleBlinkStyle = `
 @keyframes nara-sale-blink {
   0%, 100% { opacity: 1; }
@@ -154,7 +154,7 @@ const SliderNavbar = ({ isOpen, toggleMenu, allCollections: initialCollections }
                     <span
                       className={`text-xl md:text-2xl font-bold not-italic pl-4 md:pl-8 md:tracking-widest text-red-600 dark:!text-red-400 ${activeLink === "sale" ? "underline underline-offset-4" : ""}`}
                     >
-                      <span className="nara-sale-blink">FOR SALE</span>
+                      <span className="nara-sale-blink">SALE</span>
                     </span>
                     <span className="relative flex h-3 w-3 ml-3" aria-hidden="true">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
