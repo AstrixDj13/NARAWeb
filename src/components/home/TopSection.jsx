@@ -26,7 +26,8 @@ const TopSection = () => {
     "Co-ord sets",
     "Saaz",
     "BUY 1 GET 1 FREE",
-    "New Arrivals"
+    "New Arrivals",
+    "SALE"
   ];
 
   const fetchCollections = async () => {
@@ -263,10 +264,10 @@ const TopSection = () => {
                         alt={`${banner.title} Mobile`}
                         width="800"
                         height="1200"
-                      
-                      fetchpriority={index === 0 ? "high" : "auto"}
-                      loading={index === 0 ? "eager" : "lazy"}
-                      className="w-full h-full object-cover object-top grayscale-[35%] contrast-[1.08] transition-[filter,transform] duration-[1200ms] group-hover:grayscale-0 group-hover:scale-105 lg:hidden block"
+
+                        fetchpriority={index === 0 ? "high" : "auto"}
+                        loading={index === 0 ? "eager" : "lazy"}
+                        className="w-full h-full object-cover object-top grayscale-[35%] contrast-[1.08] transition-[filter,transform] duration-[1200ms] group-hover:grayscale-0 group-hover:scale-105 lg:hidden block"
                       />
                     )}
                   </>
