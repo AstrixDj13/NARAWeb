@@ -8,6 +8,7 @@ import FooterSection from "../components/home/FooterSectionUpdated";
 import ActionButtons from "../components/productsDetail/ActionButtons";
 import SizeChart from "../components/productsDetail/SizeChart";
 import ReviewSection from "../components/productsDetail/ReviewSection";
+import { SHOW_REVIEWS } from "../utils/featureFlags";
 import GalleryV2 from "../components/productV2/GalleryV2";
 import { getProductById, getProductByHandle } from "../apis/Products";
 import { fetchCollectionProducts } from "../apis/getAllProducts";
@@ -191,7 +192,7 @@ export default function ProductPageV2() {
       if (data.success && data.is_serviceable) {
         const d = new Date();
         d.setDate(d.getDate() + (data.expected_delivery || 4));
-        setPinResult({ ok: true, msg: `Delivers to ${data.city || "your area"} by ${d.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}` });
+        setPinResult({ ok: true, msg: `Expected by ${d.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}${data.city ? ` to ${data.city}` : ""}` });
       } else {
         setPinResult({ ok: false, msg: "Sorry, we don't deliver to this pincode yet" });
       }
@@ -373,7 +374,7 @@ export default function ProductPageV2() {
 
             {/* Delivery check */}
             <div className="mt-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] mb-2">Check delivery</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] mb-2">Expected delivery</p>
               <div className="flex border border-black/20 dark:border-white/30">
                 <input
                   inputMode="numeric"
@@ -471,10 +472,12 @@ export default function ProductPageV2() {
         </section>
       )}
 
-      {/* Reviews: only when this product has some */}
-      <div id="reviews" className="max-w-[1400px] mx-auto">
-        <ReviewSection productId={product.id} hideWhenEmpty />
-      </div>
+      {/* Reviews: switched off for now (utils/featureFlags.js); when on, only shown if this product has some */}
+      {SHOW_REVIEWS && (
+        <div id="reviews" className="max-w-[1400px] mx-auto">
+          <ReviewSection productId={product.id} hideWhenEmpty />
+        </div>
+      )}
 
       <div className="mt-12">
         <FooterSection />

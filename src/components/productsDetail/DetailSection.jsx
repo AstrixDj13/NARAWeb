@@ -9,6 +9,7 @@ import { campaigns, calculateTimeLeft } from "../../utils/campaignUtils";
 import { FaChevronDown, FaChevronUp, FaHeart, FaRegHeart } from "react-icons/fa";
 import { useWishlist } from "../../context/WishlistContext";
 import { FaStar } from "react-icons/fa6";
+import { SHOW_REVIEWS } from "../../utils/featureFlags";
 import { fetchReviews } from "../../apis/Reviews";
 
 export default function DetailSection({ title, descriptionHtml, cameFrom, productId, worth, isMelCollection, children }) {
@@ -127,7 +128,7 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
         </div>
         {/*{product?.title}*/}
 
-        {reviews?.length > 0 && (
+        {SHOW_REVIEWS && reviews?.length > 0 && (
           <button
             type="button"
             className="flex items-center gap-2 w-fit hover:opacity-80 transition-opacity"

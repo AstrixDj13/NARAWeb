@@ -19,6 +19,7 @@ import PageLoader from "../components/utils/PageLoader";
 import useQuery from "../hooks/useQuery";
 import RelatedProducts from "../components/productsDetail/RelatedProducts";
 import ReviewSection from "../components/productsDetail/ReviewSection";
+import { SHOW_REVIEWS } from "../utils/featureFlags";
 import TrustBadges from "../components/productsDetail/TrustBadges";
 import ProductTicker from "../components/productsDetail/ProductTicker";
 import { useProductScrollTracker, useEventTracker } from "../hooks/EventTracker";
@@ -378,10 +379,12 @@ export default function ProductsDetailPage() {
           </div>
         </div>
       )}
-      {/* Reviews: only rendered when this product has reviews */}
-      <div id="reviews" className="w-full">
-        <ReviewSection productId={product.id} hideWhenEmpty />
-      </div>
+      {/* Reviews: switched off for now (utils/featureFlags.js); when on, only rendered if this product has reviews */}
+      {SHOW_REVIEWS && (
+        <div id="reviews" className="w-full">
+          <ReviewSection productId={product.id} hideWhenEmpty />
+        </div>
+      )}
       <RelatedProducts collectionId={concernedCollectionId} productId={product.id} product={product} />
       <FooterSection />
       {/* Space so the fixed mobile buy bar never covers the footer */}
