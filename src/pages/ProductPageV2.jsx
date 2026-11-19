@@ -9,6 +9,7 @@ import ActionButtons from "../components/productsDetail/ActionButtons";
 import SizeChart from "../components/productsDetail/SizeChart";
 import ReviewSection from "../components/productsDetail/ReviewSection";
 import { SHOW_REVIEWS } from "../utils/featureFlags";
+import { useSaleProduct, SALE_PRICE_MULTIPLIER } from "../hooks/useSaleProduct";
 import GalleryV2 from "../components/productV2/GalleryV2";
 import { getProductById, getProductByHandle } from "../apis/Products";
 import { fetchCollectionProducts } from "../apis/getAllProducts";
@@ -178,6 +179,9 @@ export default function ProductPageV2() {
   }, [product]);
 
   const price = parseFloat(currentVariant?.node?.price?.amount || product?.priceRange?.minVariantPrice?.amount || 0);
+  const isSale = useSaleProduct(product?.id);
+  // Black Friday products are already 50% off, so the struck price is double; everything else keeps price + ₹200
+  const strikePrice = isSale ? price * SALE_PRICE_MULTIPLIER : price + 200;
   const isWishlisted = product?.id ? wishlist.includes(product.id) : false;
 
   const checkPincode = async () => {
@@ -282,8 +286,7 @@ export default function ProductPageV2() {
               ) : (
                 <>
                   <span className="text-lg font-semibold">{formatINR(price)}</span>
-                  {/* Strike-through price kept as on the current page (price + ₹200) */}
-                  <span className="text-sm text-neutral-500 line-through">{formatINR(price + 200)}</span>
+                  <span className="text-sm text-neutral-500 line-through">{formatINR(strikePrice)}</span>
                 </>
               )}
             </div>

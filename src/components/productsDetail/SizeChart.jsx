@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getCollections, getCollectionById } from "../../apis/Collections";
+import { createPortal } from "react-dom";
 import { IoClose } from "react-icons/io5";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import {
@@ -241,10 +242,10 @@ export default function SizeChart({ productId, product }) {
         <span>Size Guide</span>
       </button>
 
-      {/* Centered Modal Popup */}
-      {isOpen && (
+      {/* Centered Modal Popup: rendered at <body> level so the fixed navbar can never sit on top of it */}
+      {isOpen && createPortal(
         <div
-          className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 z-[300] flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-sm transition-opacity"
           onClick={() => setIsOpen(false)}
         >
           <div
@@ -504,7 +505,8 @@ export default function SizeChart({ productId, product }) {
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

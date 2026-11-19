@@ -27,7 +27,7 @@ const TopSection = () => {
     "Saaz",
     "BUY 1 GET 1 FREE",
     "New Arrivals",
-    "SALE"
+    "BLACK FRIDAY SALE"
   ];
 
   const fetchCollections = async () => {

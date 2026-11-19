@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import VideoLazy from '../loaders/VideoLazy';
 import { useOfferTag } from '../../hooks/useOfferTag';
+import { useSaleProduct, SALE_PRICE_MULTIPLIER } from '../../hooks/useSaleProduct';
 import { getOptimizedImageUrl, getSrcSet } from '../../utils/imageOptimizer';
 
 const ProductCard = ({ product, className, forceFullHeight }) => {
@@ -10,6 +11,7 @@ const ProductCard = ({ product, className, forceFullHeight }) => {
     const [isHovered, setIsHovered] = useState(false);
     const intervalRef = useRef(null);
     const offerTag = useOfferTag(product.id);
+    const isSale = useSaleProduct(product.id);
 
     // Extract images from product data
     // Handle both API structure (images.nodes) and hardcoded structure (imgSrc/images)
@@ -46,10 +48,11 @@ const ProductCard = ({ product, className, forceFullHeight }) => {
 
     const originalPriceStr = React.useMemo(() => {
         if (product.variants?.nodes?.[0]?.price?.amount) {
-            return `₹${parseFloat(product.variants.nodes[0].price.amount).toFixed(2)}`;
+            const amount = parseFloat(product.variants.nodes[0].price.amount);
+            return `₹${(isSale ? amount * SALE_PRICE_MULTIPLIER : amount).toFixed(2)}`;
         }
         return '';
-    }, [product]);
+    }, [product, isSale]);
 
     const numericProductId = product.id ? decodeURIComponent(product.id).split('/').pop() : '';
     const link = product.link || (product.handle ? `/products/${product.handle}` : (product.id ? `/product/${numericProductId}` : '#'));
@@ -139,7 +142,7 @@ const ProductCard = ({ product, className, forceFullHeight }) => {
                         {title}
                     </h3>
                     <p className="mt-1 text-sm font-medium font-mono text-gray-800 dark:text-gray-200">
-                        {offerTag === "30% Off" && originalPriceStr ? (
+                        {(isSale || offerTag === "30% Off") && originalPriceStr ? (
                             <span className="flex items-center justify-center gap-1">
                                 <span className="line-through text-gray-400 text-xs font-normal">{originalPriceStr}</span>
                                 <span>{activePriceStr}</span>

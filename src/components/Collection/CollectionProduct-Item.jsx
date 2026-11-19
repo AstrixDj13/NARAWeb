@@ -10,6 +10,7 @@ import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
 import ImageWithSkeleton from "../utils/ImageWithSkeleton";
 import { useOfferTag } from "../../hooks/useOfferTag";
+import { useSaleProduct, SALE_PRICE_MULTIPLIER } from "../../hooks/useSaleProduct";
 import { IoCartOutline } from "react-icons/io5";
 import QuickViewModal from "../productsDetail/QuickViewModal";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
@@ -33,6 +34,7 @@ const CollectionProductItem = ({
   const numericProductId = productId ? decodeURIComponent(productId).split('/').pop() : '';
   const numericCollectionId = collectionId ? decodeURIComponent(collectionId).split('/').pop() : '';
   const fullProductId = productId?.includes('gid://') ? productId : `gid://shopify/Product/${numericProductId}`;
+  const isSale = useSaleProduct(fullProductId);
 
   const { wishlist, toggleWishlist } = useWishlist();
   const isWishlisted = wishlist.includes(fullProductId);
@@ -182,7 +184,12 @@ const CollectionProductItem = ({
           <h1 className="font-semibold py-2 line-clamp-2 md:line-clamp-none min-h-[3.5rem] md:min-h-0">{name}</h1>
           <div className="flex flex-col items-center justify-center">
             <div className="font-mono text-sm flex justify-center items-center gap-1.5 mt-1">
-              {offerTag === "30% Off" ? (
+              {isSale ? (
+                <>
+                  <span className="line-through text-gray-400 text-xs">₹{formatToINR(price * SALE_PRICE_MULTIPLIER)}</span>
+                  <span className="font-medium">₹{formatToINR(price)}</span>
+                </>
+              ) : offerTag === "30% Off" ? (
                 <>
                   <span className="line-through text-gray-400 text-xs">₹{formatToINR(price)}</span>
                   <span className="font-medium">₹{formatToINR(price * 0.70)}</span>

@@ -5,6 +5,7 @@ import classes from "./DetailSection.module.css";
 import { useEffect, useState, useMemo } from "react";
 import useQuery from "../../hooks/useQuery";
 import { useOfferTag } from "../../hooks/useOfferTag";
+import { useSaleProduct, SALE_PRICE_MULTIPLIER } from "../../hooks/useSaleProduct";
 import { campaigns, calculateTimeLeft } from "../../utils/campaignUtils";
 import { FaChevronDown, FaChevronUp, FaHeart, FaRegHeart } from "react-icons/fa";
 import { useWishlist } from "../../context/WishlistContext";
@@ -21,6 +22,7 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
     (state) => state.activeProduct.outOfStock
   );
   const offerTag = useOfferTag(productId);
+  const isSale = useSaleProduct(productId);
   const [timeLeft, setTimeLeft] = useState({});
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(true);
   const { wishlist, toggleWishlist } = useWishlist();
@@ -159,7 +161,10 @@ export default function DetailSection({ title, descriptionHtml, cameFrom, produc
             <>
               <span className="line-through text-gray-500 text-base">
                 {currentVariant?.node.price.currencyCode}{" "}
-                {(parseFloat(currentVariant?.node.price.amount) + 200).toFixed(2)}
+                {(isSale
+                  ? parseFloat(currentVariant?.node.price.amount) * SALE_PRICE_MULTIPLIER
+                  : parseFloat(currentVariant?.node.price.amount) + 200
+                ).toFixed(2)}
               </span>
               <span>
                 {currentVariant?.node.price.currencyCode +
